@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); 
+const bcrypt = require('bcrypt')
 const MONGO_URI = 'mongodb+srv://moisesgomezr9:L37udLyPOFIfqRtM@scratch-project.j3hrygw.mongodb.net/?retryWrites=true&w=majority';
 mongoose.connect(MONGO_URI, {
   // options for the connect method to parse the URI
@@ -40,6 +41,30 @@ const personSchema = new Schema({
   expenses: [expenseSchema]
 });
 
-const Person = mongoose.model('person', personSchema);
+const Person = mongoose.model('person', personSchema); 
+
+// static signup method 
+Person.statics.signup = async function(email, password) {  
+
+// we use this here because we don't yet have access to Person model 
+
+  const exists = await this.findOne({ email }); 
+
+ // check if the email exists if so throw an error  
+
+  if (exists) {
+    throw Error('Email already in use');
+  } 
+  // generate salt and hash
+  const salt = await bcrypt.genSalt(10); 
+  const hash = await hash(password, salt);  
+
+  // store email and password in database
+  const user = await this.create({email, password: hash}); 
+
+  return user;
+
+
+};
 
 module.exports = Person;
