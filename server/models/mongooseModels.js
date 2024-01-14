@@ -52,21 +52,21 @@ Person.statics.signup = async function(email, password) {
     throw Error('All fields must be filled');
   }  
   // this method from validator checks if email is a valid email 
-  
+
   if(!validator.isEmail(email)) {
     throw Error('Email is not valid'); 
   }  
   //checks if password is valid 
 
   if(!validator.isStrongPassword(password)) {
-    throw Error('Password not strong enough')
+    throw Error('Password not strong enough');
   }
 
-// we use this here because we don't yet have access to Person model 
+  // we use this here because we don't yet have access to Person model 
 
   const exists = await this.findOne({ email }); 
 
- // check if the email exists if so throw an error  
+  // check if the email exists if so throw an error  
 
   if (exists) {
     throw Error('Email already in use');
