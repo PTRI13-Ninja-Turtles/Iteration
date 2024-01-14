@@ -45,7 +45,7 @@ const personSchema = new Schema({
 const Person = mongoose.model('person', personSchema); 
 
 // static signup method 
-Person.statics.signup = async function(email, password) {  
+personSchema.statics.signup = async function(email, password) {  
 
   // validation 
   if(!email || !password) {
@@ -81,6 +81,26 @@ Person.statics.signup = async function(email, password) {
   return user;
 
 
+}; 
+
+// static login method 
+personSchema.statics.login = async function(email, password) {
+  if(!email || !password) {
+    throw Error('All fields must be filled');
+  }  
+  // finds user in database with target email
+  const user = await this.findOne({email}); 
+
+  if(!user) {
+    throw Error('Incorrect email');
+  } 
+  //compares password to hashed password
+  const match = await bcrypt.compare(password, user.password); 
+
+  if(!match) {
+    throw Error('Incorrect password');
+  } 
+  return user;
 };
 
 module.exports = Person;
