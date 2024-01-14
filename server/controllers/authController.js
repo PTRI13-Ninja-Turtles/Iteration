@@ -1,4 +1,10 @@
-const Person = require('../models/mongooseModels'); 
+const Person = require('../models/mongooseModels');  
+const jwt = require('jsonwebtoken'); 
+ 
+// this creates json web token
+const createToken = (_id) => {
+  jwt.sign({_id}, )
+}
 
 // login user 
 const loginUser = async (req, res) => { 

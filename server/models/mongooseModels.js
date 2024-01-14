@@ -1,5 +1,6 @@
 const mongoose = require('mongoose'); 
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt'); 
+const validator = require('validator');
 const MONGO_URI = 'mongodb+srv://moisesgomezr9:L37udLyPOFIfqRtM@scratch-project.j3hrygw.mongodb.net/?retryWrites=true&w=majority';
 mongoose.connect(MONGO_URI, {
   // options for the connect method to parse the URI
@@ -45,6 +46,21 @@ const Person = mongoose.model('person', personSchema);
 
 // static signup method 
 Person.statics.signup = async function(email, password) {  
+
+  // validation 
+  if(!email || !password) {
+    throw Error('All fields must be filled');
+  }  
+  // this method from validator checks if email is a valid email 
+  
+  if(!validator.isEmail(email)) {
+    throw Error('Email is not valid'); 
+  }  
+  //checks if password is valid 
+
+  if(!validator.isStrongPassword(password)) {
+    throw Error('Password not strong enough')
+  }
 
 // we use this here because we don't yet have access to Person model 
 
