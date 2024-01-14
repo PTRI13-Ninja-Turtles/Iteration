@@ -1,44 +1,45 @@
-const userModels = require('../models/mongooseModels')
+const userModels = require('../models/mongooseModels');
 
-const userController = {}
+const userController = {};
 
 userController.newUser = (req, res, next) => {
 
   const { firstName,
     lastName,
-            password,
-            filingStatus,
-            state,
-            industry,
-            email,
-            estimatedIncome,
-            businessExpenses,
-            preTaxRetirementContributions
-    } = req.body
+    password,
+    filingStatus,
+    state,
+    industry,
+    email,
+    estimatedIncome,
+    businessExpenses,
+    preTaxRetirementContributions
+  } = req.body;
 
-    userModels.create({
-        firstName,
-        lastName,
-        password,
-        filingStatus,
-        state,
-        industry,
-        email,
-        estimatedIncome,
-        businessExpenses,
-        preTaxRetirementContributions
-    })
+  userModels.create({
+    firstName,
+    lastName,
+    password,
+    filingStatus,
+    state,
+    industry,
+    email,
+    estimatedIncome,
+    businessExpenses,
+    preTaxRetirementContributions
+  })
     .then((data) => {
-        console.log('sucessfully created' + data)
-        res.locals.tables.state = state
-        res.locals.tables.filingStatus = filingStatus
-        return next()
+      console.log ('Value of state from the mongo query', data.state);
+      res.locals.state = data.state;
+      res.locals.filingStatus = data.filingStatus;
+      console.log('sucessfully created' + data);
+      return next();
     })
     .catch((err) => {
-        console.log('Error' + err)
-        return next(err)
-    })
-}
+      console.log('Error in User Controller' + err);
+      return next(err);
+    });
+};
 
 
-module.exports = userController
+module.exports = userController;
