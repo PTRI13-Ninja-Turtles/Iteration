@@ -3,7 +3,9 @@ const app = express();
 const path = require('path');
 const cors = require('cors');
 const PORT = 3000;
-const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');;
+
+const apiRouterUser = require('./Routes/user')
 
 
 app.use(express.json());
@@ -15,6 +17,8 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../build/index.html'));
 });
 
+
+app.use('/signup', apiRouterUser);
 
 
 
