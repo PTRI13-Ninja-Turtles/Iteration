@@ -6,7 +6,7 @@ const data = require('../Controllers/DataRetrieval')
 const router = express.Router()
 
 router.post('/', userController.newUser, data.stateBrackets, (req, res) =>{
-  res.status(200).json(res.locals)
+  res.status(200).json(res.locals);
 })
 
 
