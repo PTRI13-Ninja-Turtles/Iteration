@@ -2,25 +2,26 @@ import React from "react";
 import styled from "styled-components";
 
 const StyledMain = styled.div`
-  align-items: center;
-  background-color: #b09ae2;
-  border-radius: 43px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  justify-content: center;
-  padding: 5% 7%;
+align-items: center;
+background-color: #b09ae2;
+border-radius: 43px;
+display: flex;
+flex-direction: column;
+gap: 10px;
+justify-content: center;
+position: relative;
+width: 1300px; 
+margin: 0 auto; /* Center the component within its parent */
+margin-bottom: 16.96px;
+
+& .MAIN-INNER {
+  height: 862px;
+  margin-left: -17.5px;
+  margin-right: -17.5px;
   position: relative;
-  max-width: 100%;
-
-
-  & .MAIN-INNER {
-    height: 862px;
-    margin-left: -17.5px;
-    margin-right: -17.5px;
-    position: relative;
-    width: 1167px;
-  }
+  width: 100%; /* Set max-width to 100% for responsiveness */
+  max-width: 1288px; /* Adjust the max-width as needed */
+}
 
   & .overlap {
     height: 425px;
@@ -167,7 +168,7 @@ export const MainSectionComponent = () => {
             <img
               className="GRAPHS-IMAGE"
               alt="Graphs IMAGE"
-              src="https://c.animaapp.com/j0wLmcPx/img/graphs-image.png"
+              src="https://c.animaapp.com/D8QAD2zE/img/graphs-image.png"
             />
             <p className="PROJECTIONS-FOR">
               <span className="text-wrapper">

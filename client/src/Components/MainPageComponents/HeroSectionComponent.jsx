@@ -4,19 +4,18 @@ import styled from "styled-components";
 const StyledHeroSection = styled.div`
   background-color: #b09ae2;
   border-radius: 43px;
+  height: 617px;
   position: relative;
-  max-width: 100%;
-  align-items: flex-start;
-  display: flex;
-  margin: 0 auto; 
-  padding: 0 5%; 
+  max-width: 100%; /* Ensure the component doesn't exceed the parent's width */
+  margin: 0 auto; /* Center the component within its parent */
+  margin-bottom: 44px;
 
   & .overlap {
     height: 575px;
     left: 24px;
     position: relative;
     top: 39px;
-    width: 1267px;
+    width: 1300px;
 
     & .overlap-group {
       height: 575px;
@@ -45,13 +44,13 @@ const StyledHeroSection = styled.div`
     & .text-wrapper {
       color: #000000;
       font-family: "Roboto", Helvetica;
-      font-size: 50px;
+      font-size: 40px;
       font-weight: 500;
       left: 0;
       letter-spacing: 1px;
       line-height: 57px;
       position: absolute;
-      top: 0;
+      top: -20px;
       width: 655px;
     }
 
@@ -62,7 +61,7 @@ const StyledHeroSection = styled.div`
       font-weight: 500;
       left: 55px;
       letter-spacing: 0.7px;
-      line-height: 57px;
+      line-height: 0px;
       position: absolute;
       top: 310px;
       white-space: nowrap;
@@ -80,7 +79,7 @@ const StyledHeroSection = styled.div`
       font-weight: 500;
       left: 55px;
       letter-spacing: 0.7px;
-      line-height: 57px;
+      line-height: 0px;
       position: absolute;
       top: 241px;
       white-space: nowrap;
@@ -111,7 +110,7 @@ const StyledHeroSection = styled.div`
       font-weight: 500;
       left: 76px;
       letter-spacing: 0.7px;
-      line-height: 57px;
+      line-height: 0px;
       position: absolute;
       top: 383px;
       white-space: nowrap;
@@ -156,8 +155,8 @@ export const HeroSection = () => {
     <StyledHeroSection>
       <div className="overlap">
         <div className="overlap-group">
-          <img className="MAIN-LOGO" alt="Main LOGO" src="https://c.animaapp.com/Ko5RhlAK/img/main-logo@2x.png" />
-          <img className="VECTORS" alt="Vectors" src="https://c.animaapp.com/Ko5RhlAK/img/vectors.png" />
+          <img className="MAIN-LOGO" alt="Main LOGO" src="https://c.animaapp.com/OfhiUw98/img/main-logo@2x.png" />
+          <img className="VECTORS" alt="Vectors" src="https://c.animaapp.com/OfhiUw98/img/vectors.png" />
           <p className="text-wrapper">GAIN COMPLETE CONTROL OVER YOUR FINANCES</p>
           <p className="TRACK-EARNINGS">
             <span className="span">
@@ -191,9 +190,9 @@ export const HeroSection = () => {
           </span>
           <span className="span">{""}</span>
         </p>
-        <img className="CHECK" alt="Check" src="https://c.animaapp.com/Ko5RhlAK/img/check-1@2x.png" />
-        <img className="img" alt="Check" src="https://c.animaapp.com/Ko5RhlAK/img/check-1@2x.png" />
-        <img className="CHECK-2" alt="Check" src="https://c.animaapp.com/Ko5RhlAK/img/check-1@2x.png" />
+        <img className="CHECK" alt="Check" src="https://c.animaapp.com/OfhiUw98/img/check-3@2x.png" />
+        <img className="img" alt="Check" src="https://c.animaapp.com/OfhiUw98/img/check-3@2x.png" />
+        <img className="CHECK-2" alt="Check" src="https://c.animaapp.com/OfhiUw98/img/check-3@2x.png" />
       </div>
     </StyledHeroSection>
   );

@@ -3,6 +3,7 @@ import { NavigationInnerBar } from '../Components/MainPageComponents/NavigationI
 import { HeroSection } from '../Components/MainPageComponents/HeroSectionComponent.jsx';
 import { MainSectionComponent } from '../Components/MainPageComponents/MainSectionComponent.jsx';
 import { Box } from '@mui/material';
+import { StayInformedComponent } from '../Components/MainPageComponents/StayInformedComponent.jsx';
 
 const LandingPageContainer = () => {
   return (
@@ -11,8 +12,6 @@ const LandingPageContainer = () => {
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      margin-left="75px"
-      margin-right="75px"
       width="100%"
       className='LandingPageContainer'
       
@@ -20,6 +19,7 @@ const LandingPageContainer = () => {
       <NavigationInnerBar />
       <HeroSection />
       <MainSectionComponent />
+      <StayInformedComponent />
     </Box>
   );
 };
