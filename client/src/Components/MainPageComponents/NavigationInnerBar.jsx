@@ -6,6 +6,9 @@ const StyledNavigationInnerBar = styled.div`
   display: flex;
   justify-content: space-between;
   position: relative;
+  gap: 10px;
+  width: 100%; /* Use 100% width to adapt to the parent container */
+  max-width: 100%; /* Set max-width to prevent it from getting too wide */
 
   & .logo {
     align-items: center;

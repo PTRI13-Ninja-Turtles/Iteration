@@ -9,9 +9,10 @@ const StyledMain = styled.div`
   flex-direction: column;
   gap: 10px;
   justify-content: center;
-  padding: 52px 78px 69.05px;
+  padding: 5% 7%;
   position: relative;
-  width: 1288px;
+  max-width: 100%;
+
 
   & .MAIN-INNER {
     height: 862px;

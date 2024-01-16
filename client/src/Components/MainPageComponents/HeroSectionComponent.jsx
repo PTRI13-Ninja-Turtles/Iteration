@@ -4,9 +4,12 @@ import styled from "styled-components";
 const StyledHeroSection = styled.div`
   background-color: #b09ae2;
   border-radius: 43px;
-  height: 617px;
   position: relative;
-  width: 1297px;
+  max-width: 100%;
+  align-items: flex-start;
+  display: flex;
+  margin: 0 auto; 
+  padding: 0 5%; 
 
   & .overlap {
     height: 575px;
