@@ -123,12 +123,12 @@ export const NavigationInnerBar = () => {
         </div>
       </div>
       <div className="menu-right">
-        <div className="div-wrapper">
+        <button className="div-wrapper">
           <div className="text-wrapper-2">LOGIN</div>
-        </div>
-        <div className="div-wrapper">
+        </button>
+        <button className="div-wrapper">
           <div className="text-wrapper-2">SIGN UP</div>
-        </div>
+        </button>
       </div>
     </StyledNavigationInnerBar>
   );

@@ -5,7 +5,7 @@ import { MainSectionComponent } from '../Components/MainPageComponents/MainSecti
 import { Box } from '@mui/material';
 import { StayInformedComponent } from '../Components/MainPageComponents/StayInformedComponent.jsx';
 
-const LandingPageContainer = () => {
+const MainPageContainer = () => {
   return (
     <Box
       display="flex"
@@ -24,4 +24,4 @@ const LandingPageContainer = () => {
   );
 };
 
-export default LandingPageContainer;
+export default MainPageContainer;
