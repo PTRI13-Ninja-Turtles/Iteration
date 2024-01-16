@@ -1,9 +1,8 @@
 import React from 'react';
-import { NavigationInnerBar } from './Components/NavigationInnerBar.jsx';
-
+import LandingPageContainer from './Containers/LandingPageContainer.jsx';
 
 const App = () => {
-  return (<NavigationInnerBar />);
+  return (<LandingPageContainer />);
 };
 
 export default App;
