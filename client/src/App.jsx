@@ -1,7 +1,7 @@
 import React from "react";
-import LandingPageContainer from "./containers/LandingPageContainer.jsx";
-import LoginPageContainer from "./containers/LoginPageContainer.jsx";
-import SignupPageContainer from "./containers/SignupPageContainer.jsx";
+import LandingPageContainer from "./Containers/LandingPageContainer.jsx";
+import MainPageContainer from "./Containers/MainPageContainer.jsx";
+import SignupPageContainer from "./Containers/SignupPageContainer.jsx";
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 
 const App = () => {
@@ -9,7 +9,7 @@ const App = () => {
     <div className="app">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<LandingPageContainer />} />
+          <Route path="/" element={<MainPageContainer />} />
           <Route path="/login" element={<LoginPageContainer />} />
           <Route path="/signup" element={<SignupPageContainer />} />
         </Routes>
