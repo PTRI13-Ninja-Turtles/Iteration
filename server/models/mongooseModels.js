@@ -42,7 +42,6 @@ const personSchema = new Schema({
   expenses: [expenseSchema]
 });
 
-const Person = mongoose.model('person', personSchema); 
 
 // static signup method 
 personSchema.statics.signup = async function(email, password) {  
@@ -103,4 +102,5 @@ personSchema.statics.login = async function(email, password) {
   return user;
 };
 
+const Person = mongoose.model('person', personSchema); 
 module.exports = Person;
