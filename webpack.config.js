@@ -7,7 +7,7 @@ module.exports = {
     path: path.resolve(__dirname, 'build'),
     filename: 'bundle.js'
   },
-  mode: 'development',
+  mode: process.env.NODE_ENV,
   module: {
     rules: [
       {
@@ -96,6 +96,7 @@ module.exports = {
 
 //   mode: 'development',
 //   devServer: {
+    
 //     host: 'localhost',
 //     historyApiFallback: true,
 //     port: 8080,

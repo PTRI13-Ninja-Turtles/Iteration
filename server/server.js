@@ -12,10 +12,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
+// statically serve everything in the build folder on the route '/build'
+app.use('/build', express.static(path.join(__dirname, '../build')));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../build/index.html'));
 });
+
 
 
 app.use('/signup', apiRouterUser);
