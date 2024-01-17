@@ -8,7 +8,7 @@ const StyledHeroSection = styled.div`
   position: relative;
   max-width: 100%; /* Ensure the component doesn't exceed the parent's width */
   margin: 0 auto; /* Center the component within its parent */
-  margin-bottom: 44px;
+  margin-bottom: 16.96px;
 
   & .overlap {
     height: 575px;
@@ -50,7 +50,7 @@ const StyledHeroSection = styled.div`
       letter-spacing: 1px;
       line-height: 57px;
       position: absolute;
-      top: -20px;
+      top: -40px;
       width: 655px;
     }
 

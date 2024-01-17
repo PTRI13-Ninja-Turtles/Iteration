@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 const StyledMain = styled.div`
 align-items: center;
+height: 983px;
 background-color: #b09ae2;
 border-radius: 43px;
 display: flex;
@@ -19,13 +20,13 @@ margin-bottom: 16.96px;
   margin-left: -17.5px;
   margin-right: -17.5px;
   position: relative;
-  width: 100%; /* Set max-width to 100% for responsiveness */
+  width: 100%;
   max-width: 1288px; /* Adjust the max-width as needed */
 }
 
   & .overlap {
     height: 425px;
-    left: 22px;
+    left: -80px;
     position: absolute;
     top: 414px;
     width: 1243px;
@@ -33,19 +34,19 @@ margin-bottom: 16.96px;
 
   & .overlap-group {
     height: 425px;
-    left: 0;
-    position: absolute;
+    left: 130px;
+    position: relative;
     top: 0;
     width: 1243px;
   }
 
   & .GRAPHS-IMAGE {
     height: 425px;
-    left: 627px;
+    left: 690px;
     object-fit: cover;
     position: absolute;
-    top: 0;
     width: 616px;
+    top: 35px;
   }
 
   & .PROJECTIONS-FOR {
@@ -71,12 +72,13 @@ margin-bottom: 16.96px;
     font-family: "Roboto", Helvetica;
     font-size: 25px;
     font-weight: 500;
-    left: 178px;
+    left: 330px;
     letter-spacing: 0.5px;
     line-height: 57px;
     position: absolute;
     top: 297px;
     white-space: nowrap;
+    margin-top: 25px;
   }
 
   & .p {
@@ -84,7 +86,7 @@ margin-bottom: 16.96px;
     font-family: "Roboto", Helvetica;
     font-size: 25px;
     font-weight: 500;
-    left: 132px;
+    left: 290px;
     letter-spacing: 0.5px;
     line-height: 57px;
     position: absolute;
@@ -97,7 +99,7 @@ margin-bottom: 16.96px;
     font-family: "Roboto", Helvetica;
     font-size: 25px;
     font-weight: 500;
-    left: 90px;
+    left: 248px;
     letter-spacing: 0.5px;
     line-height: 57px;
     position: absolute;
@@ -112,9 +114,8 @@ margin-bottom: 16.96px;
     font-weight: 500;
     left: 504px;
     letter-spacing: 0.7px;
-    line-height: 57px;
     position: absolute;
-    top: 76px;
+    top: 65px;
     white-space: nowrap;
     width: 541px;
   }
@@ -126,7 +127,6 @@ margin-bottom: 16.96px;
     font-weight: 500;
     left: 472px;
     letter-spacing: 0.5px;
-    line-height: 57px;
     position: absolute;
     top: 247px;
     white-space: nowrap;
@@ -139,7 +139,6 @@ margin-bottom: 16.96px;
     font-weight: 500;
     left: 516px;
     letter-spacing: 0.5px;
-    line-height: 57px;
     position: absolute;
     top: 190px;
     white-space: nowrap;
@@ -152,7 +151,6 @@ margin-bottom: 16.96px;
     font-weight: 500;
     left: 428px;
     letter-spacing: 0.5px;
-    line-height: 57px;
     position: absolute;
     top: 133px;
     white-space: nowrap;

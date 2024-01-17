@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 const StayInformedStyled = styled.div`
 background-color: #b09ae2;
@@ -12,7 +12,6 @@ margin: 0 auto; /* Center the component */
 
   & .join {
     align-items: center;
-    display: flex;
     flex-direction: column;
     gap: 28px;
     height: 102px;
@@ -46,7 +45,7 @@ margin: 0 auto; /* Center the component */
     font-weight: 400;
     height: 42px;
     letter-spacing: 0.72px;
-    line-height: 26.3px;
+    line-height: 5px;
     margin-bottom: -9.5px;
     position: relative;
     text-align: center;
@@ -61,7 +60,6 @@ margin: 0 auto; /* Center the component */
     height: 65px;
     justify-content: center;
     left: 411px;
-    padding: 13px 10px;
     position: absolute;
     top: 215px;
     width: 468px;
@@ -86,11 +84,12 @@ margin: 0 auto; /* Center the component */
     display: flex;
     gap: 10px;
     justify-content: center;
-    left: 580px;
+    left: 560px;
     padding: 10px 17px;
     position: absolute;
     top: 311px;
     width: 164px;
+    margin-top: 15px;
   }
 
   & .text-wrapper-3 {
@@ -175,12 +174,28 @@ export const StayInformedComponent = () => {
         <p className="text-wrapper">SIGN UP AND STAY INFORMED</p>
         <p className="div">Type your email down below to join our mailing list</p>
       </div>
-      <div className="form">
-        <div className="text-wrapper-2">Add your email here</div>
+      <div className='form'>
+
+        <input className="text-wrapper-2" type="text" placeholder="Add your email here" style={{
+          fontFamily: 'Poppins, Helvetica', // Match the font family of the text
+          fontSize: '18px', // Match the font size of the text
+          color: '#767676', // Match the color of the text
+          width: '100%',
+          textAlign: 'center', // Center the text inside the input
+          border: 'none', // Remove the outline
+          outline: 'none',
+          '::placeholder': {
+            fontFamily: 'Poppins, Helvetica', // Match the font family of the placeholder
+            fontSize: '18px', // Match the font size of the placeholder
+            color: '#767676', // Match the color of the placeholder
+          }
+        }}
+        ></input>
+
       </div>
-      <div className="login">
+      <button className="login">
         <div className="text-wrapper-3">SUBMIT</div>
-      </div>
+      </button>
       <div className="SOCIALS">
         <div className="div-2">
           <img className="vector" alt="Vector" src="https://c.animaapp.com/1a9gVhG3/img/vector.svg" />

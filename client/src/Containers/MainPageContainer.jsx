@@ -14,6 +14,9 @@ const MainPageContainer = () => {
       justifyContent="center"
       width="100%"
       className='LandingPageContainer'
+      maxWidth="1300px" // Set your desired max-width value
+      margin="0 auto"  // Center the container horizontally
+      overflow="hidden"
       
     >
       <NavigationInnerBar />
