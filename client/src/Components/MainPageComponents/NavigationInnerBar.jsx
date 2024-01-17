@@ -1,14 +1,14 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const StyledNavigationInnerBar = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
   position: relative;
-  gap: 10px;
-  width: 100%; /* Use 100% width to adapt to the parent container */
-  max-width: 100%; /* Set max-width to prevent it from getting too wide */
+  width: 100%; /* Set max-width to 100% for responsiveness */
+  max-width: 1300px; /* Adjust the max-width as needed */
+  padding: 3%;
 
   & .logo {
     align-items: center;
@@ -129,7 +129,6 @@ export const NavigationInnerBar = () => {
         <button className="div-wrapper">
           <div className="text-wrapper-2">SIGN UP</div>
         </button>
-    
       </div>
     </StyledNavigationInnerBar>
   );

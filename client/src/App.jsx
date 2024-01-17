@@ -1,8 +1,8 @@
 import React from 'react';
-import LandingPageContainer from './Containers/LandingPageContainer.jsx';
+import MainPageContainer from './Containers/MainPageContainer.jsx';
 
 const App = () => {
-  return (<LandingPageContainer />);
+  return (<MainPageContainer />);
 };
 
 export default App;
