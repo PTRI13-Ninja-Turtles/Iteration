@@ -59,7 +59,7 @@ const AccountCreationForm = () => {
       })
       .then((data) => {
         if (data.success) {
-          navigate('/login');
+          navigate('/dashboard');
         } else {
           console.error('Form submission failed:', data.message);
         }

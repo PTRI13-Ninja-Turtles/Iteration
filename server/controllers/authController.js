@@ -12,17 +12,23 @@ const createToken = (_id) => {
 };
 
 // signup user 
-const signupUser = async (req, res) => { 
+const signupUser = async (req, res, next) => { 
 
   const { firstName, lastName, password, email} = req.body;
+
   // try to sign user up using signup method 
   try {
     const user = Person.signup(firstName, lastName, password, email);  
 
     // create a token 
     const token = createToken(user._id);
+    // Send the token as a cookie
+    res.cookie('token', token, { httpOnly: true, expires: new Date(Date.now() + 24 * 60 * 60 * 1000) });
 
-    res.status(200).json({email, token});
+    return next();
+
+
+    // res.status(200).json({email, token});
   } catch (error) {
     res.status(400).json({error: error.message});
   }
