@@ -2,8 +2,7 @@ const redirect = {};
 
 redirect.dashboard = (req, res, next) => {
   console.log ('YOU ARE SIGNED IN');
-  res.redirect('/dashboard');
-  return next();
+  res.status(200).json({ redirect: '/login' });
 };
 
 module.exports = redirect;

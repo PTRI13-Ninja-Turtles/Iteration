@@ -9,10 +9,13 @@ const router = express.Router()
 
 
 
-router.post('/', userController.newUser, dashBoardRedirect.dashboard, data.stateBrackets, data.fedBrackets, calc.allTaxes, (req, res) =>{
-  res.status(200).json(res.locals)//.redirect();
-});
+// router.post('/', userController.newUser, dashBoardRedirect.dashboard, data.stateBrackets, data.fedBrackets, calc.allTaxes, (req, res) =>{
+//   res.status(200).json(res.locals)//.redirect();
+// });
 
+router.post('/', userController.newUser, dashBoardRedirect.dashboard, (req, res) => {
+  res.status(200);
+});
 
 module.exports = router;
 
