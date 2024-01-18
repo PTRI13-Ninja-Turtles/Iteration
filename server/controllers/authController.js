@@ -53,4 +53,31 @@ const loginUser = async (req,res) => {
 
 }; 
 
-module.exports = { loginUser, signupUser };
+/* Controller that verifies token */
+
+const verifyToken = (req, res, next ) => {
+
+  //EXTRACT TOKEN FROM COOKIES COMING IN FROM THE CLIENT
+  const token = req.cookies.token || ''; 
+
+  if (!token) {
+    //TOKEN NOT PROVIDED
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET);
+    //ATTACHING THE INFO FROM TOKEN ONTO REQ.USER;
+
+    req.user = decoded;
+    console.log ('Value of req.user after being decoded using jwt');
+
+    next();
+  } catch (error) {
+    return res.status(401).json({ error: 'Invalid token' });
+  }
+
+  
+}
+
+module.exports = { loginUser, signupUser, verifyToken };

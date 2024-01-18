@@ -2,7 +2,7 @@
 const express = require('express')
 const userController = require('../Controllers/User')
 const data = require('../Controllers/DataRetrieval')
-const authController = require('../controllers/authController'); 
+const authController = require('../Controllers/authController'); 
 const calc = require('../Controllers/CalcController')
 const router = express.Router()
 

@@ -6,6 +6,7 @@ const PORT = 3000;
 const bodyParser = require('body-parser');
 
 const apiRouterUser = require('./Routes/user');
+const dashboardRouter = require ('./Routes/dashboardRoute')
 
 
 app.use(express.json());
@@ -22,6 +23,8 @@ app.get('/', (req, res) => {
 
 
 app.use('/signup', apiRouterUser);
+
+app.use('/dashboard', dashboardRouter);
 
 // Catch-all route for client-side routing
 // app.get('*', (req, res) => {

@@ -18,6 +18,13 @@ import { RobotoFontFace } from "@fontsource/roboto";
 
 //STATE STATE STATE STATE
 const DashboardPage = () => {
+
+  /*On load we will make a GET request to retrieve user data based on the verification of token  */
+
+
+
+
+
   const [sliderValues, setSliderValues] = useState({ 1: 0, 2: 0 });
   const [grossEarnings, setGrossEarnings] = useState(0);
   const [isBarChart, setIsBarChart] = useState(true);
