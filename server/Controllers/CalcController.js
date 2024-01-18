@@ -3,9 +3,11 @@ const calc = {};
 calc.stateYTDCalc = (req, res, next) => {
 
   const YTD = res.locals.estimatedIncome - (res.locals.businessExpenses + res.locals.preTaxRetirementContributions); // <-- property needs to be added
+
   const bracketLow = res.locals.stateTables.forEach((ele) => {ele['income_range_low']});
   const bracketHigh = res.locals.stateTables.forEach((ele) => {ele['income_range_high']});
   const rates = res.locals.stateTables.forEach((ele) =>{ele['tax_rate']});
+
   let taxesOwed = 0;
 
   // 
@@ -44,7 +46,6 @@ calc.fedYTDCalc = (req, res, next) => {
     const min = bracketLow[i]
     const max = bracketHigh[i]
     const currentRate = rates[i]
-
     if (max === 999999999){
       taxesOwed += ((YTD - min) * currentRate)
     } else if (YTD <= max){
@@ -167,6 +168,8 @@ calc.allTaxes = (req, res, next) => {
 }
 
 
-
+  res.locals.taxesOwed.medicare = taxesOwed
+  return next()
+};
 
 module.exports = calc;
