@@ -17,8 +17,8 @@ const router = express.Router()
 //   res.status(200);
 // });
 
-router.post ('/', userController.newUser, data.stateBrackets, data.fedBrackets , (req, res) => {
-  res.status(200).json({ success: true, message: 'Request processed successfully' });
+router.post ('/', userController.newUser, data.stateBrackets, data.fedBrackets , calc.allTaxes, (req, res) => {
+  res.status(200).json({ success: true, message: 'Request processed successfully', locals: res.locals });
   
 });
 

@@ -3,9 +3,12 @@ const calc = {};
 calc.stateYTDCalc = (req, res, next) => {
 
   const YTD = res.locals.estimatedIncome - (res.locals.businessExpenses + res.locals.preTaxRetirementContributions); // <-- property needs to be added
-  const bracketLow = res.locals.stateTables.forEach((ele) => {ele['income_range_low']});
-  const bracketHigh = res.locals.stateTables.forEach((ele) => {ele['income_range_high']});
-  const rates = res.locals.stateTables.forEach((ele) =>{ele['tax_rate']});
+  const bracketLow = [];
+  res.locals.stateTables.forEach((ele) => {bracketLow.push(ele['income_range_low'])});
+  const bracketHigh = [];
+  res.locals.stateTables.forEach((ele) => {bracketHigh.push(ele['income_range_high'])});
+  const rates = [];
+  res.locals.stateTables.forEach((ele) =>{rates.push(ele['tax_rate'])});
   let taxesOwed = 0;
 
   // 
@@ -34,9 +37,12 @@ calc.stateYTDCalc = (req, res, next) => {
 
 calc.fedYTDCalc = (req, res, next) => {
   const YTD = res.locals.estimatedIncome - (res.locals.businessExpenses + res.locals.preTaxRetirementContributions); // <-- property needs to be added
-  const bracketLow = res.locals.fedTables.forEach((ele) => {ele['income_range_low']});
-  const bracketHigh = res.locals.fedTables.forEach((ele) => {ele['income_range_high']});
-  const rates = res.locals.fedTables.forEach((ele) =>{ele['tax_rate']});
+  const bracketLow = [];
+  res.locals.stateTables.forEach((ele) => {bracketLow.push(ele['income_range_low'])});
+  const bracketHigh = [];
+  res.locals.stateTables.forEach((ele) => {bracketHigh.push(ele['income_range_high'])});
+  const rates = [];
+  res.locals.stateTables.forEach((ele) =>{rates.push(ele['tax_rate'])});
   let taxesOwed = 0;
 
   for (let i=0; i<bracketLow.length; i++){
@@ -79,8 +85,8 @@ calc.medicareYTDCalc = (req , res, next) => {
   let taxesOwed = 0;
   taxesOwed = YTD < 400 ? 0 : YTD * 0.029;
 
-  res.locals.taxesOwed.medicare = taxesOwed
-  return next()
+  res.locals.taxesOwed.medicare = taxesOwed;
+  return next();
 };
 
 calc.allTaxes = (req, res, next) => {
@@ -91,10 +97,12 @@ calc.allTaxes = (req, res, next) => {
   const stateBracketHigh = [];
   const stateRates = [];
   res.locals.stateTables.forEach((ele) => {
-    stateBracketLow.push(ele['income_range_low'])
-    stateBracketHigh.push(ele['tax_rate'])
-    stateRates.push(ele['tax_rate'])
+    stateBracketLow.push(ele['income_range_low']);
+    stateBracketHigh.push(ele['income_range_high']);
+    stateRates.push(ele['tax_rate']);
   });
+
+  console.log ('Result from pushing to the arrays', stateBracketLow , stateBracketHigh, stateRates);
   let stateTaxesOwed = 0;
 
 
@@ -102,14 +110,17 @@ calc.allTaxes = (req, res, next) => {
   const fedBracketHigh = [];
   const fedRates = [];
   res.locals.fedTables.forEach((ele) => {
-    fedBracketLow.push(ele['income_range_low'])
-    fedBracketHigh.push(ele['income_range_high'])
-    fedRates.push(ele['tax_rate'])
+    fedBracketLow.push(ele['income_range_low']);
+    fedBracketHigh.push(ele['income_range_high']);
+    fedRates.push(ele['tax_rate']);
   });
+
+  console.log ('Result from pushing to the fed arrays', fedBracketLow , fedBracketHigh, fedRates);
   let fedTaxesOwed = 0;
   let SSITaxesOwed = 0;
   let MedicareTaxesOwed = 0;
 
+  res.locals.taxesOwed = res.locals.taxesOwed || {};
 
 // Calculating state tax liability
   if (stateBracketHigh[0] === 999999999){
@@ -159,11 +170,19 @@ calc.allTaxes = (req, res, next) => {
 // calculating self employment tax: Medicare
   MedicareTaxesOwed = YTD < 400 ? 0 : YTD * 0.029;
 
-  res.locals.taxesOwed.medicare = MedicareTaxesOwed
-  res.locals.taxesOwed.ssi = SSITaxesOwed
-  res.locals.taxesOwed.fed = fedTaxesOwed;
-  res.locals.taxesOwed.state = stateTaxesOwed;
-  return next()
+  res.locals.taxesOwed = {
+    ...res.locals.taxesOwed,
+    medicare: MedicareTaxesOwed,
+    ssi: SSITaxesOwed,
+    fed: fedTaxesOwed,
+    state: stateTaxesOwed
+  };
+
+  // res.locals.taxesOwed.medicare = MedicareTaxesOwed;
+  // res.locals.taxesOwed.ssi = SSITaxesOwed
+  // res.locals.taxesOwed.fed = fedTaxesOwed;
+  // res.locals.taxesOwed.state = stateTaxesOwed;
+  return next();
 }
 
 
