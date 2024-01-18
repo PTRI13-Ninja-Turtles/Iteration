@@ -86,21 +86,28 @@ calc.medicareYTDCalc = (req , res, next) => {
 calc.allTaxes = (req, res, next) => {
   
   const YTD = res.locals.estimatedIncome - (res.locals.businessExpenses + res.locals.preTaxRetirementContributions);
-  const stateBracketLow = res.locals.stateTables.forEach((ele) => {ele['income_range_low']});
-  const stateBracketHigh = res.locals.stateTables.forEach((ele) => {ele['income_range_high']});
-  const stateRates = res.locals.stateTables.forEach((ele) =>{ele['tax_rate']});
+  
+  const stateBracketLow = [];
+  const stateBracketHigh = [];
+  const stateRates = [];
+  res.locals.stateTables.forEach((ele) => {
+    stateBracketLow.push(ele['income_range_low'])
+    stateBracketHigh.push(ele['tax_rate'])
+    stateRates.push(ele['tax_rate'])
+  });
   let stateTaxesOwed = 0;
 
 
   const fedBracketLow = [];
-  
-  res.locals.fedTables.forEach((ele) => {fedBracketLow.push(ele['income_range_low'])});
-  const fedBracketHigh = res.locals.fedTables.forEach((ele) => {ele['income_range_high']});
-  const fedRates = res.locals.fedTables.forEach((ele) =>{ele['tax_rate']});
+  const fedBracketHigh = [];
+  const fedRates = [];
+  res.locals.fedTables.forEach((ele) => {
+    fedBracketLow.push(ele['income_range_low'])
+    fedBracketHigh.push(ele['income_range_high'])
+    fedRates.push(ele['tax_rate'])
+  });
   let fedTaxesOwed = 0;
-
   let SSITaxesOwed = 0;
-
   let MedicareTaxesOwed = 0;
 
 
@@ -108,7 +115,7 @@ calc.allTaxes = (req, res, next) => {
   if (stateBracketHigh[0] === 999999999){
     stateTaxesOwed = YTD * stateRates[0];
   } else {
-    for (let i=0; i<stateBracketLow.length; i++){
+    for (let i = 0; i < stateBracketLow.length; i++){
       const min = stateBracketLow[i];
       const max = stateBracketHigh[i];
       const currentRate = stateRates[i];
@@ -125,7 +132,7 @@ calc.allTaxes = (req, res, next) => {
   }
 
 // calculating federal tax liability 
-  for (let i=0; i<fedBracketLow.length; i++){
+  for (let i = 0; i < fedBracketLow.length; i++){
 
     const min = fedBracketLow[i]
     const max = fedBracketHigh[i]
@@ -137,7 +144,7 @@ calc.allTaxes = (req, res, next) => {
       fedTaxesOwed += ((YTD - min) * currentRate)
       break;
     } else {
-      fedTaxesOwed += ((max-min) * currentRate)
+      fedTaxesOwed += ((max - min) * currentRate)
     }
   }
 
