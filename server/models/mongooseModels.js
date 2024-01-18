@@ -27,7 +27,7 @@ const expenseSchema = new Schema({
 
 const personSchema = new Schema({
   firstName: {type: String, required: true},
-  lastName: {type: String, required: true},
+  lastName: {type: String },
   password: {type: String, unique: true, required: true},
   filingStatus: String,
   state: String,
@@ -42,10 +42,11 @@ const personSchema = new Schema({
 
 
 // static signup method 
-personSchema.statics.signup = async function(email, password) {  
+personSchema.statics.signup = async function(firstName, lastName, password, email) {  
+  console.log('Received data:', { firstName, lastName, password, email });
 
   // validation 
-  if(!email || !password) {
+  if(!firstName || !lastName || !password || !email ) {
     throw Error('All fields must be filled');
   }  
   // this method from validator checks if email is a valid email 
@@ -70,10 +71,10 @@ personSchema.statics.signup = async function(email, password) {
   } 
   // generate salt and hash
   const salt = await bcrypt.genSalt(10); 
-  const hash = await hash(password, salt);  
+  const hash = await bcrypt.hash(password, salt);  
 
   // store email and password in database
-  const user = await this.create({email, password: hash}); 
+  const user = await this.create({email, password: hash, firstName}); 
 
   return user;
 
@@ -100,5 +101,5 @@ personSchema.statics.login = async function(email, password) {
   return user;
 };
 
-const Person = mongoose.model('person', personSchema); 
-module.exports = Person;
+//const Person = mongoose.model('person', personSchema); 
+module.exports = mongoose.model('Person', personSchema);

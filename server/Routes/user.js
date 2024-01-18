@@ -1,7 +1,8 @@
 // Middleware for user signup & sign in
-const express = require('express');
-const userController = require('../Controllers/User');
-const data = require('../Controllers/DataRetrieval');
+const express = require('express')
+const userController = require('../Controllers/User')
+const data = require('../Controllers/DataRetrieval')
+//const authController = require('../controllers/authController'); 
 const authController = require('../controllers/authController');
 const calc = require('../Controllers/CalcController')
 const dashBoardRedirect = require('../Controllers/redirectController.js');
