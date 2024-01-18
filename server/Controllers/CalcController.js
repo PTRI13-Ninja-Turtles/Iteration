@@ -50,7 +50,6 @@ calc.fedYTDCalc = (req, res, next) => {
     const min = bracketLow[i]
     const max = bracketHigh[i]
     const currentRate = rates[i]
-
     if (max === 999999999){
       taxesOwed += ((YTD - min) * currentRate)
     } else if (YTD <= max){
@@ -190,6 +189,8 @@ calc.allTaxes = (req, res, next) => {
 }
 
 
-
+  res.locals.taxesOwed.medicare = taxesOwed
+  return next()
+};
 
 module.exports = calc;
