@@ -16,7 +16,7 @@ userController.newUser = (req, res, next) => {
     preTaxRetirementContributions
   } = req.body;
 
-  userModels.create({
+  userModels.Person.create({
     firstName,
     lastName,
     password,

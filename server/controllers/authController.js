@@ -1,6 +1,6 @@
 process.env.SECRET = '7hDkL$2pA!sFg@9rJm&5tYiX';
 require('dotenv').config();
-const Person = require('../models/mongooseModels');  
+const models = require('../models/mongooseModels');  
 const jwt = require('jsonwebtoken'); 
  
 // this creates json web token
@@ -18,12 +18,15 @@ const signupUser = async (req, res, next) => {
 
   // try to sign user up using signup method 
   try {
-    const user = Person.signup(firstName, lastName, password, email);  
+    // const user = await models.Person.signup(firstName, lastName, password, email);  
+    const user = await models.Person.findOne({email});
+
+    console.log ('Found a user to create a token with their document id', user);
 
     // create a token 
     const token = createToken(user._id);
     // Send the token as a cookie
-    res.cookie('token', token, { httpOnly: true, expires: new Date(Date.now() + 24 * 60 * 60 * 1000) });
+    res.cookie('token', token, { expires: new Date(Date.now() + 24 * 60 * 60 * 1000), secure: false, sameSite: 'Lax' });
 
     return next();
 
@@ -38,7 +41,7 @@ const signupUser = async (req, res, next) => {
 const loginUser = async (req,res) => { 
   const { email, password } = req.body; 
   try {
-    const user = Person.login(email, password);  
+    const user = await models.Person.login(email, password);  
 
     // create token
     const token = createToken(user._id);
