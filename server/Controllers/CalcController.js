@@ -61,6 +61,8 @@ calc.fedYTDCalc = (req, res, next) => {
     }
 }
   res.locals.taxesOwed.fed = taxesOwed;
+
+  
   return next();
 };
 
@@ -97,9 +99,9 @@ calc.allTaxes = (req, res, next) => {
   const stateBracketHigh = [];
   const stateRates = [];
   res.locals.stateTables.forEach((ele) => {
-    stateBracketLow.push(ele['income_range_low']);
-    stateBracketHigh.push(ele['income_range_high']);
-    stateRates.push(ele['tax_rate']);
+    stateBracketLow.push(parseInt(ele['income_range_low']));
+    stateBracketHigh.push(parseInt(ele['income_range_high']));
+    stateRates.push(parseFloat(ele['tax_rate']));
   });
 
   console.log ('Result from pushing to the arrays', stateBracketLow , stateBracketHigh, stateRates);
@@ -110,9 +112,9 @@ calc.allTaxes = (req, res, next) => {
   const fedBracketHigh = [];
   const fedRates = [];
   res.locals.fedTables.forEach((ele) => {
-    fedBracketLow.push(ele['income_range_low']);
-    fedBracketHigh.push(ele['income_range_high']);
-    fedRates.push(ele['tax_rate']);
+    fedBracketLow.push(parseInt(ele['income_range_low']));
+    fedBracketHigh.push(parseInt(ele['income_range_high']));
+    fedRates.push(parseFloat(ele['tax_rate']));
   });
 
   console.log ('Result from pushing to the fed arrays', fedBracketLow , fedBracketHigh, fedRates);
@@ -150,12 +152,12 @@ calc.allTaxes = (req, res, next) => {
     const currentRate = fedRates[i]
 
     if (max === 999999999){
-      fedTaxesOwed += ((YTD - min) * currentRate)
+      fedTaxesOwed += ((YTD - min) * currentRate);
     } else if (YTD <= max){
-      fedTaxesOwed += ((YTD - min) * currentRate)
+      fedTaxesOwed += ((YTD - min) * currentRate);
       break;
     } else {
-      fedTaxesOwed += ((max - min) * currentRate)
+      fedTaxesOwed += ((max - min) * currentRate);
     }
   }
 
@@ -169,6 +171,8 @@ calc.allTaxes = (req, res, next) => {
   }
 // calculating self employment tax: Medicare
   MedicareTaxesOwed = YTD < 400 ? 0 : YTD * 0.029;
+
+  console.log (`Final result of all the calculations, Medicare Taxes Owed: ${MedicareTaxesOwed}, SSITaxesOwed: ${SSITaxesOwed}, FedTaxesOwed: ${fedTaxesOwed}, StateTaxesOwed: ${stateTaxesOwed}` )
 
   res.locals.taxesOwed = {
     ...res.locals.taxesOwed,

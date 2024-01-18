@@ -35,7 +35,7 @@ userController.newUser = (req, res, next) => {
       res.locals.estimatedIncome = data.estimatedIncome;
       res.locals.businessExpenses = data.businessExpenses;
       res.locals.preTaxRetirementContributions = data.preTaxRetirementContributions;
-      console.log('sucessfully created' + data);
+      console.log('sucessfully created the document in MongoDB' + data);
       return next();
     })
     .catch((err) => {

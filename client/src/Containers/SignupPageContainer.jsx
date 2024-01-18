@@ -23,7 +23,7 @@ const AccountCreationForm = () => {
   const [password, setPassword] = useState('');
   const [estimatedIncome, setEstimatedIncome] = useState(30);
   const [businessExpenses, setBusinessExpenses] = useState(30);
-  const [preTaxContributions, setPreTaxContributions] = useState(30);
+  const [preTaxRetirementContributions, setPreTaxContributions] = useState(30);
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -38,8 +38,10 @@ const AccountCreationForm = () => {
       email,
       estimatedIncome,
       businessExpenses,
-      preTaxContributions,
+      preTaxRetirementContributions,
     };
+
+    console.log ('THIS IS THE FORM DATA FROM SUBMISSION ON SIGN UP', formData);
 
     // FORM SUBMISSION LOGIC
     fetch('http://localhost:3000/signup', {
@@ -218,7 +220,7 @@ const AccountCreationForm = () => {
         />
         <Typography gutterBottom>Pre-Tax Retirement Contributions</Typography>
         <Slider
-          value={preTaxContributions}
+          value={preTaxRetirementContributions}
           onChange={(e, newValue) => setPreTaxContributions(newValue)}
           aria-labelledby="pre-tax-contributions-slider"
           valueLabelDisplay="auto"
