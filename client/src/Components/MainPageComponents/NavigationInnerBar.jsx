@@ -1,5 +1,6 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const StyledNavigationInnerBar = styled.div`
   align-items: center;
@@ -106,6 +107,9 @@ const StyledNavigationInnerBar = styled.div`
     position: relative;
     width: fit-content;
   }
+  & a {
+    text-decoration: none;
+  }
 `;
 
 export const NavigationInnerBar = () => {
@@ -123,12 +127,16 @@ export const NavigationInnerBar = () => {
         </div>
       </div>
       <div className="menu-right">
-        <button className="div-wrapper">
-          <div className="text-wrapper-2">LOGIN</div>
-        </button>
-        <button className="div-wrapper">
-          <div className="text-wrapper-2">SIGN UP</div>
-        </button>
+        <Link to='/login'>
+          <button className="div-wrapper">
+            <div className="text-wrapper-2">LOGIN</div>
+          </button>
+        </Link>
+        <Link to='/signup'>
+          <button className="div-wrapper">
+            <div className="text-wrapper-2">SIGN UP</div>
+          </button>
+        </Link>
       </div>
     </StyledNavigationInnerBar>
   );
