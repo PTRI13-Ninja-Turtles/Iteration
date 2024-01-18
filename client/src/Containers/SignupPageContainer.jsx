@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Typography,
@@ -10,7 +11,8 @@ import {
 } from '@mui/material';
 
 const AccountCreationForm = () => {
-
+  //used to redirect upon success recieved from the response object
+  const navigate = useNavigate();
   // STATE
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -43,17 +45,26 @@ const AccountCreationForm = () => {
     fetch('http://localhost:3000/signup', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(formData)
+      body: JSON.stringify(formData),
     })
-      .then (response => response.json())
-      .then (data => {
-        console.log('Form Data:', data);
-        //DO SOMETHING WITH THE DATA 
-
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Form submission failed');
+        }
+        return response.json();
       })
-      .catch(err => console.log(err));
+      .then((data) => {
+        if (data.success) {
+          navigate('/login');
+        } else {
+          console.error('Form submission failed:', data.message);
+        }
+      })
+      .catch((error) => {
+        console.error('Error during form submission:', error);
+      });
   };
 
   return (

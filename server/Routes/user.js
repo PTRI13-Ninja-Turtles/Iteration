@@ -13,8 +13,13 @@ const router = express.Router()
 //   res.status(200).json(res.locals)//.redirect();
 // });
 
-router.post('/', userController.newUser, dashBoardRedirect.dashboard, (req, res) => {
-  res.status(200);
+// router.post('/', userController.newUser, dashBoardRedirect.dashboard, (req, res) => {
+//   res.status(200);
+// });
+
+router.post ('/', userController.newUser, data.stateBrackets, data.fedBrackets , (req, res) => {
+  res.status(200).json({ success: true, message: 'Request processed successfully' });
+  
 });
 
 module.exports = router;
