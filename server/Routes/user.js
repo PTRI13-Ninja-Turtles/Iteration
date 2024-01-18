@@ -6,7 +6,7 @@ const authController = require('../controllers/authController');
 const router = express.Router();
 
 
-router.post('/',  userController.newUser, data.stateBrackets,  (req, res) =>{
+router.post('/', userController.newUser, data.stateBrackets,  (req, res) =>{
   res.status(200).json(res.locals);
 });
 

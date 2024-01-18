@@ -17,13 +17,11 @@ const Schema = mongoose.Schema;
 const incomeSchema = new Schema({
   source: { type: String, required: true },
   amount: { type: Number, required: true },
-  date: { type: Date, default: Date.now }
 });
 
 const expenseSchema = new Schema({
   source: { type: String, required: true },
   amount: { type: Number, required: true },
-  date: { type: Date, default: Date.now }
 
 });
 
