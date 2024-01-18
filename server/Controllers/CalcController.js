@@ -91,7 +91,10 @@ calc.allTaxes = (req, res, next) => {
   const stateRates = res.locals.stateTables.forEach((ele) =>{ele['tax_rate']});
   let stateTaxesOwed = 0;
 
-  const fedBracketLow = res.locals.fedTables.forEach((ele) => {ele['income_range_low']});
+
+  const fedBracketLow = [];
+  
+  res.locals.fedTables.forEach((ele) => {fedBracketLow.push(ele['income_range_low'])});
   const fedBracketHigh = res.locals.fedTables.forEach((ele) => {ele['income_range_high']});
   const fedRates = res.locals.fedTables.forEach((ele) =>{ele['tax_rate']});
   let fedTaxesOwed = 0;

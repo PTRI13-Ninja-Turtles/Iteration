@@ -5,7 +5,7 @@ const data = {};
 data.stateBrackets = (req, res, next) =>{
   console.log ('State Brackets Middleware accessed');
   let { state, filingStatus } = res.locals;
-  if (filingStatus === 'head') filingStatus = 'single'
+  if (filingStatus === 'head') filingStatus = 'single';
 
   console.log ('Value of state in StateBrackets', state);
   console.log ('Vale of filingStatus in StateBrackets',filingStatus);
@@ -38,7 +38,7 @@ data.fedBrackets = ( req, res, next) => {
   const query = {
     text: `
         SELECT *
-        FROM fed_rates
+        FROM federal_tax_rates
         WHERE filing_status = $1`,
     values: [filingStatus],
   };
