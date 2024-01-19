@@ -45,10 +45,10 @@ userController.newUser = (req, res, next) => {
 };
 
 userController.findUser = (req, res, next) => {
-  //dont know what the value is here. 
-  const email = req.user;
+  const id = req.user._id;
+  console.log ('ID FOUND IN THE TOKEN FROM FIND USER CONTROLLER', id);
 
-  userModels.Person.findOne({email}).exec()
+  userModels.Person.findById(id).exec()
     .then (response => {
       res.locals.userFound = response;
       console.log ('User has been found by token verification', response);
