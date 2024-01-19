@@ -25,7 +25,7 @@ const DashboardPage = () => {
   const [isDeductionFormOpen, setIsDeductionFormOpen] = useState(false);
   const [earningData, setEarningData] = useState({
     amount: "",
-    source: "",
+    source: "",r
     timestamp: "",
   });
   const [deductionData, setDeductionData] = useState({
