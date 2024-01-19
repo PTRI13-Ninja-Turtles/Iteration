@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Paper,
   Button,
@@ -9,17 +9,48 @@ import {
   Typography,
   Grid,
   IconButton,
-} from "@mui/material";
-import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
-import { ResponsivePie } from "@nivo/pie";
-import { ResponsiveBar } from "@nivo/bar";
-import { ResponsiveLine } from "@nivo/line";
-import { RobotoFontFace } from "@fontsource/roboto";
+} from '@mui/material';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import { ResponsivePie } from '@nivo/pie';
+import { ResponsiveBar } from '@nivo/bar';
+import { ResponsiveLine } from '@nivo/line';
+import { RobotoFontFace } from '@fontsource/roboto';
 
 //STATE STATE STATE STATE
 const DashboardPage = () => {
 
+  const [userData, setUserData] = useState(null);
+
   /*On load we will make a GET request to retrieve user data based on the verification of token  */
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = document.cookie.split('; ').find(row => row.startsWith('token=')).split('=')[1];
+
+        const response = await fetch('/profile', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          setUserData(userData);
+        } else {
+          console.error('Failed to fetch user data');
+        }
+      } catch (error) {
+        console.error('Error fetching user data', error);
+      }
+    };
+
+    fetchData();
+
+  }, []);
+
 
 
 
@@ -31,14 +62,14 @@ const DashboardPage = () => {
   const [isEarningFormOpen, setIsEarningFormOpen] = useState(false);
   const [isDeductionFormOpen, setIsDeductionFormOpen] = useState(false);
   const [earningData, setEarningData] = useState({
-    amount: "",
-    source: "",
-    timestamp: "",
+    amount: '',
+    source: '',
+    timestamp: '',
   });
   const [deductionData, setDeductionData] = useState({
-    amount: "",
-    source: "",
-    timestamp: "",
+    amount: '',
+    source: '',
+    timestamp: '',
   });
 
   //HELPER FUNCTIONS FOR CHARTS / FORMS - TRUE / FALSE
@@ -67,8 +98,8 @@ const DashboardPage = () => {
 
   const handleEarningSubmit = () => {
     const currentTime = new Date();
-    const currentMonth = currentTime.toLocaleString("default", {
-      month: "short",
+    const currentMonth = currentTime.toLocaleString('default', {
+      month: 'short',
     });
 
     setEarningData({
@@ -94,7 +125,7 @@ const DashboardPage = () => {
 
     // UPDATE PIE
     const updatedPieChartData = pieChartData.map((slice) => {
-      if (slice.id === "Earnings") {
+      if (slice.id === 'Earnings') {
         return {
           ...slice,
           value: slice.value + earningAmount,
@@ -120,7 +151,7 @@ const DashboardPage = () => {
 
     // SAME FOR LINE
     const updatedLineChartData = lineChartData.map((lineData) => {
-      if (lineData.id === "Earnings") {
+      if (lineData.id === 'Earnings') {
         return {
           ...lineData,
           data: [
@@ -139,9 +170,9 @@ const DashboardPage = () => {
 
     // RESET FORM
     setEarningData({
-      amount: "",
-      source: "",
-      timestamp: "",
+      amount: '',
+      source: '',
+      timestamp: '',
     });
     closeEarningForm();
   };
@@ -149,8 +180,8 @@ const DashboardPage = () => {
   // ANOTHER HANDLE EVERYTHING SUBMIT - DEDUCTIONS
   const handleDeductionSubmit = () => {
     const currentTime = new Date();
-    const currentMonth = currentTime.toLocaleString("default", {
-      month: "short",
+    const currentMonth = currentTime.toLocaleString('default', {
+      month: 'short',
     });
 
     setDeductionData({
@@ -178,7 +209,7 @@ const DashboardPage = () => {
 
     // UPDATE PIE
     const updatedPieChartData = pieChartData.map((slice) => {
-      if (slice.id === "Deductions") {
+      if (slice.id === 'Deductions') {
         return {
           ...slice,
           value: slice.value + deductionAmount,
@@ -204,7 +235,7 @@ const DashboardPage = () => {
 
     // UPDATE LINE
     const updatedLineChartData = lineChartData.map((lineData) => {
-      if (lineData.id === "Deductions") {
+      if (lineData.id === 'Deductions') {
         return {
           ...lineData,
           data: [
@@ -223,9 +254,9 @@ const DashboardPage = () => {
 
     // RESET FORM
     setDeductionData({
-      amount: "",
-      source: "",
-      timestamp: "",
+      amount: '',
+      source: '',
+      timestamp: '',
     });
     closeDeductionForm();
   };
@@ -242,56 +273,56 @@ const DashboardPage = () => {
   //MOCK DATE FOR BUILD | REPLACE WITH USER DATA
 
   const [transactions, setTransactions] = useState([
-    { id: 1, description: "Transaction 1", amount: "$100.00" },
-    { id: 2, description: "Transaction 2", amount: "$200.00" },
-    { id: 3, description: "Transaction 3", amount: "$-50.00" },
-    { id: 4, description: "Transaction 4", amount: "$-40.00" },
-    { id: 5, description: "Transaction 5", amount: "$-35.00" },
-    { id: 6, description: "Transaction 6", amount: "$-15.00" },
-    { id: 7, description: "Transaction 7", amount: "$-123.00" },
-    { id: 8, description: "Transaction 8", amount: "$-66.00" },
-    { id: 9, description: "Transaction 9", amount: "$-45.00" },
-    { id: 10, description: "Transaction 10", amount: "$-15.00" },
+    { id: 1, description: 'Transaction 1', amount: '$100.00' },
+    { id: 2, description: 'Transaction 2', amount: '$200.00' },
+    { id: 3, description: 'Transaction 3', amount: '$-50.00' },
+    { id: 4, description: 'Transaction 4', amount: '$-40.00' },
+    { id: 5, description: 'Transaction 5', amount: '$-35.00' },
+    { id: 6, description: 'Transaction 6', amount: '$-15.00' },
+    { id: 7, description: 'Transaction 7', amount: '$-123.00' },
+    { id: 8, description: 'Transaction 8', amount: '$-66.00' },
+    { id: 9, description: 'Transaction 9', amount: '$-45.00' },
+    { id: 10, description: 'Transaction 10', amount: '$-15.00' },
   ]);
 
   const [pieChartData, setPieChartData] = useState([
-    { id: "State Tax", label: "Slice 1", value: 10 },
-    { id: "Federal Tax", label: "Slice 2", value: 25 },
-    { id: "SE Tax", label: "Slice 3", value: 5 },
-    { id: "Deductions", label: "Slice 4", value: 10 },
-    { id: "Earnings", label: "Slice 5", value: 50 },
+    { id: 'State Tax', label: 'Slice 1', value: 10 },
+    { id: 'Federal Tax', label: 'Slice 2', value: 25 },
+    { id: 'SE Tax', label: 'Slice 3', value: 5 },
+    { id: 'Deductions', label: 'Slice 4', value: 10 },
+    { id: 'Earnings', label: 'Slice 5', value: 50 },
   ]);
 
   const [barChartData, setBarChartData] = useState([
-    { month: "Aug", earnings: 1000, deductions: -500 },
-    { month: "Sep", earnings: 1200, deductions: -600 },
-    { month: "Oct", earnings: 800, deductions: -400 },
-    { month: "Nov", earnings: 1100, deductions: -550 },
-    { month: "Dec", earnings: 900, deductions: -450 },
-    { month: "Jan", earnings: 1300, deductions: -650 },
+    { month: 'Aug', earnings: 1000, deductions: -500 },
+    { month: 'Sep', earnings: 1200, deductions: -600 },
+    { month: 'Oct', earnings: 800, deductions: -400 },
+    { month: 'Nov', earnings: 1100, deductions: -550 },
+    { month: 'Dec', earnings: 900, deductions: -450 },
+    { month: 'Jan', earnings: 1300, deductions: -650 },
   ]);
 
   const [lineChartData, setLineChartData] = useState([
     {
-      id: "Earnings",
+      id: 'Earnings',
       data: [
-        { x: "Aug", y: 1000 },
-        { x: "Sep", y: 1200 },
-        { x: "Oct", y: 800 },
-        { x: "Nov", y: 1100 },
-        { x: "Dec", y: 900 },
-        { x: "Jan", y: 1300 },
+        { x: 'Aug', y: 1000 },
+        { x: 'Sep', y: 1200 },
+        { x: 'Oct', y: 800 },
+        { x: 'Nov', y: 1100 },
+        { x: 'Dec', y: 900 },
+        { x: 'Jan', y: 1300 },
       ],
     },
     {
-      id: "Deductions",
+      id: 'Deductions',
       data: [
-        { x: "Aug", y: 500 },
-        { x: "Sep", y: 600 },
-        { x: "Oct", y: 400 },
-        { x: "Nov", y: 550 },
-        { x: "Dec", y: 450 },
-        { x: "Jan", y: 650 },
+        { x: 'Aug', y: 500 },
+        { x: 'Sep', y: 600 },
+        { x: 'Oct', y: 400 },
+        { x: 'Nov', y: 550 },
+        { x: 'Dec', y: 450 },
+        { x: 'Jan', y: 650 },
       ],
     },
   ]);
@@ -305,7 +336,7 @@ const DashboardPage = () => {
   const renderSlider = (id) => (
     <div key={id} style={styles.projection}>
       <Typography gutterBottom>
-        {id === "1" ? "Earning Projection" : "Deduction Projection"}
+        {id === '1' ? 'Earning Projection' : 'Deduction Projection'}
       </Typography>
       <Slider
         style={styles.slider}
@@ -324,85 +355,85 @@ const DashboardPage = () => {
 
   const styles = {
     dashboard: {
-      padding: "20px",
-      margin: "60px",
-      backgroundColor: "#EDE7F6",
+      padding: '20px',
+      margin: '60px',
+      backgroundColor: '#EDE7F6',
     },
     header: {
-      fontFamily: "Poppins, sans-serif",
-      color: "#673AB7",
-      marginBottom: "20px",
+      fontFamily: 'Poppins, sans-serif',
+      color: '#673AB7',
+      marginBottom: '20px',
     },
     chartContainer: {
-      height: "400px",
-      backgroundColor: "#E8EAF6",
-      margin: "20px 0",
+      height: '400px',
+      backgroundColor: '#E8EAF6',
+      margin: '20px 0',
     },
     buttonContainer: {
-      display: "flex",
-      justifyContent: "center",
-      margin: "20px 0",
+      display: 'flex',
+      justifyContent: 'center',
+      margin: '20px 0',
     },
     button: {
-      margin: "5px",
+      margin: '5px',
     },
     formContainer: {
-      position: "fixed",
-      top: "55%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      backgroundColor: "#fff",
-      padding: "30px",
+      position: 'fixed',
+      top: '55%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      backgroundColor: '#fff',
+      padding: '30px',
       zIndex: 2,
-      boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.2)",
-      borderRadius: "10px",
-      width: "400px",
-      textAlign: "center",
-      color: "#333",
+      boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.2)',
+      borderRadius: '10px',
+      width: '400px',
+      textAlign: 'center',
+      color: '#333',
     },
     closeButton: {
-      position: "absolute",
-      top: "5px",
-      right: "5px",
-      cursor: "pointer",
+      position: 'absolute',
+      top: '5px',
+      right: '5px',
+      cursor: 'pointer',
     },
     listContainer: {
-      width: "100%",
-      backgroundColor: "#D1C4E9",
-      padding: "8px",
-      right: "10px",
-      bottom: "0px",
-      maxHeight: "247.5px",
-      overflow: "auto",
+      width: '100%',
+      backgroundColor: '#D1C4E9',
+      padding: '8px',
+      right: '10px',
+      bottom: '0px',
+      maxHeight: '247.5px',
+      overflow: 'auto',
     },
     listTitle: {
-      padding: "10px",
-      backgroundColor: "white",
-      position: "sticky",
-      top: "1px",
+      padding: '10px',
+      backgroundColor: 'white',
+      position: 'sticky',
+      top: '1px',
       zIndex: 1,
     },
     listContent: {
-      maxHeight: "calc(100% - 58px)",
-      overflowY: "auto",
-      marginTop: "7px",
+      maxHeight: 'calc(100% - 58px)',
+      overflowY: 'auto',
+      marginTop: '7px',
     },
     projectionsContainer: {
-      backgroundColor: "#D1C4E9",
-      padding: "20px",
-      margin: "60px",
-      marginTop: "20px",
+      backgroundColor: '#D1C4E9',
+      padding: '20px',
+      margin: '60px',
+      marginTop: '20px',
     },
     projection: {
-      fontFamily: "Poppins, sans-serif",
-      padding: "10px",
-      marginBottom: "10px",
-      borderRadius: "4px",
-      backgroundColor: "white",
+      fontFamily: 'Poppins, sans-serif',
+      padding: '10px',
+      marginBottom: '10px',
+      borderRadius: '4px',
+      backgroundColor: 'white',
     },
     slider: {
-      marginTop: "10px",
-      color: "#673AB7",
+      marginTop: '10px',
+      color: '#673AB7',
     },
   };
 
@@ -417,7 +448,7 @@ const DashboardPage = () => {
               {isBarChart ? (
                 <ResponsiveBar
                   data={barChartData}
-                  keys={["earnings", "deductions"]}
+                  keys={['earnings', 'deductions']}
                   indexBy="month"
                   margin={{ top: 50, right: 40, bottom: 100, left: 40 }}
                   padding={0.3}
@@ -447,14 +478,14 @@ const DashboardPage = () => {
                 innerRadius={0.5}
                 padAngle={2}
                 activeOuterRadiusOffset={8}
-                colors={{ scheme: "set3" }}
+                colors={{ scheme: 'set3' }}
               />
               <Typography
                 variant="h6"
                 style={{
-                  marginTop: "18px",
-                  marginLeft: "225px",
-                  fontFamily: "Roboto, sans-serif",
+                  marginTop: '18px',
+                  marginLeft: '225px',
+                  fontFamily: 'Roboto, sans-serif',
                 }}
               >
                 YTD Gross Earnings = ${grossEarnings}
@@ -467,9 +498,9 @@ const DashboardPage = () => {
             variant="contained"
             style={{
               ...styles.button,
-              backgroundColor: "white",
-              color: "black",
-              boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+              backgroundColor: 'white',
+              color: 'black',
+              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
             }}
             onClick={openEarningForm}
           >
@@ -479,9 +510,9 @@ const DashboardPage = () => {
             variant="contained"
             style={{
               ...styles.button,
-              backgroundColor: "white",
-              color: "black",
-              boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+              backgroundColor: 'white',
+              color: 'black',
+              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
             }}
             onClick={openDeductionForm}
           >
@@ -496,14 +527,14 @@ const DashboardPage = () => {
             {transactions.map((transaction) => (
               <React.Fragment key={transaction.id}>
                 <ListItem style={styles.listItem}>
-                  <div style={{ width: "50%", display: "inline-block" }}>
+                  <div style={{ width: '50%', display: 'inline-block' }}>
                     {transaction.description} {transaction.amount}
                   </div>
                   <div
                     style={{
-                      width: "50%",
-                      display: "inline-block",
-                      textAlign: "right",
+                      width: '50%',
+                      display: 'inline-block',
+                      textAlign: 'right',
                     }}
                   >
                     Timestamp: {transaction.timestamp}
@@ -519,7 +550,7 @@ const DashboardPage = () => {
         <div style={styles.formContainer}>
           <IconButton
             onClick={closeEarningForm}
-            style={{ ...styles.closeButton, fontSize: "16px" }}
+            style={{ ...styles.closeButton, fontSize: '16px' }}
             color="black"
           >
             X
@@ -558,7 +589,7 @@ const DashboardPage = () => {
         <div style={styles.formContainer}>
           <IconButton
             onClick={closeDeductionForm}
-            style={{ ...styles.closeButton, fontSize: "16px" }}
+            style={{ ...styles.closeButton, fontSize: '16px' }}
             color="black"
           >
             X
