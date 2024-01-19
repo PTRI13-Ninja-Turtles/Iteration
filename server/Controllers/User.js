@@ -16,7 +16,7 @@ userController.newUser = (req, res, next) => {
     preTaxRetirementContributions
   } = req.body;
 
-  userModels.create({
+  userModels.Person.create({
     firstName,
     lastName,
     password,
@@ -35,7 +35,7 @@ userController.newUser = (req, res, next) => {
       res.locals.estimatedIncome = data.estimatedIncome;
       res.locals.businessExpenses = data.businessExpenses;
       res.locals.preTaxRetirementContributions = data.preTaxRetirementContributions;
-      console.log('sucessfully created' + data);
+      console.log('sucessfully created the document in MongoDB' + data);
       return next();
     })
     .catch((err) => {
@@ -44,5 +44,20 @@ userController.newUser = (req, res, next) => {
     });
 };
 
+userController.findUser = (req, res, next) => {
+  //dont know what the value is here. 
+  const email = req.user;
 
+  userModels.Person.findOne({email}).exec()
+    .then (response => {
+      res.locals.userFound = response;
+      console.log ('User has been found by token verification', response);
+      return next();
+    })
+    .catch((err) => {
+      console.log('Error in User Controller' + err);
+      return next(err);
+    });
+
+};
 module.exports = userController;
