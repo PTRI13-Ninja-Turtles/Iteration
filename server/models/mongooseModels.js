@@ -36,6 +36,10 @@ const personSchema = new Schema({
   estimatedIncome: Number,
   businessExpenses: Number,
   preTaxRetirementContributions: Number,
+  medicareTax: Number,
+  ssiTax: Number,
+  fedTax: Number,
+  stateTax: Number,
   incomes: [incomeSchema],
   expenses: [expenseSchema]
 });
