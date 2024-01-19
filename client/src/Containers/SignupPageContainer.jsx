@@ -59,7 +59,10 @@ const AccountCreationForm = () => {
       })
       .then((data) => {
         if (data.success) {
-          navigate('/dashboard');
+
+          setTimeout (() => {
+            navigate('/dashboard');
+          }, 3000);
         } else {
           console.error('Form submission failed:', data.message);
         }
