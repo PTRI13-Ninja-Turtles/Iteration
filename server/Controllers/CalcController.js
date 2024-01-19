@@ -121,6 +121,8 @@ calc.allTaxes = (req, res, next) => {
   let SSITaxesOwed = 0;
   let MedicareTaxesOwed = 0;
 
+  //initializing res.locals.taxesOwed
+
   res.locals.taxesOwed = res.locals.taxesOwed || {};
 
   // Calculating state tax liability
@@ -178,13 +180,8 @@ calc.allTaxes = (req, res, next) => {
     medicare: MedicareTaxesOwed,
     ssi: SSITaxesOwed,
     fed: fedTaxesOwed,
-    state: stateTaxesOwed
+    stateTax: stateTaxesOwed
   };
-
-  // res.locals.taxesOwed.medicare = MedicareTaxesOwed;
-  // res.locals.taxesOwed.ssi = SSITaxesOwed
-  // res.locals.taxesOwed.fed = fedTaxesOwed;
-  // res.locals.taxesOwed.state = stateTaxesOwed;
   return next();
 }; 
 

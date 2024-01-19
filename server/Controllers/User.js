@@ -5,17 +5,13 @@ const userController = {};
 userController.newUser = (req, res, next) => {
 
   /* Originally the implementation here was that we would create the document in the database using the Person model in this 
-  middleware function. Instead we will move the creation of the document at the end of the middleware chain since we do not 
-  have all the data we need just from the request body. We would still need the calculations for taxes and that is done further
-  down the middleware chain, we will embed that data onto the document once retrieved*/
+  middleware function. Instead we will move the creation of the document at the end of the middleware chain in a function called createUser
+  since we do not have all the data we need just from the request body. We would still need the calculations for taxes and that is done further
+  down the middleware chain, we will embed that data onto the document once retrieved.*/
 
-  const { firstName,
-    lastName,
-    password,
+  const {
     filingStatus,
     state,
-    industry,
-    email,
     estimatedIncome,
     businessExpenses,
     preTaxRetirementContributions
@@ -27,32 +23,7 @@ userController.newUser = (req, res, next) => {
   res.locals.businessExpenses = businessExpenses;
   res.locals.preTaxRetirementContributions = preTaxRetirementContributions;
 
-  userModels.Person.create({
-    firstName,
-    lastName,
-    password,
-    filingStatus,
-    state,
-    industry,
-    email,
-    estimatedIncome,
-    businessExpenses,
-    preTaxRetirementContributions
-  })
-    .then((data) => {
-      console.log ('Value of state from the mongo query', data.state);
-      res.locals.state = data.state;
-      res.locals.filingStatus = data.filingStatus;
-      res.locals.estimatedIncome = data.estimatedIncome;
-      res.locals.businessExpenses = data.businessExpenses;
-      res.locals.preTaxRetirementContributions = data.preTaxRetirementContributions;
-      console.log('sucessfully created the document in MongoDB' + data);
-      return next();
-    })
-    .catch((err) => {
-      console.log('Error in User Controller' + err);
-      return next(err);
-    });
+  return next();
 };
 
 userController.findUser = (req, res, next) => {
@@ -71,4 +42,57 @@ userController.findUser = (req, res, next) => {
     });
 
 };
+
+userController.createUser = (req, res, next) => {
+
+  const {
+    filingStatus,
+    state,
+    estimatedIncome,
+    businessExpenses,
+    preTaxRetirementContributions
+  } = res.locals;
+
+  const {
+    firstName,
+    lastName,
+    password,
+    email,
+    industry
+  } = req.body;
+
+  const medicareTax = res.locals.taxesOwed.medicare;
+  const ssiTax = res.locals.taxesOwed.ssi;
+  const fedTax = res.locals.taxesOwed.fed;
+  const stateTax = res.locals.taxesOwed.stateTax;
+
+
+
+  userModels.Person.create({
+    firstName,
+    lastName,
+    password,
+    filingStatus,
+    state,
+    industry,
+    email,
+    estimatedIncome,
+    businessExpenses,
+    preTaxRetirementContributions,
+    medicareTax,
+    ssiTax,
+    fedTax,
+    stateTax
+  })
+    .then((data) => {
+      console.log('sucessfully created the document in MongoDB' + data);
+      return next();
+    })
+    .catch((err) => {
+      console.log('Error in User Controller' + err);
+      return next(err);
+    });
+
+};
+
 module.exports = userController;
