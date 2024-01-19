@@ -4,6 +4,11 @@ const userController = {};
 
 userController.newUser = (req, res, next) => {
 
+  /* Originally the implementation here was that we would create the document in the database using the Person model in this 
+  middleware function. Instead we will move the creation of the document at the end of the middleware chain since we do not 
+  have all the data we need just from the request body. We would still need the calculations for taxes and that is done further
+  down the middleware chain, we will embed that data onto the document once retrieved*/
+
   const { firstName,
     lastName,
     password,
@@ -15,6 +20,12 @@ userController.newUser = (req, res, next) => {
     businessExpenses,
     preTaxRetirementContributions
   } = req.body;
+
+  res.locals.state = state;
+  res.locals.filingStatus = filingStatus;
+  res.locals.estimatedIncome = estimatedIncome;
+  res.locals.businessExpenses = businessExpenses;
+  res.locals.preTaxRetirementContributions = preTaxRetirementContributions;
 
   userModels.Person.create({
     firstName,
