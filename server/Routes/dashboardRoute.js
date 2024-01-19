@@ -5,7 +5,7 @@ const router = express.Router();
 const authController = require ('../Controllers/authController.js');
 
 
-router.get('/', authController.verifyToken, (req, res, next) => {
+router.get('/', authController.verifyToken, (req, res) => {
     res.status(200).send('Made it through the verification of token')
 
 

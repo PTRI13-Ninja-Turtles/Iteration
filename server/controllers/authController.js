@@ -72,7 +72,7 @@ const verifyToken = (req, res, next ) => {
     req.user = decoded;
     console.log ('Value of req.user after being decoded using jwt');
 
-    next();
+    return next();
   } catch (error) {
     return res.status(401).json({ error: 'Invalid token' });
   }
