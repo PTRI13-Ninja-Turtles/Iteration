@@ -28,6 +28,8 @@ const signupUser = async (req, res, next) => {
     // Send the token as a cookie
     // res.cookie('token', token, {httpOnly: true});
 
+    res.locals.token = token;
+
 
     //expires: new Date(Date.now() + 24 * 60 * 60 * 1000), secure: true, sameSite: 'Strict'
 
@@ -58,29 +60,32 @@ const loginUser = async (req,res) => {
 
 /* Controller that verifies token */
 
-const verifyToken = (req, res, next ) => {
+const verifyToken = (req, res, next) => {
+  // Extract token from Authorization header
+  const authorizationHeader = req.headers['authorization'];
 
-  //EXTRACT TOKEN FROM COOKIES COMING IN FROM THE CLIENT
-  const token = req.cookies.token || ''; 
-
-  if (!token) {
-    //TOKEN NOT PROVIDED
+  if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
+    // Token not provided in the correct format
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
+  const token = authorizationHeader.split(' ')[1];
+
   try {
+    // Verify the token
     const decoded = jwt.verify(token, process.env.SECRET);
-    //ATTACHING THE INFO FROM TOKEN ONTO REQ.USER;
-
+    
+    // Attach the decoded user information onto req.user
     req.user = decoded;
-    console.log ('Value of req.user after being decoded using jwt');
-
+    
+    console.log('THIS IS THE DATA DECODED', decoded);
+    
     return next();
   } catch (error) {
+    console.error('Token verification error:', error);
     return res.status(401).json({ error: 'Invalid token' });
   }
+};
 
-  
-}
 
-module.exports = { loginUser, signupUser, verifyToken };
+module.exports = {verifyToken, loginUser, signupUser};

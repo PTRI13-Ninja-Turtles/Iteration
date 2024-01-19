@@ -60,11 +60,12 @@ const AccountCreationForm = () => {
       .then((data) => {
         if (data.success) {
 
-          console.log ('REDIRECTED!!')
+          //store cookie on local storage here? data.locals.token
+          localStorage.setItem('token', data.locals.token);
 
-          // setTimeout (() => {
-          //   navigate('/dashboard');
-          // }, 3000);
+          setTimeout (() => {
+            navigate('/dashboard');
+          }, 3000);
         } else {
           console.error('Form submission failed:', data.message);
         }

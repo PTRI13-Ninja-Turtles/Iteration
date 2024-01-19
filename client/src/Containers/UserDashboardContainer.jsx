@@ -21,32 +21,36 @@ const DashboardPage = () => {
 
   const [userData, setUserData] = useState(null);
 
+  const fetchData = async () => {
+    try {
+      // const token = document.cookie.split('; ').find(row => row.startsWith('token=')).split('=')[1];
+      const token = localStorage.getItem('token');
+
+      console.log ('token data retrieved using localstorage.getItem', token);
+
+      const response = await fetch('/dashboard', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUserData(data);
+        console.log ('response in dashboard', data);
+      } else {
+        console.error('Failed to fetch user data');
+      }
+    } catch (error) {
+      console.error('Error fetching user data', error);
+    }
+  };
+
   /*On load we will make a GET request to retrieve user data based on the verification of token  */
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = document.cookie.split('; ').find(row => row.startsWith('token=')).split('=')[1];
-
-        const response = await fetch('/dashboard', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
-
-        if (response.ok) {
-          const userData = await response.json();
-          setUserData(userData);
-        } else {
-          console.error('Failed to fetch user data');
-        }
-      } catch (error) {
-        console.error('Error fetching user data', error);
-      }
-    };
-
     fetchData();
 
   }, []);
