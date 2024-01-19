@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Container,
   Typography,
@@ -7,40 +7,53 @@ import {
   Slider,
   Box,
   MenuItem,
-} from "@mui/material";
+} from '@mui/material';
 
 const AccountCreationForm = () => {
+
   // STATE
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [filingStatus, setFilingStatus] = useState("");
-  const [state, setState] = useState("");
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [filingStatus, setFilingStatus] = useState('');
+  const [state, setState] = useState('');
   // const [industry, setIndustry] = useState('');
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [estimatedIncome, setEstimatedIncome] = useState(30);
   const [businessExpenses, setBusinessExpenses] = useState(30);
   const [preTaxContributions, setPreTaxContributions] = useState(30);
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    // FORM SUBMISSION LOGIC
 
-    // CONSOLE LOG TEST
     const formData = {
       firstName,
       lastName,
+      password,
       filingStatus,
       state,
       // industry,
       email,
-      password,
       estimatedIncome,
       businessExpenses,
       preTaxContributions,
     };
 
-    console.log("Form Data:", formData);
+    // FORM SUBMISSION LOGIC
+    fetch('http://localhost:3000/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+      .then (response => response.json())
+      .then (data => {
+        console.log('Form Data:', data);
+        //DO SOMETHING WITH THE DATA 
+
+      })
+      .catch(err => console.log(err));
   };
 
   return (
@@ -101,56 +114,57 @@ const AccountCreationForm = () => {
           value={state}
           onChange={(e) => setState(e.target.value)}
         >
-          <MenuItem value="AL">Alabama</MenuItem>
-          <MenuItem value="AK">Alaska</MenuItem>
-          <MenuItem value="AZ">Arizona</MenuItem>
-          <MenuItem value="AR">Arkansas</MenuItem>
-          <MenuItem value="CA">California</MenuItem>
-          <MenuItem value="CO">Colorado</MenuItem>
-          <MenuItem value="CT">Connecticut</MenuItem>
-          <MenuItem value="DE">Delaware</MenuItem>
-          <MenuItem value="FL">Florida</MenuItem>
-          <MenuItem value="GA">Georgia</MenuItem>
-          <MenuItem value="HI">Hawaii</MenuItem>
-          <MenuItem value="ID">Idaho</MenuItem>
-          <MenuItem value="IL">Illinois</MenuItem>
-          <MenuItem value="IN">Indiana</MenuItem>
-          <MenuItem value="IA">Iowa</MenuItem>
-          <MenuItem value="KS">Kansas</MenuItem>
-          <MenuItem value="KY">Kentucky</MenuItem>
-          <MenuItem value="LA">Louisiana</MenuItem>
-          <MenuItem value="ME">Maine</MenuItem>
-          <MenuItem value="MD">Maryland</MenuItem>
-          <MenuItem value="MA">Massachusetts</MenuItem>
-          <MenuItem value="MI">Michigan</MenuItem>
-          <MenuItem value="MN">Minnesota</MenuItem>
-          <MenuItem value="MS">Mississippi</MenuItem>
-          <MenuItem value="MO">Missouri</MenuItem>
-          <MenuItem value="MT">Montana</MenuItem>
-          <MenuItem value="NE">Nebraska</MenuItem>
-          <MenuItem value="NV">Nevada</MenuItem>
-          <MenuItem value="NH">New Hampshire</MenuItem>
-          <MenuItem value="NJ">New Jersey</MenuItem>
-          <MenuItem value="NM">New Mexico</MenuItem>
-          <MenuItem value="NY">New York</MenuItem>
-          <MenuItem value="NC">North Carolina</MenuItem>
-          <MenuItem value="ND">North Dakota</MenuItem>
-          <MenuItem value="OH">Ohio</MenuItem>
-          <MenuItem value="OK">Oklahoma</MenuItem>
-          <MenuItem value="OR">Oregon</MenuItem>
-          <MenuItem value="PA">Pennsylvania</MenuItem>
-          <MenuItem value="RI">Rhode Island</MenuItem>
-          <MenuItem value="SC">South Carolina</MenuItem>
-          <MenuItem value="SD">South Dakota</MenuItem>
-          <MenuItem value="TN">Tennessee</MenuItem>
-          <MenuItem value="TX">Texas</MenuItem>
-          <MenuItem value="UT">Utah</MenuItem>
-          <MenuItem value="VT">Vermont</MenuItem>
-          <MenuItem value="VA">Virginia</MenuItem>
-          <MenuItem value="WA">Washington</MenuItem>
-          <MenuItem value="WV">West Virginia</MenuItem>
-          <MenuItem value="WI">Wisconsin</MenuItem>
-          <MenuItem value="WY">Wyoming</MenuItem>
+          <MenuItem value="alabama">Alabama</MenuItem>
+          <MenuItem value="alaska">Alaska</MenuItem>
+          <MenuItem value="arizona">Arizona</MenuItem>
+          <MenuItem value="arkansas">Arkansas</MenuItem>
+          <MenuItem value="california">California</MenuItem>
+          <MenuItem value="colorado">Colorado</MenuItem>
+          <MenuItem value="connecticut">Connecticut</MenuItem>
+          <MenuItem value="delaware">Delaware</MenuItem>
+          <MenuItem value="florida">Florida</MenuItem>
+          <MenuItem value="georgia">Georgia</MenuItem>
+          <MenuItem value="hawaii">Hawaii</MenuItem>
+          <MenuItem value="idaho">Idaho</MenuItem>
+          <MenuItem value="illinois">Illinois</MenuItem>
+          <MenuItem value="indiana">Indiana</MenuItem>
+          <MenuItem value="iowa">Iowa</MenuItem>
+          <MenuItem value="kansas">Kansas</MenuItem>
+          <MenuItem value="kentucky">Kentucky</MenuItem>
+          <MenuItem value="louisiana">Louisiana</MenuItem>
+          <MenuItem value="maine">Maine</MenuItem>
+          <MenuItem value="maryland">Maryland</MenuItem>
+          <MenuItem value="massachusetts">Massachusetts</MenuItem>
+          <MenuItem value="michigan">Michigan</MenuItem>
+          <MenuItem value="minnesota">Minnesota</MenuItem>
+          <MenuItem value="mississippi">Mississippi</MenuItem>
+          <MenuItem value="missouri">Missouri</MenuItem>
+          <MenuItem value="montana">Montana</MenuItem>
+          <MenuItem value="nebraska">Nebraska</MenuItem>
+          <MenuItem value="nevada">Nevada</MenuItem>
+          <MenuItem value="newhampshire">New Hampshire</MenuItem>
+          <MenuItem value="newjersey">New Jersey</MenuItem>
+          <MenuItem value="newmexico">New Mexico</MenuItem>
+          <MenuItem value="newyork">New York</MenuItem>
+          <MenuItem value="northcarolina">North Carolina</MenuItem>
+          <MenuItem value="northdakota">North Dakota</MenuItem>
+          <MenuItem value="ohio">Ohio</MenuItem>
+          <MenuItem value="oklahoma">Oklahoma</MenuItem>
+          <MenuItem value="oregon">Oregon</MenuItem>
+          <MenuItem value="pennsylvania">Pennsylvania</MenuItem>
+          <MenuItem value="rhodeisland">Rhode Island</MenuItem>
+          <MenuItem value="southcarolina">South Carolina</MenuItem>
+          <MenuItem value="southdakota">South Dakota</MenuItem>
+          <MenuItem value="tennessee">Tennessee</MenuItem>
+          <MenuItem value="texas">Texas</MenuItem>
+          <MenuItem value="utah">Utah</MenuItem>
+          <MenuItem value="vermont">Vermont</MenuItem>
+          <MenuItem value="virginia">Virginia</MenuItem>
+          <MenuItem value="washington">Washington</MenuItem>
+          <MenuItem value="westvirginia">West Virginia</MenuItem>
+          <MenuItem value="wisconsin">Wisconsin</MenuItem>
+          <MenuItem value="wyoming">Wyoming</MenuItem>
+
         </TextField>
         <TextField
           fullWidth
@@ -206,9 +220,9 @@ const AccountCreationForm = () => {
           type="submit"
           variant="contained"
           sx={{
-            backgroundColor: "#000",
-            "&:hover": {
-              backgroundColor: "rgba(0, 0, 0, 0.8)",
+            backgroundColor: '#000',
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
             },
             mt: 3,
             mb: 2,
