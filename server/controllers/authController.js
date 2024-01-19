@@ -26,7 +26,10 @@ const signupUser = async (req, res, next) => {
     // create a token 
     const token = createToken(user._id);
     // Send the token as a cookie
-    res.cookie('token', token, { expires: new Date(Date.now() + 24 * 60 * 60 * 1000), secure: false, sameSite: 'Lax' });
+    // res.cookie('token', token, {httpOnly: true});
+
+
+    //expires: new Date(Date.now() + 24 * 60 * 60 * 1000), secure: true, sameSite: 'Strict'
 
     return next();
 

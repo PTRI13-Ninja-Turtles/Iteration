@@ -15,6 +15,7 @@ const router = express.Router()
 //ROUTE FOR SIGN UP
 
 router.post ('/', userController.newUser, authController.signupUser ,data.stateBrackets, data.fedBrackets , calc.allTaxes, (req, res) => {
+  res.cookie('name', 'moises', {secure: false});
   res.status(200).json({ success: true, message: 'Request processed successfully', locals: res.locals });
   
 });
