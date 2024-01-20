@@ -1,6 +1,6 @@
 process.env.SECRET = '7hDkL$2pA!sFg@9rJm&5tYiX';
 require('dotenv').config();
-const Person = require('../models/mongooseModels');  
+const models = require('../models/mongooseModels');  
 const jwt = require('jsonwebtoken'); 
  
 // this creates json web token
@@ -12,17 +12,33 @@ const createToken = (_id) => {
 };
 
 // signup user 
-const signupUser = async (req, res) => { 
+const signupUser = async (req, res, next) => { 
 
-  const { firstName, lastName, password, email} = req.body;
+  const {email} = req.body;
+
+  console.log ('Email from the request body in jwt token creation', email);
+
   // try to sign user up using signup method 
   try {
-    const user = Person.signup(firstName, lastName, password, email);  
+    // const user = await models.Person.signup(firstName, lastName, password, email);  
+    const user = await models.Person.findOne({email});
+
+    console.log ('Found a user to create a token with their document id', user);
 
     // create a token 
     const token = createToken(user._id);
+    // Send the token as a cookie
+    // res.cookie('token', token, {httpOnly: true});
 
-    res.status(200).json({email, token});
+    res.locals.token = token;
+
+
+    //expires: new Date(Date.now() + 24 * 60 * 60 * 1000), secure: true, sameSite: 'Strict'
+
+    return next();
+
+
+    // res.status(200).json({email, token});
   } catch (error) {
     res.status(400).json({error: error.message});
   }
@@ -32,7 +48,7 @@ const signupUser = async (req, res) => {
 const loginUser = async (req,res) => { 
   const { email, password } = req.body; 
   try {
-    const user = Person.login(email, password);  
+    const user = await models.Person.login(email, password);  
 
     // create token
     const token = createToken(user._id);
@@ -44,4 +60,34 @@ const loginUser = async (req,res) => {
 
 }; 
 
-module.exports = { loginUser, signupUser };
+/* Controller that verifies token */
+
+const verifyToken = (req, res, next) => {
+  // Extract token from Authorization header
+  const authorizationHeader = req.headers['authorization'];
+
+  if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
+    // Token not provided in the correct format
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const token = authorizationHeader.split(' ')[1];
+
+  try {
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.SECRET);
+    
+    // Attach the decoded user information onto req.user
+    req.user = decoded;
+    
+    console.log('THIS IS THE DATA DECODED', decoded);
+    
+    return next();
+  } catch (error) {
+    console.error('Token verification error:', error);
+    return res.status(401).json({ error: 'Invalid token' });
+  }
+};
+
+
+module.exports = {verifyToken, loginUser, signupUser};

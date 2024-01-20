@@ -36,10 +36,15 @@ const personSchema = new Schema({
   estimatedIncome: Number,
   businessExpenses: Number,
   preTaxRetirementContributions: Number,
+  medicareTax: Number,
+  ssiTax: Number,
+  fedTax: Number,
+  stateTax: Number,
   incomes: [incomeSchema],
   expenses: [expenseSchema]
 });
 
+//maybe use this is a pre method before storing in to collection ? 
 
 // static signup method 
 personSchema.statics.signup = async function(firstName, lastName, password, email) {  
@@ -100,6 +105,7 @@ personSchema.statics.login = async function(email, password) {
   } 
   return user;
 };
+const Person = mongoose.model('person', personSchema); 
 
-//const Person = mongoose.model('person', personSchema); 
-module.exports = mongoose.model('Person', personSchema);
+
+module.exports = { Person };
