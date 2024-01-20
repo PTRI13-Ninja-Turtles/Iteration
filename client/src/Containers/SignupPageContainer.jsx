@@ -65,7 +65,7 @@ const AccountCreationForm = () => {
 
           setTimeout (() => {
             navigate('/dashboard');
-          }, 3000);
+          }, 1000);
         } else {
           console.error('Form submission failed:', data.message);
         }
@@ -208,7 +208,7 @@ const AccountCreationForm = () => {
           onChange={(e, newValue) => setEstimatedIncome(newValue)}
           aria-labelledby="estimated-income-slider"
           valueLabelDisplay="auto"
-          min={10000}
+          min={0}
           max={200000}
           step={10000}
           valueLabelFormat={(value) => `$${value.toLocaleString()}`}
@@ -219,7 +219,7 @@ const AccountCreationForm = () => {
           onChange={(e, newValue) => setBusinessExpenses(newValue)}
           aria-labelledby="business-expenses-slider"
           valueLabelDisplay="auto"
-          min={10000}
+          min={0}
           max={200000}
           step={10000}
           valueLabelFormat={(value) => `$${value.toLocaleString()}`}
@@ -230,7 +230,7 @@ const AccountCreationForm = () => {
           onChange={(e, newValue) => setPreTaxContributions(newValue)}
           aria-labelledby="pre-tax-contributions-slider"
           valueLabelDisplay="auto"
-          min={10000}
+          min={0}
           max={200000}
           step={10000}
           valueLabelFormat={(value) => `$${value.toLocaleString()}`}

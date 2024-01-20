@@ -127,8 +127,39 @@ const DashboardPage = () => {
       })
         .then (response => response.json())
         .then (data => {
+          const stateTax = (Math.abs(data.userTransactionData.stateTax));
           //DO SOMETHING WITH DATA FROM THE TRANSACTION
+          //UPDATE STATE OF THE CHART 
+
+          const updatedPieChartData = [
+            { id: 'State Tax', label: 'State Tax', value: stateTax },
+            { id: 'Federal Tax', label: 'Federal Tax', value: (Math.abs(data.userTransactionData.fedTax)).toFixed(2) },
+            { id: 'SSI Tax', label: 'SSI Tax', value: (Math.abs(data.userTransactionData.ssiTax)).toFixed(2) },
+            { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.abs(data.userTransactionData.medicareTax)).toFixed(2) },
+            { id: 'Deductions', label: 'Deductions', value: (Math.abs(data.userTransactionData.businessExpenses)).toFixed(2) },
+            { id: 'Earnings', label: 'Earnings', value: (Math.abs(data.userTransactionData.estimatedIncome)).toFixed(2) },
+          ];
+          
+          setPieChartData(updatedPieChartData);
           console.log ('Result of transaction coming from Dashboard Container', data);
+
+          //ITERATE THROUGH THE TRANSACTION ARRAY AND UPDATE THE STATE.
+          data.userTransactionData.incomes.forEach((earning) => {
+            //SETTING TRANSACTION DATA
+
+            const newEarningTransaction = {
+              id: transactions.length + 1,
+              description: `Earning | ${earning.source}`,
+              amount: `+$${earning.amount.toFixed(2)}`,
+              // timestamp: currentTime.toISOString(),
+            };
+      
+            setTransactions([...transactions, newEarningTransaction]);
+
+
+          });
+
+
         })
         .catch((error) => {
           console.error('Error while fetching transaction data', error);
@@ -170,14 +201,14 @@ const DashboardPage = () => {
     setGrossEarnings((prevGrossEarnings) => prevGrossEarnings + earningAmount);
 
     // CREATE & ADD NEW TRANSACTION
-    const newEarningTransaction = {
-      id: transactions.length + 1,
-      description: `Earning | ${earningData.source}`,
-      amount: `+$${earningAmount.toFixed(2)}`,
-      timestamp: currentTime.toISOString(),
-    };
+    // const newEarningTransaction = {
+    //   id: transactions.length + 1,
+    //   description: `Earning | ${earningData.source}`,
+    //   amount: `+$${earningAmount.toFixed(2)}`,
+    //   timestamp: currentTime.toISOString(),
+    // };
 
-    setTransactions([...transactions, newEarningTransaction]);
+    // setTransactions([...transactions, newEarningTransaction]);
 
 
 
@@ -252,8 +283,37 @@ const DashboardPage = () => {
       })
         .then (response => response.json())
         .then (data => {
+          const stateTax = (Math.abs(data.userTransactionData.stateTax));
           //DO SOMETHING WITH DATA FROM THE TRANSACTION
+          //UPDATE STATE OF THE CHART 
+
+          const updatedPieChartData = [
+            { id: 'State Tax', label: 'State Tax', value: stateTax },
+            { id: 'Federal Tax', label: 'Federal Tax', value: (Math.abs(data.userTransactionData.fedTax)).toFixed(2) },
+            { id: 'SSI Tax', label: 'SSI Tax', value: (Math.abs(data.userTransactionData.ssiTax)).toFixed(2) },
+            { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.abs(data.userTransactionData.medicareTax)).toFixed(2) },
+            { id: 'Deductions', label: 'Deductions', value: (Math.abs(data.userTransactionData.businessExpenses)).toFixed(2) },
+            { id: 'Earnings', label: 'Earnings', value: (Math.abs(data.userTransactionData.estimatedIncome)).toFixed(2) },
+          ];
+          
+          setPieChartData(updatedPieChartData);
           console.log ('Result of transaction coming from Dashboard Container', data);
+
+          data.userTransactionData.expenses.forEach((earning) => {
+            //SETTING TRANSACTION DATA
+
+            const newExpenseTransaction = {
+              id: transactions.length + 1,
+              description: `Earning | ${earning.source}`,
+              amount: `+$${earning.amount.toFixed(2)}`,
+              // timestamp: currentTime.toISOString(),
+            };
+      
+            setTransactions([...transactions, newExpenseTransaction]);
+
+
+          });
+        
         })
         .catch((error) => {
           console.error('Error while fetching transaction data', error);
@@ -364,16 +424,16 @@ const DashboardPage = () => {
   //MOCK DATE FOR BUILD | REPLACE WITH USER DATA
 
   const [transactions, setTransactions] = useState([
-    { id: 1, description: 'Transaction 1', amount: '$100.00' },
-    { id: 2, description: 'Transaction 2', amount: '$200.00' },
-    { id: 3, description: 'Transaction 3', amount: '$-50.00' },
-    { id: 4, description: 'Transaction 4', amount: '$-40.00' },
-    { id: 5, description: 'Transaction 5', amount: '$-35.00' },
-    { id: 6, description: 'Transaction 6', amount: '$-15.00' },
-    { id: 7, description: 'Transaction 7', amount: '$-123.00' },
-    { id: 8, description: 'Transaction 8', amount: '$-66.00' },
-    { id: 9, description: 'Transaction 9', amount: '$-45.00' },
-    { id: 10, description: 'Transaction 10', amount: '$-15.00' },
+    // { id: 1, description: 'Transaction 1', amount: '$100.00' },
+    // { id: 2, description: 'Transaction 2', amount: '$200.00' },
+    // { id: 3, description: 'Transaction 3', amount: '$-50.00' },
+    // { id: 4, description: 'Transaction 4', amount: '$-40.00' },
+    // { id: 5, description: 'Transaction 5', amount: '$-35.00' },
+    // { id: 6, description: 'Transaction 6', amount: '$-15.00' },
+    // { id: 7, description: 'Transaction 7', amount: '$-123.00' },
+    // { id: 8, description: 'Transaction 8', amount: '$-66.00' },
+    // { id: 9, description: 'Transaction 9', amount: '$-45.00' },
+    // { id: 10, description: 'Transaction 10', amount: '$-15.00' },
   ]);
 
   const [pieChartData, setPieChartData] = useState([
