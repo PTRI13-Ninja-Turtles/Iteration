@@ -14,6 +14,7 @@ router.post ('/', userController.newUser ,data.stateBrackets, data.fedBrackets ,
   
 });
 
+
 module.exports = router;
 
 //authController.signupUser, authController.loginUser,

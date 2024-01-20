@@ -14,12 +14,12 @@ mongoose.connect(MONGO_URI, {
 
 const Schema = mongoose.Schema;
 
-const incomeSchema = new Schema({
+const earningSchema = new Schema({
   source: { type: String, required: true },
   amount: { type: Number, required: true },
 });
 
-const expenseSchema = new Schema({
+const deductionSchema = new Schema({
   source: { type: String, required: true },
   amount: { type: Number, required: true },
 
@@ -36,17 +36,12 @@ const personSchema = new Schema({
   estimatedIncome: Number,
   businessExpenses: Number,
   preTaxRetirementContributions: Number,
-  medicareTax: Number,
-  ssiTax: Number,
-  fedTax: Number,
-  stateTax: Number,
-  incomes: [incomeSchema],
-  expenses: [expenseSchema]
+  earning :[earningSchema],
+  deduction :[deductionSchema]
 });
 
-//maybe use this is a pre method before storing in to collection ? 
 
-// static signup method 
+earningSchema// static signup method 
 personSchema.statics.signup = async function(firstName, lastName, password, email) {  
   console.log('Received data:', { firstName, lastName, password, email });
 
@@ -105,7 +100,6 @@ personSchema.statics.login = async function(email, password) {
   } 
   return user;
 };
-const Person = mongoose.model('person', personSchema); 
 
-
-module.exports = { Person };
+//const Person = mongoose.model('person', personSchema); 
+module.exports = mongoose.model('Person', personSchema);

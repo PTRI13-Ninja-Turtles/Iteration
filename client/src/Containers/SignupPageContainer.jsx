@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Typography,
@@ -11,8 +10,7 @@ import {
 } from '@mui/material';
 
 const AccountCreationForm = () => {
-  //used to redirect upon success recieved from the response object
-  const navigate = useNavigate();
+
   // STATE
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -23,7 +21,7 @@ const AccountCreationForm = () => {
   const [password, setPassword] = useState('');
   const [estimatedIncome, setEstimatedIncome] = useState(30);
   const [businessExpenses, setBusinessExpenses] = useState(30);
-  const [preTaxRetirementContributions, setPreTaxContributions] = useState(30);
+  const [preTaxContributions, setPreTaxContributions] = useState(30);
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -38,41 +36,24 @@ const AccountCreationForm = () => {
       email,
       estimatedIncome,
       businessExpenses,
-      preTaxRetirementContributions,
+      preTaxContributions,
     };
-
-    console.log ('THIS IS THE FORM DATA FROM SUBMISSION ON SIGN UP', formData);
 
     // FORM SUBMISSION LOGIC
     fetch('http://localhost:3000/signup', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(formData)
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Form submission failed');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data.success) {
+      .then (response => response.json())
+      .then (data => {
+        console.log('Form Data:', data);
+        //currently we are receiving the whole res.locals object, do we want all the data ? 
 
-          //store cookie on local storage here? data.locals.token
-          localStorage.setItem('token', data.locals.token);
-
-          setTimeout (() => {
-            navigate('/dashboard');
-          }, 3000);
-        } else {
-          console.error('Form submission failed:', data.message);
-        }
       })
-      .catch((error) => {
-        console.error('Error during form submission:', error);
-      });
+      .catch(err => console.log(err));
   };
 
   return (
@@ -226,7 +207,7 @@ const AccountCreationForm = () => {
         />
         <Typography gutterBottom>Pre-Tax Retirement Contributions</Typography>
         <Slider
-          value={preTaxRetirementContributions}
+          value={preTaxContributions}
           onChange={(e, newValue) => setPreTaxContributions(newValue)}
           aria-labelledby="pre-tax-contributions-slider"
           valueLabelDisplay="auto"
