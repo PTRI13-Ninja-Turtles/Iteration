@@ -1,9 +1,9 @@
 import React from 'react';
-import { NavigationInnerBar } from '../Components/MainPageComponents/NavigationInnerBar.jsx';
-import { HeroSection } from '../Components/MainPageComponents/HeroSectionComponent.jsx';
-import { MainSectionComponent } from '../Components/MainPageComponents/MainSectionComponent.jsx';
+import { NavigationInnerBar } from '../components/MainPageComponents/NavigationInnerBar.jsx';
+import { HeroSection } from '../components/MainPageComponents/HeroSectionComponent.jsx';
+import { MainSectionComponent } from '../components/MainPageComponents/MainSectionComponent.jsx';
 import { Box } from '@mui/material';
-import { StayInformedComponent } from '../Components/MainPageComponents/StayInformedComponent.jsx';
+import { StayInformedComponent } from '../components/MainPageComponents/StayInformedComponent.jsx';
 
 const MainPageContainer = () => {
   return (
@@ -13,11 +13,10 @@ const MainPageContainer = () => {
       alignItems="center"
       justifyContent="center"
       width="100%"
-      className='LandingPageContainer'
+      className="LandingPageContainer"
       maxWidth="1300px" // Set your desired max-width value
-      margin="0 auto"  // Center the container horizontally
+      margin="0 auto" // Center the container horizontally
       overflow="hidden"
-      
     >
       <NavigationInnerBar />
       <HeroSection />
