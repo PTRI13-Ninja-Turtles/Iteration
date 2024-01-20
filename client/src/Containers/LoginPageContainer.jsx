@@ -132,7 +132,7 @@ const LoginPageContainer = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+ 
     // TEST CONSOLE LOGS
     console.log("Email:", email);
     console.log("Password:", password);
