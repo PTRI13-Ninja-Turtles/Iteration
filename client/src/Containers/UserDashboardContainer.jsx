@@ -59,13 +59,13 @@ const DashboardPage = () => {
     amount: '',
     source: '',
     timestamp: '',
-    type: 'earning'
+    type: 'earning',
   });
   const [deductionData, setDeductionData] = useState({
     amount: '',
     source: '',
     timestamp: '',
-    type: 'deduction'
+    type: 'deduction',
   });
 
   //HELPER FUNCTIONS FOR CHARTS / FORMS - TRUE / FALSE
@@ -171,6 +171,7 @@ const DashboardPage = () => {
       amount: '',
       source: '',
       timestamp: '',
+      type:'earning',
     });
     closeEarningForm();
   };
@@ -257,6 +258,7 @@ const DashboardPage = () => {
       amount: '',
       source: '',
       timestamp: '',
+      type: 'deduction',
     });
     closeDeductionForm();
   };

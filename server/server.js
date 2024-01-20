@@ -26,7 +26,8 @@ app.use('/dashboard', dashboardRouter);
 
 app.use('/signup', apiRouterUser);
 
-app.use('/transaction', transacionRouter)
+app.use('/transaction', transacionRouter);
+
 // app.get('/', (req, res) => {
   
 //   res.status(200).sendFile(path.join(__dirname, '../build/index.html'));
