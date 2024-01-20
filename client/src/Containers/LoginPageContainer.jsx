@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { Box, Button, TextField } from "@mui/material";
-import styled from "styled-components";
-// import { NavigationInnerBar } from '../Components/MainPageComponents/NavigationInnerBar.jsx';
+import React, { useState } from 'react';
+import { Box, Button, TextField } from '@mui/material';
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+
 
 const StyledLogin = styled.div`
   align-items: center;
@@ -119,8 +120,9 @@ const StyledLogin = styled.div`
 `;
 
 const LoginPageContainer = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -132,11 +134,16 @@ const LoginPageContainer = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+ 
+    const isLoginSuccessful = true;
 
-    // TEST CONSOLE LOGS
-    console.log("Email:", email);
-    console.log("Password:", password);
+    if (isLoginSuccessful) {
+      navigate('/dashboard');
+    } else {
+      console.log('Login failed');
+    }
   };
+
 
   return (
     <StyledLogin>

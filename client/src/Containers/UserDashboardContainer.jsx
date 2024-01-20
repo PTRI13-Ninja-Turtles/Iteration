@@ -21,10 +21,11 @@ const DashboardPage = () => {
 
   const [userData, setUserData] = useState(null);
 
+  // FETCHING DATA
   const fetchData = () => {
     const token = localStorage.getItem('token');
     console.log ('token data retrieved using localstorage.getItem', token);
-     // GET REQUEST TO RETRIEVE USER DATA
+    // GET REQUEST TO RETRIEVE USER DATA
     fetch ('http://localhost:3000/dashboard', {
       method: 'GET',
       headers: {
@@ -32,17 +33,36 @@ const DashboardPage = () => {
         'Content-Type': 'application/json',
       },
       //credentials: 'include',
-
     })
-      .then (response => response.json())
-      .then (data => {
+      .then(response => response.json())
+      .then(data => {
         setUserData(data);
-        console.log ('response from GET request to /dashboard in dashboard', data);
-      }).
-      catch(err => console.log (err));
+        console.log('response from GET request to /dashboard in dashboard', data);
 
+        const username = data.userFound.email;
+        const stateTax = (Math.abs(data.userFound.stateTax));
+        setUsername(username);
+        // setStateTax(stateTax);
+
+  
+        const updatedPieChartData = [
+          { id: 'State Tax', label: 'State Tax', value: stateTax },
+          { id: 'Federal Tax', label: 'Federal Tax', value: (Math.abs(data.userFound.fedTax)) },
+          { id: 'SSI Tax', label: 'SSI Tax', value: (Math.abs(data.userFound.ssiTax)) },
+          { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.abs(data.userFound.medicareTax)) },
+          { id: 'Deductions', label: 'Deductions', value: 0 },
+          { id: 'Earnings', label: 'Earnings', value: 0 },
+        ];
+        
+        setPieChartData(updatedPieChartData);
+  
+  
+        if (data.userFound) {
+          setGrossEarnings(data.userFound.estimatedIncome);
+        }
+      })
+      .catch(err => console.log(err));
   };
-
   /*On load we will make a GET request to retrieve user data based on the verification of token  */
   useEffect(() => {
     fetchData();
@@ -51,6 +71,7 @@ const DashboardPage = () => {
 
   const [sliderValues, setSliderValues] = useState({ 1: 0, 2: 0 });
   const [grossEarnings, setGrossEarnings] = useState(0);
+  const [username, setUsername] = useState();
   const [isBarChart, setIsBarChart] = useState(true);
   const [isEarningFormOpen, setIsEarningFormOpen] = useState(false);
   const [isDeductionFormOpen, setIsDeductionFormOpen] = useState(false);
@@ -113,14 +134,14 @@ const DashboardPage = () => {
       },
       body: JSON.stringify(earningData),
     })
-    .then (response => response.json())
-    .then (data => {
+      .then (response => response.json())
+      .then (data => {
       //DO SOMETHING WITH DATA FROM THE TRANSACTION
-      console.log ('Result of transaction coming from Dashboard Container', data);
-    })
-    .catch((error) => {
-      console.error('Error while fetching transaction data', error);
-    })
+        console.log ('Result of transaction coming from Dashboard Container', data);
+      })
+      .catch((error) => {
+        console.error('Error while fetching transaction data', error);
+      });
 
     // TURN STRING TO NUM
     const earningAmount = parseFloat(earningData.amount);
@@ -307,11 +328,12 @@ const DashboardPage = () => {
   ]);
 
   const [pieChartData, setPieChartData] = useState([
-    { id: 'State Tax', label: 'Slice 1', value: 10 },
-    { id: 'Federal Tax', label: 'Slice 2', value: 25 },
-    { id: 'SE Tax', label: 'Slice 3', value: 5 },
-    { id: 'Deductions', label: 'Slice 4', value: 10 },
-    { id: 'Earnings', label: 'Slice 5', value: 50 },
+    // { id: 'State Tax', label: 'State Tax', value: stateTax },
+    // { id: 'Federal Tax', label: 'Federal Tax', value: fedTax },
+    // { id: 'SSI Tax', label: 'SSI Tax', value: ssiTax },
+    // { id: 'Medicare Tax', label: 'Medicare Tax', value: medicareTax },
+    // { id: 'Deductions', label: 'Deductions', value: 0 },
+    // { id: 'Earnings', label: 'Earnings', value: 0 },
   ]);
 
   const [barChartData, setBarChartData] = useState([
@@ -384,6 +406,14 @@ const DashboardPage = () => {
       fontFamily: 'Poppins, sans-serif',
       color: '#673AB7',
       marginBottom: '20px',
+    },
+    username: {
+      position: 'absolute',
+      fontFamily: 'Poppins, sans-serif',
+      color: '#673AB7',
+      top: '80px',
+      right: '95px',
+      fontSize: '16px',
     },
     chartContainer: {
       height: '400px',
@@ -463,6 +493,9 @@ const DashboardPage = () => {
     <div>
       <Paper style={styles.dashboard}>
         <h1 style={styles.header}>Prosper Dashboard</h1>
+        <div>
+          <div style={styles.username}>Welcome, {username}</div>
+        </div>
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <div style={styles.chartContainer}>
@@ -577,7 +610,7 @@ const DashboardPage = () => {
             X
           </IconButton>
           <h3>Record Earning</h3>
-          <form onSubmit={handleEarningSubmit, }>
+          <form onSubmit={handleEarningSubmit}>
             <div>
               <label htmlFor="amount">Amount: $</label>
               <input
