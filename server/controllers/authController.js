@@ -14,7 +14,9 @@ const createToken = (_id) => {
 // signup user 
 const signupUser = async (req, res, next) => { 
 
-  const { firstName, lastName, password, email} = req.body;
+  const {email} = req.body;
+
+  console.log ('Email from the request body in jwt token creation', email);
 
   // try to sign user up using signup method 
   try {

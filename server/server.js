@@ -27,10 +27,18 @@ app.use('/build', express.static(path.join(__dirname, '../build')));
 
 app.use('/dashboard', dashboardRouter);
 
+
+app.use('/dashboard', dashboardRouter);
+
 app.use('/signup', apiRouterUser);
 
-// Catch-all route for client-side routing
-app.get('*', (req, res) => {
+// app.get('/', (req, res) => {
+  
+//   res.status(200).sendFile(path.join(__dirname, '../build/index.html'));
+// });
+
+//Catch-all route for client-side routing
+app.get('/*', (req, res) => {
   res.status(200).sendFile(path.join(__dirname, '../client/public/index.html'));
 });
 
