@@ -50,7 +50,7 @@ const DashboardPage = () => {
           { id: 'Federal Tax', label: 'Federal Tax', value: (Math.abs(data.userFound.fedTax)) },
           { id: 'SSI Tax', label: 'SSI Tax', value: (Math.abs(data.userFound.ssiTax)) },
           { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.abs(data.userFound.medicareTax)) },
-          { id: 'Deductions', label: 'Deductions', value: 0 },
+          { id: 'Deductions', label: 'Deductions', value: (Math.abs(data.userFound.businessExpenses))},
           { id: 'Earnings', label: 'Earnings', value: 0 },
         ];
         
@@ -76,13 +76,13 @@ const DashboardPage = () => {
   const [isEarningFormOpen, setIsEarningFormOpen] = useState(false);
   const [isDeductionFormOpen, setIsDeductionFormOpen] = useState(false);
   const [earningData, setEarningData] = useState({
-    amount: '',
+    amount: 0,
     source: '',
     timestamp: '',
     type: 'earning',
   });
   const [deductionData, setDeductionData] = useState({
-    amount: '',
+    amount: 0,
     source: '',
     timestamp: '',
     type: 'deduction',
@@ -110,6 +110,37 @@ const DashboardPage = () => {
     setIsDeductionFormOpen(false);
   };
 
+  const postEarning = () => {
+    const token = localStorage.getItem('token');
+
+    setTimeout(()=> {
+
+      fetch('http://localhost:3000/transaction', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(earningData),
+      })
+        .then (response => response.json())
+        .then (data => {
+          //DO SOMETHING WITH DATA FROM THE TRANSACTION
+          console.log ('Result of transaction coming from Dashboard Container', data);
+        })
+        .catch((error) => {
+          console.error('Error while fetching transaction data', error);
+        });
+
+    }, 3000);
+
+  };
+
+  //CHECKING DATA TYPE OF EARNING DATA
+  console.log ('CHECKING DATA TYPE OF EARNING DATA', typeof earningData.amount);
+  console.log ('CHECKING DATA TYPE OF ded DATA', typeof deductionData.amount);
+
+
   // REALLY HANDLE EVERYTHING SUBMIT - EARNINGS
 
   const handleEarningSubmit = () => {
@@ -120,32 +151,19 @@ const DashboardPage = () => {
       month: 'short',
     });
 
+    // TURN STRING TO NUM
+    const earningAmount = parseFloat(earningData.amount);
+
+
     setEarningData({
       ...earningData,
       timestamp: currentTime.toISOString(),
+      amount: earningAmount
     });
 
     console.log ('Value of earning data from DashBoard Container', earningData);
 
-    fetch('http://localhost:3000/transaction', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(earningData),
-    })
-      .then (response => response.json())
-      .then (data => {
-      //DO SOMETHING WITH DATA FROM THE TRANSACTION
-        console.log ('Result of transaction coming from Dashboard Container', data);
-      })
-      .catch((error) => {
-        console.error('Error while fetching transaction data', error);
-      });
-
-    // TURN STRING TO NUM
-    const earningAmount = parseFloat(earningData.amount);
-
+    
     // UPDATE GROSS
     setGrossEarnings((prevGrossEarnings) => prevGrossEarnings + earningAmount);
 
@@ -208,12 +226,39 @@ const DashboardPage = () => {
 
     // RESET FORM
     setEarningData({
-      amount: '',
+      amount: 0,
       source: '',
       timestamp: '',
       type:'earning',
     });
     closeEarningForm();
+  };
+
+
+  const postDeduction = () => {
+    const token = localStorage.getItem('token');
+
+    setTimeout (() => {
+
+      fetch('http://localhost:3000/transaction', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(deductionData),
+      })
+        .then (response => response.json())
+        .then (data => {
+          //DO SOMETHING WITH DATA FROM THE TRANSACTION
+          console.log ('Result of transaction coming from Dashboard Container', data);
+        })
+        .catch((error) => {
+          console.error('Error while fetching transaction data', error);
+        });
+
+    }, 3000);
+
   };
 
   // ANOTHER HANDLE EVERYTHING SUBMIT - DEDUCTIONS
@@ -224,14 +269,16 @@ const DashboardPage = () => {
     const currentMonth = currentTime.toLocaleString('default', {
       month: 'short',
     });
+    const deductionAmount = parseFloat(deductionData.amount);
 
     setDeductionData({
       ...deductionData,
       timestamp: currentTime.toISOString(),
+      amount: deductionAmount
     });
 
     // TURN STRING TO NUM
-    const deductionAmount = parseFloat(deductionData.amount);
+   
 
     // UPDATE GROSS
     setGrossEarnings(
@@ -295,7 +342,7 @@ const DashboardPage = () => {
 
     // RESET FORM
     setDeductionData({
-      amount: '',
+      amount: 0,
       source: '',
       timestamp: '',
       type: 'deduction',
@@ -610,7 +657,7 @@ const DashboardPage = () => {
             X
           </IconButton>
           <h3>Record Earning</h3>
-          <form onSubmit={handleEarningSubmit}>
+          <form onSubmit={(e) => { handleEarningSubmit(), postEarning(e); }}>
             <div>
               <label htmlFor="amount">Amount: $</label>
               <input
@@ -649,7 +696,7 @@ const DashboardPage = () => {
             X
           </IconButton>
           <h3>Record Deduction</h3>
-          <form onSubmit={handleDeductionSubmit}>
+          <form onSubmit={(e) => { handleDeductionSubmit(), postDeduction(e); }}>
             <div>
               <label htmlFor="deductionAmount">Amount: $</label>
               <input

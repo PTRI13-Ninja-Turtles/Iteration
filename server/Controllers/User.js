@@ -106,14 +106,14 @@ userController.updateUser = (req, res, next) => {
     body = {incomes: req.body};
   } else if (req.body.type === 'deduction'){
     body = {expenses: req.body};
-  };
+  }
 
   // tax values for this transaction
   const { transMedicare, transSSI, transFed, transState } = res.locals.transactionOwed;
   // new YTD taxes owed
   const { medicare, ssi, fed, stateTax,} = res.locals.taxesOwed;
   // new YDT earnings and deductions
-  const { estimatedIncome, businessExpenses } = res.locals.estimatedIncome;
+  const { estimatedIncome, businessExpenses } = res.locals;
   
   const id = req.user._id;
   const update = {
@@ -122,15 +122,19 @@ userController.updateUser = (req, res, next) => {
     medicareTax: medicare,
     ssiTax: ssi,
     fedTax: fed,
-    stateTax
+    stateTax,
+    $push: body 
   };
 
   console.log ('Coming from updateUser middleware: result of update Object', update);
 
-  userModels.Person.findOneAndUpdate({id}, {$set: update, $push: body }).exec()
+  userModels.Person.findByIdAndUpdate(id, update, {overwrite: true}).exec()
     .then(response => {
       console.log ('result of the response from updating the document in db', response);
-      res.locals.responseFromUpdatingDocument})
+      res.locals.responseFromUpdatingDocument = response;
+      return next();
+    })
+      
     .catch (err => console.log (err));
 
   // req.user._id
@@ -139,7 +143,7 @@ userController.updateUser = (req, res, next) => {
 
   //methods we can use: findAndUpdate? $push? 
 
-  return next();
+  
 };
 
 module.exports = userController;
