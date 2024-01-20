@@ -24,7 +24,7 @@ const DashboardPage = () => {
   const fetchData = () => {
     const token = localStorage.getItem('token');
     console.log ('token data retrieved using localstorage.getItem', token);
-     // GET REQUEST TO RETRIEVE USER DATA
+    // GET REQUEST TO RETRIEVE USER DATA
     fetch ('http://localhost:3000/dashboard', {
       method: 'GET',
       headers: {
@@ -113,14 +113,14 @@ const DashboardPage = () => {
       },
       body: JSON.stringify(earningData),
     })
-    .then (response => response.json())
-    .then (data => {
+      .then (response => response.json())
+      .then (data => {
       //DO SOMETHING WITH DATA FROM THE TRANSACTION
-      console.log ('Result of transaction coming from Dashboard Container', data);
-    })
-    .catch((error) => {
-      console.error('Error while fetching transaction data', error);
-    })
+        console.log ('Result of transaction coming from Dashboard Container', data);
+      })
+      .catch((error) => {
+        console.error('Error while fetching transaction data', error);
+      });
 
     // TURN STRING TO NUM
     const earningAmount = parseFloat(earningData.amount);
@@ -208,6 +208,22 @@ const DashboardPage = () => {
       ...deductionData,
       timestamp: currentTime.toISOString(),
     });
+
+    fetch('http://localhost:3000/transaction', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(deductionData),
+    })
+      .then (response => response.json())
+      .then (data => {
+      //DO SOMETHING WITH DATA FROM THE TRANSACTION
+        console.log ('Result of transaction coming from Dashboard Container on Deduction', data);
+      })
+      .catch((error) => {
+        console.error('Error while fetching transaction data', error);
+      });
 
     // TURN STRING TO NUM
     const deductionAmount = parseFloat(deductionData.amount);
@@ -577,7 +593,7 @@ const DashboardPage = () => {
             X
           </IconButton>
           <h3>Record Earning</h3>
-          <form onSubmit={handleEarningSubmit }>
+          <form onSubmit={handleEarningSubmit}>
             <div>
               <label htmlFor="amount">Amount: $</label>
               <input
