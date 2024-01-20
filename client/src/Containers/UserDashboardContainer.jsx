@@ -55,13 +55,13 @@ const DashboardPage = () => {
   const [isEarningFormOpen, setIsEarningFormOpen] = useState(false);
   const [isDeductionFormOpen, setIsDeductionFormOpen] = useState(false);
   const [earningData, setEarningData] = useState({
-    amount: '',
+    amount: 0,
     source: '',
     timestamp: '',
     type: 'earning',
   });
   const [deductionData, setDeductionData] = useState({
-    amount: '',
+    amount: 0,
     source: '',
     timestamp: '',
     type: 'deduction',
@@ -89,23 +89,7 @@ const DashboardPage = () => {
     setIsDeductionFormOpen(false);
   };
 
-  // REALLY HANDLE EVERYTHING SUBMIT - EARNINGS
-
-  const handleEarningSubmit = () => {
-
-    //POST REQUEST HERE 
-    const currentTime = new Date();
-    const currentMonth = currentTime.toLocaleString('default', {
-      month: 'short',
-    });
-
-    setEarningData({
-      ...earningData,
-      timestamp: currentTime.toISOString(),
-    });
-
-    console.log ('Value of earning data from DashBoard Container', earningData);
-
+  const postEarning = () => {
     const token = localStorage.getItem('token');
 
     fetch('http://localhost:3000/transaction', {
@@ -125,9 +109,36 @@ const DashboardPage = () => {
         console.error('Error while fetching transaction data', error);
       });
 
+  };
+
+  //CHECKING DATA TYPE OF EARNING DATA
+  console.log ('CHECKING DATA TYPE OF EARNING DATA', typeof earningData.amount);
+  console.log ('CHECKING DATA TYPE OF ded DATA', typeof deductionData.amount);
+
+
+  // REALLY HANDLE EVERYTHING SUBMIT - EARNINGS
+
+  const handleEarningSubmit = () => {
+
+    //POST REQUEST HERE 
+    const currentTime = new Date();
+    const currentMonth = currentTime.toLocaleString('default', {
+      month: 'short',
+    });
+
     // TURN STRING TO NUM
     const earningAmount = parseFloat(earningData.amount);
 
+
+    setEarningData({
+      ...earningData,
+      timestamp: currentTime.toISOString(),
+      amount: earningAmount
+    });
+
+    console.log ('Value of earning data from DashBoard Container', earningData);
+
+    
     // UPDATE GROSS
     setGrossEarnings((prevGrossEarnings) => prevGrossEarnings + earningAmount);
 
@@ -190,7 +201,7 @@ const DashboardPage = () => {
 
     // RESET FORM
     setEarningData({
-      amount: '',
+      amount: 0,
       source: '',
       timestamp: '',
       type:'earning',
@@ -198,20 +209,8 @@ const DashboardPage = () => {
     closeEarningForm();
   };
 
-  // ANOTHER HANDLE EVERYTHING SUBMIT - DEDUCTIONS
-  const handleDeductionSubmit = () => {
 
-    //POST REQUEST HERE 
-    const currentTime = new Date();
-    const currentMonth = currentTime.toLocaleString('default', {
-      month: 'short',
-    });
-
-    setDeductionData({
-      ...deductionData,
-      timestamp: currentTime.toISOString(),
-    });
-
+  const postDeduction = () => {
     const token = localStorage.getItem('token');
 
     fetch('http://localhost:3000/transaction', {
@@ -225,14 +224,32 @@ const DashboardPage = () => {
       .then (response => response.json())
       .then (data => {
       //DO SOMETHING WITH DATA FROM THE TRANSACTION
-        console.log ('Result of transaction coming from Dashboard Container on Deduction', data);
+        console.log ('Result of transaction coming from Dashboard Container', data);
       })
       .catch((error) => {
         console.error('Error while fetching transaction data', error);
       });
 
-    // TURN STRING TO NUM
+  }
+
+  // ANOTHER HANDLE EVERYTHING SUBMIT - DEDUCTIONS
+  const handleDeductionSubmit = () => {
+
+    //POST REQUEST HERE 
+    const currentTime = new Date();
+    const currentMonth = currentTime.toLocaleString('default', {
+      month: 'short',
+    });
     const deductionAmount = parseFloat(deductionData.amount);
+
+    setDeductionData({
+      ...deductionData,
+      timestamp: currentTime.toISOString(),
+      amount: deductionAmount
+    });
+
+    // TURN STRING TO NUM
+   
 
     // UPDATE GROSS
     setGrossEarnings(
@@ -296,7 +313,7 @@ const DashboardPage = () => {
 
     // RESET FORM
     setDeductionData({
-      amount: '',
+      amount: 0,
       source: '',
       timestamp: '',
       type: 'deduction',
@@ -599,7 +616,7 @@ const DashboardPage = () => {
             X
           </IconButton>
           <h3>Record Earning</h3>
-          <form onSubmit={handleEarningSubmit}>
+          <form onSubmit={(e) => { handleEarningSubmit(); postEarning(e); }}>
             <div>
               <label htmlFor="amount">Amount: $</label>
               <input
@@ -638,7 +655,7 @@ const DashboardPage = () => {
             X
           </IconButton>
           <h3>Record Deduction</h3>
-          <form onSubmit={handleDeductionSubmit}>
+          <form onSubmit={(e) => { handleDeductionSubmit(); postDeduction(e); }}>
             <div>
               <label htmlFor="deductionAmount">Amount: $</label>
               <input

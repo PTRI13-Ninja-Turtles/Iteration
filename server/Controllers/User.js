@@ -122,15 +122,16 @@ userController.updateUser = (req, res, next) => {
     medicareTax: medicare,
     ssiTax: ssi,
     fedTax: fed,
-    stateTax
+    stateTax,
+    $push: body 
   };
 
   console.log ('Coming from updateUser middleware: result of update Object', update);
 
-  userModels.Person.findByIdAndUpdate(id, {$set: update, $push: body }).exec()
+  userModels.Person.findByIdAndUpdate(id, update, {overwrite: true}).exec()
     .then(response => {
       console.log ('result of the response from updating the document in db', response);
-      res.locals.responseFromUpdatingDocument;
+      res.locals.responseFromUpdatingDocument = response;
       return next();
     })
       

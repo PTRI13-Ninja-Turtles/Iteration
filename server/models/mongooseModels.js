@@ -17,6 +17,11 @@ const Schema = mongoose.Schema;
 const incomeSchema = new Schema({
   source: { type: String, required: true },
   amount: { type: Number, required: true },
+  transMedicare: Number,
+  transSSI: Number,
+  transFed: Number,
+  transState: Number,
+
 }, {
   timestamps: true,
 });

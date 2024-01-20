@@ -193,7 +193,15 @@ calc.storage = (req, res, next) => {
     medicareTax,
     ssiTax,
     fedTax,
-    stateTax} = res.locals.userFound
+    stateTax} = res.locals.userFound;
+
+  // estimatedIncome = parseInt (estimatedIncome),
+  // businessExpenses = parseInt(businessExpenses),
+  // preTaxRetirementContributions = parseInt(preTaxRetirementContributions),
+  // medicareTax = parseInt(medicareTax);
+  // ssiTax = parseInt (ssiTax),
+  // fedTax = parseInt (fedTax),
+  // stateTax = parseInt (stateTax);
 
   res.locals.storage = {};
   res.locals.storage = {
@@ -206,25 +214,33 @@ calc.storage = (req, res, next) => {
     stateTax
   };
 
-  return next()
-}
+  return next();
+};
 
 calc.newNumbers = (req, res, next) => {
 
+  const amount = parseInt(req.body.amount);
+
+  console.log ('COMING FROM THE NEW NUMBERS MIDDLEWARE, VALUE OF AMOUNT COMING FROM THE TRANSACTION', typeof amount);
+
   if (req.body.type === 'earning'){
-    res.locals.estimatedIncome = res.locals.userFound.estimatedIncome + req.body.amount;
+    res.locals.estimatedIncome = res.locals.userFound.estimatedIncome + amount;
     res.locals.businessExpenses = res.locals.userFound.businessExpenses;
   } else {
     res.locals.estimatedIncome = res.locals.userFound.estimatedIncome;
-    res.locals.businessExpenses = res.locals.userFound.businessExpenses + req.body.amount;
+    res.locals.businessExpenses = res.locals.userFound.businessExpenses + amount;
   }
   res.locals.preTaxRetirementContributions = res.locals.userFound.preTaxRetirementContributions;
 
   res.locals.state = res.locals.userFound.state;
   res.locals.filingStatus = res.locals.userFound.filingStatus;
 
+  console.log ('DATA TYPE OF THE ESTIMATED INCOME', typeof res.locals.estimatedIncome);
+
+  console.log ('Coming from newnumbers middleware, result of adding the income plus earning', res.locals.estimatedIncome);
+
   return next();
-}
+};
 
 calc.transactionOwed = (req , res, next) => {
   const { medicare, ssi, fed, stateTax } = res.locals.taxesOwed;
@@ -233,7 +249,7 @@ calc.transactionOwed = (req , res, next) => {
 
   res.locals.transactionOwed = {};
 
-  res.locals.transactionOwed ={
+  res.locals.transactionOwed = {
     transMedicare: medicare - medicareTax,
     transSSI: ssi - ssiTax,
     transFed: fed - fedTax,
@@ -241,6 +257,6 @@ calc.transactionOwed = (req , res, next) => {
   };
 
   return next();
-}
+};
 
 module.exports = calc;
