@@ -95,4 +95,8 @@ userController.createUser = (req, res, next) => {
 
 };
 
+userController.updateUser = (req, res, next) = {
+  
+}
+
 module.exports = userController;

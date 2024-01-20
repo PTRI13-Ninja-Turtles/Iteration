@@ -185,7 +185,7 @@ calc.allTaxes = (req, res, next) => {
   return next();
 }; 
 
-calc.storge = (req, res, next) => {
+calc.storage = (req, res, next) => {
   const {estimatedIncome,
     businessExpenses,
     preTaxRetirementContributions,
@@ -193,6 +193,46 @@ calc.storge = (req, res, next) => {
     ssiTax,
     fedTax,
     stateTax} = res.locals.userFound
+
+  res.locals.storage = {};
+  res.locals.storage = {
+    estimatedIncome,
+    businessExpenses,
+    preTaxRetirementContributions,
+    medicareTax,
+    ssiTax,
+    fedTax,
+    stateTax
+  };
+
+  return next()
+}
+
+calc.newNumbers = (req, res, next) => {
+  res.locals.estimatedIncome = res.locals.userFound.estimatedIncome + req.body.amount;
+  res.locals.businessExpenses = res.locals.userFound.businessExpenses + req.body.deduction;
+  res.locals.preTaxRetirementContributions = res.locals.userFound.preTaxRetirementContributions;
+
+  res.locals.state = res.locals.userFound.state;
+  res.locals.filingStatus = res.locals.userFound.filingStatus;
+  return next();
+}
+
+calc.transactionOwed = (req , res, next) => {
+  const { medicare, ssi, fed, stateTax } = res.locals.taxesOwed;
+  const { medicareTax, ssiTax, fedTax} = res.locals.storage;
+  const stateOld = res.locals.storage.stateTax;
+
+  res.locals.transactionOwed = {};
+
+  res.locals.transactionOwed ={
+    transMedicare: medicare - medicareTax,
+    transSSI: ssi - ssiTax,
+    transFed: fed - fedTax,
+    transState: stateTax - stateOld
+  };
+
+  return next();
 }
 
 module.exports = calc;
