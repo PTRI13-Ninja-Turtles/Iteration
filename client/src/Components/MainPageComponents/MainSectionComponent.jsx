@@ -155,12 +155,26 @@ margin-bottom: 16.96px;
     top: 133px;
     white-space: nowrap;
   }
+
+  & .PAPERTAX-IMAGE{
+    height: 425px;
+    object-fit: cover;
+    position: absolute;
+    left: -70px; /* Adjust this value based on your layout */
+    top: -30px;  /* Adjust this value based on your layout */
+    width: 616px;
+    z-index: 1;  /* Set a higher z-index to bring it to the top */
+  }
 `;
 
 export const MainSectionComponent = () => {
   return (
     <StyledMain>
       <div className="MAIN-INNER">
+      <img
+              className="PAPERTAX-IMAGE"
+              src="build/2183084705-removebg-preview.png"
+            />
         <div className="overlap">
           <div className="overlap-group">
             <img
