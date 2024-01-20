@@ -50,7 +50,7 @@ const DashboardPage = () => {
           { id: 'Federal Tax', label: 'Federal Tax', value: (Math.abs(data.userFound.fedTax)) },
           { id: 'SSI Tax', label: 'SSI Tax', value: (Math.abs(data.userFound.ssiTax)) },
           { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.abs(data.userFound.medicareTax)) },
-          { id: 'Deductions', label: 'Deductions', value: 0 },
+          { id: 'Deductions', label: 'Deductions', value: (Math.abs(data.userFound.businessExpenses))},
           { id: 'Earnings', label: 'Earnings', value: 0 },
         ];
         
