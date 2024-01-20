@@ -95,4 +95,51 @@ userController.createUser = (req, res, next) => {
 
 };
 
+userController.updateUser = (req, res, next) => {
+  // update gross income, deduction & tax amounts, return per transaction tax values, create a transaction or deduction element on the array
+  // req.body.type = earning || deduction
+  let body = {};
+  
+  console.log ('Coming from updateUser middleware: result of req.body.type', req.body.type);
+
+  if (req.body.type === 'earning'){
+    body = {incomes: req.body};
+  } else if (req.body.type === 'deduction'){
+    body = {expenses: req.body};
+  };
+
+  // tax values for this transaction
+  const { transMedicare, transSSI, transFed, transState } = res.locals.transactionOwed;
+  // new YTD taxes owed
+  const { medicare, ssi, fed, stateTax,} = res.locals.taxesOwed;
+  // new YDT earnings and deductions
+  const { estimatedIncome, businessExpenses } = res.locals.estimatedIncome;
+  
+  const id = req.user._id;
+  const update = {
+    estimatedIncome,
+    businessExpenses,
+    medicareTax: medicare,
+    ssiTax: ssi,
+    fedTax: fed,
+    stateTax
+  };
+
+  console.log ('Coming from updateUser middleware: result of update Object', update);
+
+  userModels.Person.findOneAndUpdate({id}, {$set: update, $push: body }).exec()
+    .then(response => {
+      console.log ('result of the response from updating the document in db', response);
+      res.locals.responseFromUpdatingDocument})
+    .catch (err => console.log (err));
+
+  // req.user._id
+
+  //serving to client: transactionOwed, responseFromUpdatingDocument
+
+  //methods we can use: findAndUpdate? $push? 
+
+  return next();
+};
+
 module.exports = userController;
