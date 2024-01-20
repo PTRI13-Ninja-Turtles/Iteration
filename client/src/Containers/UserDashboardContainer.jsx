@@ -51,7 +51,7 @@ const DashboardPage = () => {
           { id: 'SSI Tax', label: 'SSI Tax', value: (Math.abs(data.userFound.ssiTax)) },
           { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.abs(data.userFound.medicareTax)) },
           { id: 'Deductions', label: 'Deductions', value: (Math.abs(data.userFound.businessExpenses))},
-          { id: 'Earnings', label: 'Earnings', value: 0 },
+          { id: 'Earnings', label: 'Earnings', value: (Math.abs(data.userFound.estimatedIncome))},
         ];
         
         setPieChartData(updatedPieChartData);
