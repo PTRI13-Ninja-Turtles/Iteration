@@ -1,3 +1,4 @@
+
 const calc = {};
 
 calc.stateYTDCalc = (req, res, next) => {
