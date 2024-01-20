@@ -21,28 +21,43 @@ const DashboardPage = () => {
 
   const [userData, setUserData] = useState(null);
 
+  // FETCHING DATA
   const fetchData = () => {
     const token = localStorage.getItem('token');
-    console.log ('token data retrieved using localstorage.getItem', token);
-
-    fetch ('http://localhost:3000/dashboard', {
+    console.log('token data retrieved using localstorage.getItem', token);
+  
+    fetch('http://localhost:3000/dashboard', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
       //credentials: 'include',
-
     })
-      .then (response => response.json())
-      .then (data => {
+      .then(response => response.json())
+      .then(data => {
         setUserData(data);
-        console.log ('response from GET request to /dashboard in dashboard', data);
-      }).
-      catch(err => console.log (err));
+        console.log('response from GET request to /dashboard in dashboard', data);
 
+  
+        const updatedPieChartData = [
+          { id: 'State Tax', label: 'State Tax', value: (Math.abs(data.userFound.stateTax)) },
+          { id: 'Federal Tax', label: 'Federal Tax', value: (Math.abs(data.userFound.fedTax)) },
+          { id: 'SSI Tax', label: 'SSI Tax', value: (Math.abs(data.userFound.ssiTax)) },
+          { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.abs(data.userFound.medicareTax)) },
+          { id: 'Deductions', label: 'Deductions', value: 0 },
+          { id: 'Earnings', label: 'Earnings', value: 0 },
+        ];
+        
+        setPieChartData(updatedPieChartData);
+  
+  
+        if (data.userFound) {
+          setGrossEarnings(data.userFound.estimatedIncome);
+        }
+      })
+      .catch(err => console.log(err));
   };
-
   /*On load we will make a GET request to retrieve user data based on the verification of token  */
   useEffect(() => {
     fetchData();
@@ -53,7 +68,10 @@ const DashboardPage = () => {
 
 
 
-
+  // const [fedTax, setFedTax] = useState(0);
+  // const [stateTax, setStateTax] = useState(0);
+  // const [ssiTax, setSsiTax] = useState(0);
+  // const [medicareTax, setMedicareTax] = useState(0);
   const [sliderValues, setSliderValues] = useState({ 1: 0, 2: 0 });
   const [grossEarnings, setGrossEarnings] = useState(0);
   const [isBarChart, setIsBarChart] = useState(true);
@@ -284,11 +302,12 @@ const DashboardPage = () => {
   ]);
 
   const [pieChartData, setPieChartData] = useState([
-    { id: 'State Tax', label: 'Slice 1', value: 10 },
-    { id: 'Federal Tax', label: 'Slice 2', value: 25 },
-    { id: 'SE Tax', label: 'Slice 3', value: 5 },
-    { id: 'Deductions', label: 'Slice 4', value: 10 },
-    { id: 'Earnings', label: 'Slice 5', value: 50 },
+    // { id: 'State Tax', label: 'State Tax', value: stateTax },
+    // { id: 'Federal Tax', label: 'Federal Tax', value: fedTax },
+    // { id: 'SSI Tax', label: 'SSI Tax', value: ssiTax },
+    // { id: 'Medicare Tax', label: 'Medicare Tax', value: medicareTax },
+    // { id: 'Deductions', label: 'Deductions', value: 0 },
+    // { id: 'Earnings', label: 'Earnings', value: 0 },
   ]);
 
   const [barChartData, setBarChartData] = useState([
