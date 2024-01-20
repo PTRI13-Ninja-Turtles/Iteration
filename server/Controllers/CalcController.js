@@ -59,7 +59,7 @@ calc.fedYTDCalc = (req, res, next) => {
   return next();
 };
 
-calc.SSYTDCalc = (req, res, next) => {
+calc.SSIYTDCalc = (req, res, next) => {
   const YTD = res.locals.estimatedIncome - (res.locals.businessExpenses + res.locals.preTaxRetirementContributions); // <-- property needs to be added
   let taxesOwed = 0;
 
@@ -140,12 +140,12 @@ calc.allTaxes = (req, res, next) => {
     const currentRate = fedRates[i]
 
     if (max === 999999999){
-      fedTaxesOwed += ((YTD - min) * currentRate)
+      fedTaxesOwed += ((YTD - min) * currentRate);
     } else if (YTD <= max){
-      fedTaxesOwed += ((YTD - min) * currentRate)
+      fedTaxesOwed += ((YTD - min) * currentRate);
       break;
     } else {
-      fedTaxesOwed += ((max - min) * currentRate)
+      fedTaxesOwed += ((max - min) * currentRate);
     }
   }
 
@@ -160,16 +160,11 @@ calc.allTaxes = (req, res, next) => {
 // calculating self employment tax: Medicare
   MedicareTaxesOwed = YTD < 400 ? 0 : YTD * 0.029;
 
-  res.locals.taxesOwed.medicare = MedicareTaxesOwed
-  res.locals.taxesOwed.ssi = SSITaxesOwed
+  res.locals.taxesOwed.medicare = MedicareTaxesOwed;
+  res.locals.taxesOwed.ssi = SSITaxesOwed;
   res.locals.taxesOwed.fed = fedTaxesOwed;
   res.locals.taxesOwed.state = stateTaxesOwed;
-  return next()
-}
-
-
-  res.locals.taxesOwed.medicare = taxesOwed
-  return next()
+  return next();
 };
 
 module.exports = calc;

@@ -1,3 +1,4 @@
+const { findIp } = require('webpack-dev-server');
 const tables = require('../models/pgModels.js');
 
 const data = {};
@@ -5,7 +6,8 @@ const data = {};
 data.stateBrackets = (req, res, next) =>{
   console.log ('State Brackets Middleware accessed');
   let { state, filingStatus } = res.locals;
-  if (filingStatus === 'head') filingStatus = 'single';
+  if (filingStatus === 'head_of_household' || filingStatus === 'married_separate') filingStatus = 'single';
+  if (filingStatus === 'married_joint') filingStatus = 'jointly';
 
   console.log ('Value of state in StateBrackets', state);
   console.log ('Vale of filingStatus in StateBrackets',filingStatus);
@@ -33,7 +35,11 @@ data.stateBrackets = (req, res, next) =>{
 };
 
 data.fedBrackets = ( req, res, next) => {
-  const { filingStatus } = res.locals;
+  let { filingStatus } = res.locals;
+
+  if (filingStatus === 'married_separate') filingStatus = 'single';
+  if (filingStatus === 'head_of_household') filingStatus = 'head';
+  if (filingStatus === 'married_joint') filingStatus = 'jointly';
 
   const query = {
     text: `
