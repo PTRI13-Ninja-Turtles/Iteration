@@ -92,22 +92,26 @@ const DashboardPage = () => {
   const postEarning = () => {
     const token = localStorage.getItem('token');
 
-    fetch('http://localhost:3000/transaction', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(earningData),
-    })
-      .then (response => response.json())
-      .then (data => {
-      //DO SOMETHING WITH DATA FROM THE TRANSACTION
-        console.log ('Result of transaction coming from Dashboard Container', data);
+    setTimeout(()=> {
+
+      fetch('http://localhost:3000/transaction', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(earningData),
       })
-      .catch((error) => {
-        console.error('Error while fetching transaction data', error);
-      });
+        .then (response => response.json())
+        .then (data => {
+          //DO SOMETHING WITH DATA FROM THE TRANSACTION
+          console.log ('Result of transaction coming from Dashboard Container', data);
+        })
+        .catch((error) => {
+          console.error('Error while fetching transaction data', error);
+        });
+
+    }, 3000);
 
   };
 
@@ -213,24 +217,28 @@ const DashboardPage = () => {
   const postDeduction = () => {
     const token = localStorage.getItem('token');
 
-    fetch('http://localhost:3000/transaction', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(deductionData),
-    })
-      .then (response => response.json())
-      .then (data => {
-      //DO SOMETHING WITH DATA FROM THE TRANSACTION
-        console.log ('Result of transaction coming from Dashboard Container', data);
-      })
-      .catch((error) => {
-        console.error('Error while fetching transaction data', error);
-      });
+    setTimeout (() => {
 
-  }
+      fetch('http://localhost:3000/transaction', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(deductionData),
+      })
+        .then (response => response.json())
+        .then (data => {
+          //DO SOMETHING WITH DATA FROM THE TRANSACTION
+          console.log ('Result of transaction coming from Dashboard Container', data);
+        })
+        .catch((error) => {
+          console.error('Error while fetching transaction data', error);
+        });
+
+    }, 3000);
+
+  };
 
   // ANOTHER HANDLE EVERYTHING SUBMIT - DEDUCTIONS
   const handleDeductionSubmit = () => {
@@ -616,7 +624,7 @@ const DashboardPage = () => {
             X
           </IconButton>
           <h3>Record Earning</h3>
-          <form onSubmit={(e) => { handleEarningSubmit(); postEarning(e); }}>
+          <form onSubmit={(e) => { handleEarningSubmit(), postEarning(e); }}>
             <div>
               <label htmlFor="amount">Amount: $</label>
               <input
@@ -655,7 +663,7 @@ const DashboardPage = () => {
             X
           </IconButton>
           <h3>Record Deduction</h3>
-          <form onSubmit={(e) => { handleDeductionSubmit(); postDeduction(e); }}>
+          <form onSubmit={(e) => { handleDeductionSubmit(), postDeduction(e); }}>
             <div>
               <label htmlFor="deductionAmount">Amount: $</label>
               <input
