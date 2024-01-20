@@ -80,6 +80,11 @@ const DashboardPage = () => {
     source: '',
     timestamp: '',
     type: 'earning',
+    medicareTax: 0,
+    stateTax: 0,
+    ssiTax: 0,
+    federalTax: 0,
+
   });
   const [deductionData, setDeductionData] = useState({
     amount: 0,
@@ -151,6 +156,11 @@ const DashboardPage = () => {
               id: transactions.length + 1,
               description: `Earning | ${earning.source}`,
               amount: `+$${earning.amount.toFixed(2)}`,
+              medicareTax: `Medicare Tax | ${earning.transMedicare.toFixed(2)}`,
+              stateTax: `State Tax | ${earning.transState.toFixed(2)}`,
+              ssiTax:  `SSI Tax | ${earning.transSSI.toFixed(2)}`,
+              federalTax: `Federal Tax | ${earning.transFed.toFixed(2)}`,
+          
               // timestamp: currentTime.toISOString(),
             };
       
@@ -165,7 +175,7 @@ const DashboardPage = () => {
           console.error('Error while fetching transaction data', error);
         });
 
-    }, 3000);
+    }, 0);
 
   };
 
@@ -190,7 +200,7 @@ const DashboardPage = () => {
 
     setEarningData({
       ...earningData,
-      timestamp: currentTime.toISOString(),
+      // timestamp: currentTime.toISOString(),
       amount: earningAmount
     });
 
@@ -201,14 +211,14 @@ const DashboardPage = () => {
     setGrossEarnings((prevGrossEarnings) => prevGrossEarnings + earningAmount);
 
     // CREATE & ADD NEW TRANSACTION
-    // const newEarningTransaction = {
-    //   id: transactions.length + 1,
-    //   description: `Earning | ${earningData.source}`,
-    //   amount: `+$${earningAmount.toFixed(2)}`,
-    //   timestamp: currentTime.toISOString(),
-    // };
+    const newEarningTransaction = {
+      id: transactions.length + 1,
+      description: `Earning | ${earningData.source}`,
+      amount: `+$${earningAmount.toFixed(2)}`,
+      // timestamp: currentTime.toISOString(),
+    };
 
-    // setTransactions([...transactions, newEarningTransaction]);
+    setTransactions([...transactions, newEarningTransaction]);
 
 
 
@@ -299,13 +309,13 @@ const DashboardPage = () => {
           setPieChartData(updatedPieChartData);
           console.log ('Result of transaction coming from Dashboard Container', data);
 
-          data.userTransactionData.expenses.forEach((earning) => {
+          data.userTransactionData.expenses.forEach((deduction) => {
             //SETTING TRANSACTION DATA
 
             const newExpenseTransaction = {
               id: transactions.length + 1,
-              description: `Earning | ${earning.source}`,
-              amount: `+$${earning.amount.toFixed(2)}`,
+              description: `Deduction | ${deduction.source}`,
+              amount: `+$${deduction.amount.toFixed(2)}`,
               // timestamp: currentTime.toISOString(),
             };
       
@@ -319,7 +329,7 @@ const DashboardPage = () => {
           console.error('Error while fetching transaction data', error);
         });
 
-    }, 3000);
+    }, 0);
 
   };
 
@@ -335,7 +345,7 @@ const DashboardPage = () => {
 
     setDeductionData({
       ...deductionData,
-      timestamp: currentTime.toISOString(),
+      // timestamp: currentTime.toISOString(),
       amount: deductionAmount
     });
 
@@ -352,7 +362,7 @@ const DashboardPage = () => {
       id: transactions.length + 1,
       description: `Deduction | ${deductionData.source}`,
       amount: `-$${deductionAmount.toFixed(2)}`,
-      timestamp: currentTime.toISOString(),
+      // timestamp: currentTime.toISOString(),
     };
 
     setTransactions([...transactions, newDeductionTransaction]);
@@ -691,7 +701,7 @@ const DashboardPage = () => {
               <React.Fragment key={transaction.id}>
                 <ListItem style={styles.listItem}>
                   <div style={{ width: '50%', display: 'inline-block' }}>
-                    {transaction.description} {transaction.amount}
+                    {transaction.description} {transaction.amount} {transaction.medicareTax} {transaction.stateTax} {transaction.federalTax} {transaction.ssiTax}
                   </div>
                   <div
                     style={{
