@@ -577,7 +577,7 @@ const DashboardPage = () => {
             X
           </IconButton>
           <h3>Record Earning</h3>
-          <form onSubmit={handleEarningSubmit, }>
+          <form onSubmit={handleEarningSubmit }>
             <div>
               <label htmlFor="amount">Amount: $</label>
               <input
