@@ -50,10 +50,6 @@ const DashboardPage = () => {
   }, []);
 
 
-
-
-
-
   const [sliderValues, setSliderValues] = useState({ 1: 0, 2: 0 });
   const [grossEarnings, setGrossEarnings] = useState(0);
   const [isBarChart, setIsBarChart] = useState(true);
@@ -63,11 +59,13 @@ const DashboardPage = () => {
     amount: '',
     source: '',
     timestamp: '',
+    type: 'earning'
   });
   const [deductionData, setDeductionData] = useState({
     amount: '',
     source: '',
     timestamp: '',
+    type: 'deduction'
   });
 
   //HELPER FUNCTIONS FOR CHARTS / FORMS - TRUE / FALSE
@@ -95,6 +93,8 @@ const DashboardPage = () => {
   // REALLY HANDLE EVERYTHING SUBMIT - EARNINGS
 
   const handleEarningSubmit = () => {
+
+    //POST REQUEST HERE 
     const currentTime = new Date();
     const currentMonth = currentTime.toLocaleString('default', {
       month: 'short',
@@ -177,6 +177,8 @@ const DashboardPage = () => {
 
   // ANOTHER HANDLE EVERYTHING SUBMIT - DEDUCTIONS
   const handleDeductionSubmit = () => {
+
+    //POST REQUEST HERE 
     const currentTime = new Date();
     const currentMonth = currentTime.toLocaleString('default', {
       month: 'short',

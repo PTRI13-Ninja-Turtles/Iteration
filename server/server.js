@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 
 const apiRouterUser = require('./Routes/user');
 const dashboardRouter = require ('./Routes/dashboardRoute')
-
+const transacionRouter = require ('./Routes/transactions')
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -26,6 +26,7 @@ app.use('/dashboard', dashboardRouter);
 
 app.use('/signup', apiRouterUser);
 
+app.use('/transaction', transacionRouter)
 // app.get('/', (req, res) => {
   
 //   res.status(200).sendFile(path.join(__dirname, '../build/index.html'));

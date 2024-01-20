@@ -209,12 +209,19 @@ calc.storage = (req, res, next) => {
 }
 
 calc.newNumbers = (req, res, next) => {
-  res.locals.estimatedIncome = res.locals.userFound.estimatedIncome + req.body.amount;
-  res.locals.businessExpenses = res.locals.userFound.businessExpenses + req.body.deduction;
+
+  if (req.body.type === 'earning'){
+    res.locals.estimatedIncome = res.locals.userFound.estimatedIncome + req.body.amount;
+    res.locals.businessExpenses = res.locals.userFound.businessExpenses;
+  } else {
+    res.locals.estimatedIncome = res.locals.userFound.estimatedIncome;
+    res.locals.businessExpenses = res.locals.userFound.businessExpenses + req.body.amount;
+  }
   res.locals.preTaxRetirementContributions = res.locals.userFound.preTaxRetirementContributions;
 
   res.locals.state = res.locals.userFound.state;
   res.locals.filingStatus = res.locals.userFound.filingStatus;
+
   return next();
 }
 
