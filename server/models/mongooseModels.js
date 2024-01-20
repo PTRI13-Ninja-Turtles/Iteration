@@ -17,11 +17,15 @@ const Schema = mongoose.Schema;
 const incomeSchema = new Schema({
   source: { type: String, required: true },
   amount: { type: Number, required: true },
+}, {
+  timestamps: true,
 });
 
 const expenseSchema = new Schema({
   source: { type: String, required: true },
   amount: { type: Number, required: true },
+} , {
+  timestamps: true,
 
 });
 
