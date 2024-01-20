@@ -24,9 +24,9 @@ const DashboardPage = () => {
   // FETCHING DATA
   const fetchData = () => {
     const token = localStorage.getItem('token');
-    console.log('token data retrieved using localstorage.getItem', token);
-  
-    fetch('http://localhost:3000/dashboard', {
+    console.log ('token data retrieved using localstorage.getItem', token);
+    // GET REQUEST TO RETRIEVE USER DATA
+    fetch ('http://localhost:3000/dashboard', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -42,7 +42,7 @@ const DashboardPage = () => {
         const username = data.userFound.email;
         const stateTax = (Math.abs(data.userFound.stateTax));
         setUsername(username);
-        setStateTax(stateTax);
+        // setStateTax(stateTax);
 
   
         const updatedPieChartData = [
@@ -69,10 +69,6 @@ const DashboardPage = () => {
 
   }, []);
 
-  // const [fedTax, setFedTax] = useState(0);
-  const [stateTax, setStateTax] = useState(0);
-  // const [ssiTax, setSsiTax] = useState(0);
-  // const [medicareTax, setMedicareTax] = useState(0);
   const [sliderValues, setSliderValues] = useState({ 1: 0, 2: 0 });
   const [grossEarnings, setGrossEarnings] = useState(0);
   const [username, setUsername] = useState();
@@ -83,11 +79,13 @@ const DashboardPage = () => {
     amount: '',
     source: '',
     timestamp: '',
+    type: 'earning',
   });
   const [deductionData, setDeductionData] = useState({
     amount: '',
     source: '',
     timestamp: '',
+    type: 'deduction',
   });
 
   //HELPER FUNCTIONS FOR CHARTS / FORMS - TRUE / FALSE
@@ -115,6 +113,8 @@ const DashboardPage = () => {
   // REALLY HANDLE EVERYTHING SUBMIT - EARNINGS
 
   const handleEarningSubmit = () => {
+
+    //POST REQUEST HERE 
     const currentTime = new Date();
     const currentMonth = currentTime.toLocaleString('default', {
       month: 'short',
@@ -124,6 +124,24 @@ const DashboardPage = () => {
       ...earningData,
       timestamp: currentTime.toISOString(),
     });
+
+    console.log ('Value of earning data from DashBoard Container', earningData);
+
+    fetch('http://localhost:3000/transaction', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(earningData),
+    })
+      .then (response => response.json())
+      .then (data => {
+      //DO SOMETHING WITH DATA FROM THE TRANSACTION
+        console.log ('Result of transaction coming from Dashboard Container', data);
+      })
+      .catch((error) => {
+        console.error('Error while fetching transaction data', error);
+      });
 
     // TURN STRING TO NUM
     const earningAmount = parseFloat(earningData.amount);
@@ -140,6 +158,8 @@ const DashboardPage = () => {
     };
 
     setTransactions([...transactions, newEarningTransaction]);
+
+
 
     // UPDATE PIE
     const updatedPieChartData = pieChartData.map((slice) => {
@@ -191,12 +211,15 @@ const DashboardPage = () => {
       amount: '',
       source: '',
       timestamp: '',
+      type:'earning',
     });
     closeEarningForm();
   };
 
   // ANOTHER HANDLE EVERYTHING SUBMIT - DEDUCTIONS
   const handleDeductionSubmit = () => {
+
+    //POST REQUEST HERE 
     const currentTime = new Date();
     const currentMonth = currentTime.toLocaleString('default', {
       month: 'short',
@@ -275,6 +298,7 @@ const DashboardPage = () => {
       amount: '',
       source: '',
       timestamp: '',
+      type: 'deduction',
     });
     closeDeductionForm();
   };
