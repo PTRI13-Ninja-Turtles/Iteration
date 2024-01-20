@@ -700,7 +700,7 @@ const DashboardPage = () => {
             {transactions.map((transaction) => (
               <React.Fragment key={transaction.id}>
                 <ListItem style={styles.listItem}>
-                  <div style={{ width: '50%', display: 'inline-block' }}>
+                  <div style={{ width: '70%', display: 'inline-block' }}>
                     {transaction.description} {transaction.amount} {transaction.medicareTax} {transaction.stateTax} {transaction.federalTax} {transaction.ssiTax}
                   </div>
                   <div
