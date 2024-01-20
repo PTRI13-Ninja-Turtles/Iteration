@@ -186,7 +186,13 @@ calc.allTaxes = (req, res, next) => {
 }; 
 
 calc.storge = (req, res, next) => {
-  const {estimatedIncome, businessExpenses, preTaxRetirementContributions} = res.locals.userFound
+  const {estimatedIncome,
+    businessExpenses,
+    preTaxRetirementContributions,
+    medicareTax,
+    ssiTax,
+    fedTax,
+    stateTax} = res.locals.userFound
 }
 
 module.exports = calc;

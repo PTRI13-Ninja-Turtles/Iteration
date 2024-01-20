@@ -10,10 +10,10 @@ const express = require('express')
 const router = express.Router()
 
 // verify user √ -> find user √ -> grab state & local brackets ->
-// store current YTD earnings, deductions & taxes on res.locals object ->
+// store current YTD earnings, deductions & taxes on res.locals object √->
 // calc all taxes. -> update user with new totals -> calc difference between new totals and stored current ->
 // return new totals and calced difference.
-router.post('/', authController.verifyToken, userController.findUser,(req, res) =>{
+router.post('/', authController.verifyToken, userController.findUser, calc.storge,(req, res) =>{
     res.status(200).json(res.locals);
 })
 
