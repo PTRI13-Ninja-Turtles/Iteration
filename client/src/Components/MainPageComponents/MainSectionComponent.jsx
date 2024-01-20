@@ -160,10 +160,9 @@ margin-bottom: 16.96px;
     height: 425px;
     object-fit: cover;
     position: absolute;
-    left: -70px; /* Adjust this value based on your layout */
-    top: -30px;  /* Adjust this value based on your layout */
+    left: -100px; 
     width: 616px;
-    z-index: 1;  /* Set a higher z-index to bring it to the top */
+    z-index: 1; 
   }
 `;
 
