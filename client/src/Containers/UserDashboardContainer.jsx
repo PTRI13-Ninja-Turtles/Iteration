@@ -39,9 +39,14 @@ const DashboardPage = () => {
         setUserData(data);
         console.log('response from GET request to /dashboard in dashboard', data);
 
+        const username = data.userFound.email;
+        const stateTax = (Math.abs(data.userFound.stateTax));
+        setUsername(username);
+        setStateTax(stateTax);
+
   
         const updatedPieChartData = [
-          { id: 'State Tax', label: 'State Tax', value: (Math.abs(data.userFound.stateTax)) },
+          { id: 'State Tax', label: 'State Tax', value: stateTax },
           { id: 'Federal Tax', label: 'Federal Tax', value: (Math.abs(data.userFound.fedTax)) },
           { id: 'SSI Tax', label: 'SSI Tax', value: (Math.abs(data.userFound.ssiTax)) },
           { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.abs(data.userFound.medicareTax)) },
@@ -64,16 +69,13 @@ const DashboardPage = () => {
 
   }, []);
 
-
-
-
-
   // const [fedTax, setFedTax] = useState(0);
-  // const [stateTax, setStateTax] = useState(0);
+  const [stateTax, setStateTax] = useState(0);
   // const [ssiTax, setSsiTax] = useState(0);
   // const [medicareTax, setMedicareTax] = useState(0);
   const [sliderValues, setSliderValues] = useState({ 1: 0, 2: 0 });
   const [grossEarnings, setGrossEarnings] = useState(0);
+  const [username, setUsername] = useState();
   const [isBarChart, setIsBarChart] = useState(true);
   const [isEarningFormOpen, setIsEarningFormOpen] = useState(false);
   const [isDeductionFormOpen, setIsDeductionFormOpen] = useState(false);
@@ -381,6 +383,14 @@ const DashboardPage = () => {
       color: '#673AB7',
       marginBottom: '20px',
     },
+    username: {
+      position: 'absolute',
+      fontFamily: 'Poppins, sans-serif',
+      color: '#673AB7',
+      top: '80px',
+      right: '95px',
+      fontSize: '16px',
+    },
     chartContainer: {
       height: '400px',
       backgroundColor: '#E8EAF6',
@@ -459,6 +469,9 @@ const DashboardPage = () => {
     <div>
       <Paper style={styles.dashboard}>
         <h1 style={styles.header}>Prosper Dashboard</h1>
+        <div>
+          <div style={styles.username}>Welcome, {username}</div>
+        </div>
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <div style={styles.chartContainer}>
