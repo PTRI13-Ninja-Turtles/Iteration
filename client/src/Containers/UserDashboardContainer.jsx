@@ -110,6 +110,8 @@ const DashboardPage = () => {
     setIsDeductionFormOpen(false);
   };
 
+  /* FUNCTION TO SEND POST REQUEST UPON SUBMIT EARNING*/
+
   const postEarning = () => {
     const token = localStorage.getItem('token');
 
@@ -657,7 +659,7 @@ const DashboardPage = () => {
             X
           </IconButton>
           <h3>Record Earning</h3>
-          <form onSubmit={(e) => { handleEarningSubmit(), postEarning(e); }}>
+          <form onSubmit={(e) => { handleEarningSubmit(); postEarning(e); }}>
             <div>
               <label htmlFor="amount">Amount: $</label>
               <input
@@ -696,7 +698,7 @@ const DashboardPage = () => {
             X
           </IconButton>
           <h3>Record Deduction</h3>
-          <form onSubmit={(e) => { handleDeductionSubmit(), postDeduction(e); }}>
+          <form onSubmit={(e) => { handleDeductionSubmit(); postDeduction(e); }}>
             <div>
               <label htmlFor="deductionAmount">Amount: $</label>
               <input

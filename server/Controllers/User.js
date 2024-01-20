@@ -99,8 +99,21 @@ userController.updateUser = (req, res, next) => {
   // update gross income, deduction & tax amounts, return per transaction tax values, create a transaction or deduction element on the array
   // req.body.type = earning || deduction
   let body = {};
+
+  console.log ('Coming from updateUser middleware: value of the req.body coming from client',req.body );
   
   console.log ('Coming from updateUser middleware: result of req.body.type', req.body.type);
+
+  //DESTRUCTURE THE BODY AND THEN ADD THE TRANSACTION OWED TAXES Jan 20 9:58 am
+
+  const { transMedicare, transSSI, transFed, transState } = res.locals.transactionOwed;
+  req.body = {
+    ...req.body,
+    transMedicare,
+    transSSI,
+    transFed, 
+    transState,
+  };
 
   if (req.body.type === 'earning'){
     body = {incomes: req.body};
@@ -109,7 +122,6 @@ userController.updateUser = (req, res, next) => {
   }
 
   // tax values for this transaction
-  const { transMedicare, transSSI, transFed, transState } = res.locals.transactionOwed;
   // new YTD taxes owed
   const { medicare, ssi, fed, stateTax,} = res.locals.taxesOwed;
   // new YDT earnings and deductions
