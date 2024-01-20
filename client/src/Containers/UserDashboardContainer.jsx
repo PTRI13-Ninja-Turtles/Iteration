@@ -106,10 +106,13 @@ const DashboardPage = () => {
 
     console.log ('Value of earning data from DashBoard Container', earningData);
 
+    const token = localStorage.getItem('token');
+
     fetch('http://localhost:3000/transaction', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(earningData),
     })
@@ -209,10 +212,13 @@ const DashboardPage = () => {
       timestamp: currentTime.toISOString(),
     });
 
+    const token = localStorage.getItem('token');
+
     fetch('http://localhost:3000/transaction', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(deductionData),
     })
