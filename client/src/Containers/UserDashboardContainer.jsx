@@ -42,7 +42,6 @@ const DashboardPage = () => {
         const username = data.userFound.email;
         const stateTax = (Math.abs(data.userFound.stateTax));
         setUsername(username);
-        // setStateTax(stateTax);
 
   
         const updatedPieChartData = [
