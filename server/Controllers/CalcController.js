@@ -3,7 +3,7 @@ const calc = {};
 
 calc.stateYTDCalc = (req, res, next) => {
 
-  const YTD = res.locals.estimatedIncome - (res.locals.businessExpenses + res.locals.preTaxRetirementContributions); // <-- property needs to be added
+  const YTD = res.locals.estimatedIncome - (res.locals.businessExpenses + res.locals.preTaxRetirementContributions); 
   const bracketLow = [];
   res.locals.stateTables.forEach((ele) => {bracketLow.push(ele['income_range_low']);});
   const bracketHigh = [];

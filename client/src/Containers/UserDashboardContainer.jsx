@@ -42,7 +42,6 @@ const DashboardPage = () => {
         const username = data.userFound.email;
         const stateTax = (Math.abs(data.userFound.stateTax));
         setUsername(username);
-        // setStateTax(stateTax);
 
   
         const updatedPieChartData = [
@@ -51,7 +50,7 @@ const DashboardPage = () => {
           { id: 'SSI Tax', label: 'SSI Tax', value: (Math.abs(data.userFound.ssiTax)) },
           { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.abs(data.userFound.medicareTax)) },
           { id: 'Deductions', label: 'Deductions', value: (Math.abs(data.userFound.businessExpenses))},
-          { id: 'Earnings', label: 'Earnings', value: 0 },
+          { id: 'Earnings', label: 'Earnings', value: (Math.abs(data.userFound.estimatedIncome))},
         ];
         
         setPieChartData(updatedPieChartData);
@@ -80,6 +79,11 @@ const DashboardPage = () => {
     source: '',
     timestamp: '',
     type: 'earning',
+    medicareTax: 0,
+    stateTax: 0,
+    ssiTax: 0,
+    federalTax: 0,
+
   });
   const [deductionData, setDeductionData] = useState({
     amount: 0,
@@ -110,6 +114,8 @@ const DashboardPage = () => {
     setIsDeductionFormOpen(false);
   };
 
+  /* FUNCTION TO SEND POST REQUEST UPON SUBMIT EARNING*/
+
   const postEarning = () => {
     const token = localStorage.getItem('token');
 
@@ -125,14 +131,50 @@ const DashboardPage = () => {
       })
         .then (response => response.json())
         .then (data => {
+          const stateTax = (Math.abs(data.userTransactionData.stateTax));
           //DO SOMETHING WITH DATA FROM THE TRANSACTION
+          //UPDATE STATE OF THE CHART 
+
+          const updatedPieChartData = [
+            { id: 'State Tax', label: 'State Tax', value: stateTax },
+            { id: 'Federal Tax', label: 'Federal Tax', value: (Math.abs(data.userTransactionData.fedTax)).toFixed(2) },
+            { id: 'SSI Tax', label: 'SSI Tax', value: (Math.abs(data.userTransactionData.ssiTax)).toFixed(2) },
+            { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.abs(data.userTransactionData.medicareTax)).toFixed(2) },
+            { id: 'Deductions', label: 'Deductions', value: (Math.abs(data.userTransactionData.businessExpenses)).toFixed(2) },
+            { id: 'Earnings', label: 'Earnings', value: (Math.abs(data.userTransactionData.estimatedIncome)).toFixed(2) },
+          ];
+          
+          setPieChartData(updatedPieChartData);
           console.log ('Result of transaction coming from Dashboard Container', data);
+
+          //ITERATE THROUGH THE TRANSACTION ARRAY AND UPDATE THE STATE.
+          data.userTransactionData.incomes.forEach((earning) => {
+            //SETTING TRANSACTION DATA
+
+            const newEarningTransaction = {
+              id: transactions.length + 1,
+              description: `Earning | ${earning.source}`,
+              amount: `+$${earning.amount.toFixed(2)}`,
+              medicareTax: `Medicare Tax | ${earning.transMedicare.toFixed(2)}`,
+              stateTax: `State Tax | ${earning.transState.toFixed(2)}`,
+              ssiTax:  `SSI Tax | ${earning.transSSI.toFixed(2)}`,
+              federalTax: `Federal Tax | ${earning.transFed.toFixed(2)}`,
+          
+              // timestamp: currentTime.toISOString(),
+            };
+      
+            setTransactions([...transactions, newEarningTransaction]);
+
+
+          });
+
+
         })
         .catch((error) => {
           console.error('Error while fetching transaction data', error);
         });
 
-    }, 3000);
+    }, 0);
 
   };
 
@@ -157,7 +199,7 @@ const DashboardPage = () => {
 
     setEarningData({
       ...earningData,
-      timestamp: currentTime.toISOString(),
+      // timestamp: currentTime.toISOString(),
       amount: earningAmount
     });
 
@@ -172,7 +214,7 @@ const DashboardPage = () => {
       id: transactions.length + 1,
       description: `Earning | ${earningData.source}`,
       amount: `+$${earningAmount.toFixed(2)}`,
-      timestamp: currentTime.toISOString(),
+      // timestamp: currentTime.toISOString(),
     };
 
     setTransactions([...transactions, newEarningTransaction]);
@@ -250,14 +292,43 @@ const DashboardPage = () => {
       })
         .then (response => response.json())
         .then (data => {
+          const stateTax = (Math.abs(data.userTransactionData.stateTax));
           //DO SOMETHING WITH DATA FROM THE TRANSACTION
+          //UPDATE STATE OF THE CHART 
+
+          const updatedPieChartData = [
+            { id: 'State Tax', label: 'State Tax', value: stateTax },
+            { id: 'Federal Tax', label: 'Federal Tax', value: (Math.abs(data.userTransactionData.fedTax)).toFixed(2) },
+            { id: 'SSI Tax', label: 'SSI Tax', value: (Math.abs(data.userTransactionData.ssiTax)).toFixed(2) },
+            { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.abs(data.userTransactionData.medicareTax)).toFixed(2) },
+            { id: 'Deductions', label: 'Deductions', value: (Math.abs(data.userTransactionData.businessExpenses)).toFixed(2) },
+            { id: 'Earnings', label: 'Earnings', value: (Math.abs(data.userTransactionData.estimatedIncome)).toFixed(2) },
+          ];
+          
+          setPieChartData(updatedPieChartData);
           console.log ('Result of transaction coming from Dashboard Container', data);
+
+          data.userTransactionData.expenses.forEach((deduction) => {
+            //SETTING TRANSACTION DATA
+
+            const newExpenseTransaction = {
+              id: transactions.length + 1,
+              description: `Deduction | ${deduction.source}`,
+              amount: `+$${deduction.amount.toFixed(2)}`,
+              // timestamp: currentTime.toISOString(),
+            };
+      
+            setTransactions([...transactions, newExpenseTransaction]);
+
+
+          });
+        
         })
         .catch((error) => {
           console.error('Error while fetching transaction data', error);
         });
 
-    }, 3000);
+    }, 0);
 
   };
 
@@ -273,7 +344,7 @@ const DashboardPage = () => {
 
     setDeductionData({
       ...deductionData,
-      timestamp: currentTime.toISOString(),
+      // timestamp: currentTime.toISOString(),
       amount: deductionAmount
     });
 
@@ -290,7 +361,7 @@ const DashboardPage = () => {
       id: transactions.length + 1,
       description: `Deduction | ${deductionData.source}`,
       amount: `-$${deductionAmount.toFixed(2)}`,
-      timestamp: currentTime.toISOString(),
+      // timestamp: currentTime.toISOString(),
     };
 
     setTransactions([...transactions, newDeductionTransaction]);
@@ -362,16 +433,16 @@ const DashboardPage = () => {
   //MOCK DATE FOR BUILD | REPLACE WITH USER DATA
 
   const [transactions, setTransactions] = useState([
-    { id: 1, description: 'Transaction 1', amount: '$100.00' },
-    { id: 2, description: 'Transaction 2', amount: '$200.00' },
-    { id: 3, description: 'Transaction 3', amount: '$-50.00' },
-    { id: 4, description: 'Transaction 4', amount: '$-40.00' },
-    { id: 5, description: 'Transaction 5', amount: '$-35.00' },
-    { id: 6, description: 'Transaction 6', amount: '$-15.00' },
-    { id: 7, description: 'Transaction 7', amount: '$-123.00' },
-    { id: 8, description: 'Transaction 8', amount: '$-66.00' },
-    { id: 9, description: 'Transaction 9', amount: '$-45.00' },
-    { id: 10, description: 'Transaction 10', amount: '$-15.00' },
+    // { id: 1, description: 'Transaction 1', amount: '$100.00' },
+    // { id: 2, description: 'Transaction 2', amount: '$200.00' },
+    // { id: 3, description: 'Transaction 3', amount: '$-50.00' },
+    // { id: 4, description: 'Transaction 4', amount: '$-40.00' },
+    // { id: 5, description: 'Transaction 5', amount: '$-35.00' },
+    // { id: 6, description: 'Transaction 6', amount: '$-15.00' },
+    // { id: 7, description: 'Transaction 7', amount: '$-123.00' },
+    // { id: 8, description: 'Transaction 8', amount: '$-66.00' },
+    // { id: 9, description: 'Transaction 9', amount: '$-45.00' },
+    // { id: 10, description: 'Transaction 10', amount: '$-15.00' },
   ]);
 
   const [pieChartData, setPieChartData] = useState([
@@ -628,8 +699,8 @@ const DashboardPage = () => {
             {transactions.map((transaction) => (
               <React.Fragment key={transaction.id}>
                 <ListItem style={styles.listItem}>
-                  <div style={{ width: '50%', display: 'inline-block' }}>
-                    {transaction.description} {transaction.amount}
+                  <div style={{ width: '70%', display: 'inline-block' }}>
+                    {transaction.description} {transaction.amount} {transaction.medicareTax} {transaction.stateTax} {transaction.federalTax} {transaction.ssiTax}
                   </div>
                   <div
                     style={{
@@ -657,7 +728,7 @@ const DashboardPage = () => {
             X
           </IconButton>
           <h3>Record Earning</h3>
-          <form onSubmit={(e) => { handleEarningSubmit(), postEarning(e); }}>
+          <form onSubmit={(e) => { handleEarningSubmit(); postEarning(e); }}>
             <div>
               <label htmlFor="amount">Amount: $</label>
               <input
@@ -696,7 +767,7 @@ const DashboardPage = () => {
             X
           </IconButton>
           <h3>Record Deduction</h3>
-          <form onSubmit={(e) => { handleDeductionSubmit(), postDeduction(e); }}>
+          <form onSubmit={(e) => { handleDeductionSubmit(); postDeduction(e); }}>
             <div>
               <label htmlFor="deductionAmount">Amount: $</label>
               <input

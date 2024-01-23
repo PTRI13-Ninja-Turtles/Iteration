@@ -1,3 +1,6 @@
+/* NOT BEING USED, USING NAVIGATE FROM REACT*/
+
+
 const redirect = {};
 
 redirect.dashboard = (req, res, next) => {
