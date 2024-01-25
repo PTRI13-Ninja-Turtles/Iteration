@@ -1,13 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 const initialState = {
-  amount: 0,
-  source: '',
-  timestamp: '',
-  medicareTax: 0,
-  stateTax: 0,
-  ssiTax: 0,
-  federalTax: 0,
+  // ORIGINAL STATE
+  // amount: 0,
+  // source: '',
+  // timestamp: '',
+  // medicareTax: 0,
+  // stateTax: 0,
+  // ssiTax: 0,
+  // federalTax: 0,
 
   status: 'pending',
   error: null
