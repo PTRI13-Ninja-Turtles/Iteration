@@ -15,6 +15,7 @@ import { ResponsivePie } from '@nivo/pie';
 import { ResponsiveBar } from '@nivo/bar';
 import { ResponsiveLine } from '@nivo/line';
 import { RobotoFontFace } from '@fontsource/roboto';
+import { useDispatch, useSelector } from 'react-redux';
 
 //STATE STATE STATE STATE
 const DashboardPage = () => {
@@ -62,6 +63,10 @@ const DashboardPage = () => {
     //   })
     //   .catch(err => console.log(err));
   };
+
+
+
+
   /*On load we will make a GET request to retrieve user data based on the verification of token  */
   useEffect(() => {
     fetchData();
