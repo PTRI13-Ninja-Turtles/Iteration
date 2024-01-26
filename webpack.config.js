@@ -5,7 +5,8 @@ module.exports = {
   entry: './client/src/index.js',
   output: {
     path: path.resolve(__dirname, 'build'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    clean: true
   },
   mode: process.env.NODE_ENV,
   module: {

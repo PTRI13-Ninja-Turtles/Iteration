@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-// 
-
 const initialState = {
 // ORIGINAL STATE PROPERTIES:
 //   amount: 0,
@@ -13,6 +11,7 @@ const initialState = {
 //   federalTax: 0,
   earningData: {},
   deductionData: {},
+  transactions: [],
   status: 'idle',
   error: null
 };
@@ -23,6 +22,16 @@ const initialState = {
 // Async Thunk functions for fetch requests
   // post request add earning data to database 
   // post request add deduction data to database
+
+  // data shape for earningData:
+    // amount: 0,
+    // source: '',
+    // timestamp: '',
+    // type: 'earning',
+    // medicareTax: 0,
+    // stateTax: 0,
+    // ssiTax: 0,
+    // federalTax: 0,
 
 export const postEarning = createAsyncThunk(
   'postEarning',
@@ -40,7 +49,30 @@ export const postEarning = createAsyncThunk(
       });
       const data = await response.json();
       console.log('Response postEarning thunk, financialSlice: ', data);
+      // data architecture for promise response (data)
+          // userTransactionData: 
+          // estimatedIncome,
+          // businessExpenses,
+          // medicareTax: medicare,
+          // ssiTax: ssi,
+          // fedTax: fed,
+          // stateTax,
+          // $push: incomes: 
+                          // amount: 0,
+                          // source: '',
+                          // timestamp: '',
+                          // type: 'earning',
+                          // medicareTax: 0,
+                          // stateTax: 0,
+                          // ssiTax: 0,
+                          // federalTax: 0,
+                          // transMedicare,
+                          // transSSI,
+                          // transFed, 
+                          // transState,
+
       return data;
+
     } catch (error) {
       console.log('Error postEarning thunk, financialSlice: ', error);
       return error.message;
@@ -64,6 +96,7 @@ export const postDeduction = createAsyncThunk(
       });
       const data = await response.json();
       console.log('Response postEarning thunk, financialSlice: ', data);
+        // data architecture: Same as above except:  // $push: expenses: 
       return data;
     } catch (error) {
       console.log('Error postEarning thunk, financialSlice: ', error);
@@ -77,11 +110,17 @@ const financialSlice = createSlice({
   name: 'financial',
   initialState,
   reducers: {
-    updateEarnings: (state, action) => {
-      state.earningData = action.payload;
-    },
-    updateDeductions: (state, action) => {
-      state.deductionData = action.payload;
+    updateTransactions: (state, action) => {
+      // transactions object architecture:
+      // const newTransaction = {
+      //   id: ,
+      //   description: ,
+      //   amount: ,
+      //   medicareTax: ,
+      //   stateTax: ,
+      //   ssiTax: ,
+      //   federalTax:
+      // }
     }
   },
   extraReducers: (builder) => {
@@ -91,6 +130,8 @@ const financialSlice = createSlice({
       })
       .addCase(postEarning.fulfilled, (state, action) => {
         state.status = 'success'
+        // Allocate state accordingly
+        state.earningData = action.payload;
       })
       .addCase(postEarning.rejected, (state, action) => {
         state.status = 'failed'
@@ -101,6 +142,7 @@ const financialSlice = createSlice({
       })
       .addCase(postDeduction.fulfilled, (state, action) => {
         state.status = 'success'
+        state.deductionData = action.payload;
       })
       .addCase(postDeduction.rejected, (state, action) => {
         state.status = 'failed'
