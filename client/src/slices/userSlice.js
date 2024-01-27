@@ -25,7 +25,7 @@ export const fetchUserData = createAsyncThunk(
 );
 
 const userSlice = createSlice({
-  name: 'user data',
+  name: 'userdata',
   initialState: {
     userData: {},
     userName: '',
