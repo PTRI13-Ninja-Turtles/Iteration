@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { transactionOwed } from '../../../server/Controllers/CalcController';
 
 // Copied initial state details from dashboard container.
 
@@ -20,7 +19,11 @@ const initialState = {
     timestamp: '',
     type: 'deduction',
   },
+  expenses: [],
+  incomes: [],
   transactions: [],
+  earningForm: false,
+  deductionForm: false,
   status: 'pending',
   error: null
 };
@@ -88,10 +91,14 @@ export const postDeduction = createAsyncThunk(
 );
 
 //financialSlice function
-const financialSlice = createSlice({
+export const financialSlice = createSlice({
   name: 'financial',
   initialState,
   reducers: {
+    setFinancialData: (state, action) => {
+      state.expenses = action.payload.expenses;
+      state.incomes = action.payload.incomes;
+    },
     updateEarnings: (state, action) => {
       state.earningData = action.payload;
     },
@@ -152,8 +159,8 @@ const financialSlice = createSlice({
   },
 });
 
-//export actions from financialSlice:
-export const {updateEarnings, updateDeductions} = financialSlice.actions;
+// Exporting setFinancial data reducer for use in useSlice.
+export const { setFinancialData } = financialSlice.actions;
 
 //export reducer:
 export default financialSlice.reducer;
