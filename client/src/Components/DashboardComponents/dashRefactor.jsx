@@ -49,6 +49,7 @@ const DashboardPage = () => {
         { id: 'Earnings', label: 'Earnings', value: (Math.abs(estimatedIncome)).toFixed(2)}
       ];
       return result;
+      
     });
     
     // label storing new array for pie chart update
