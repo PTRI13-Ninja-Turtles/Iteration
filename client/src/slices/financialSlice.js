@@ -80,10 +80,10 @@ const financialSlice = createSlice({
   initialState,
   reducers: {
     updateEarnings: (state, action) => {
-      state.earningData = action.payload;
+      state.earningData = state.earningData.push(action.payload);
     },
     updateDeductions: (state, action) => {
-      state.deductionData = action.payload;
+      state.deductionData = state.deductionData.push(action.payload);
     }
   },
   extraReducers: (builder) => {

@@ -28,16 +28,7 @@ const DashboardPage = () => {
   // use dispatch to invoke thunk and load user data
   dispatch(fetchUserData);
   
-  //helper function to update pie chart
-  // state currently passed in as arg, guessing we need to import store from redux at top?
-    // labels for storing individual selector arguments for createSelector
-
-
-
-
-
-  
-  // On Load will render piechart with userData
+  // On Load will render pieChart and barChart with userData
   useEffect(() => {
     //access state
     const stateTax = useSelector((state) => state.userData.stateTax);
@@ -46,7 +37,10 @@ const DashboardPage = () => {
     const medicareTax = useSelector((state) => state.userData.medicareTax);
     const businessExp = useSelector((state) => state.userData.businessExpenses);
     const estIncome = useSelector((state) => state.userData.estimatedIncome);
+    const earnings = useSelector((state) => state.earningData);
+    const deductions = useSelector((state) => state.deductionData);
 
+    // Declare and update pieChartData 
     const pieChartData = [
       { id: 'State Tax', label: 'State Tax', value: stateTax },
       { id: 'Federal Tax', label: 'Federal Tax', value: (Math.abs(fedTax)) },
@@ -56,9 +50,22 @@ const DashboardPage = () => {
       { id: 'Earnings', label: 'Earnings', value: (Math.abs(estIncome))},
     ];
     
-
-  }, []) //Listen on redux state change)
+    // Declare and update barChartData
+    const barChart = [
+      { month: 'Aug', earnings: 0, deductions: 0 },
+      { month: 'Sep', earnings: 0, deductions: 0 },
+      { month: 'Oct', earnings: 0, deductions: 0 },
+      { month: 'Nov', earnings: 0, deductions: 0 },
+      { month: 'Dec', earnings: 0, deductions: 0 },
+      { month: 'Jan', earnings: 0, deductions: 0 },
+    ];
   
+    // need to iterate through earnings and deductions data, parse timestamp, then sort into correct element & object
+
+  }, []) 
+  
+
+  // On load render barChart with user data
   useEffect(() => {
   
     const earnings = state => state.earningsData.incomes;
