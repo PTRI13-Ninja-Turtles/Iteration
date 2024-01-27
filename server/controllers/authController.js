@@ -2,13 +2,16 @@ process.env.SECRET = '7hDkL$2pA!sFg@9rJm&5tYiX';
 require('dotenv').config();
 const models = require('../models/mongooseModels');  
 const jwt = require('jsonwebtoken'); 
+const session = require('express-session');
+const bcrypt = require('bcrypt');
+
  
 // this creates json web token
 const createToken = (_id) => { 
   if (!process.env.SECRET) {
     throw Error('Secret key is missing. Make sure process.env.SECRET is defined.');
   }
-  return jwt.sign({_id}, process.env.SECRET, {expiresIn: '1d'});
+  return jwt.sign({_id}, process.env.SECRET, {expiresIn: '30d'});
 };
 
 // signup user 
@@ -45,18 +48,46 @@ const signupUser = async (req, res, next) => {
 }; 
 
 // login user 
-const loginUser = async (req,res) => { 
+const loginUser = async (req, res, next) => { 
   const { email, password } = req.body; 
-  try {
-    const user = await models.Person.login(email, password);  
+  // try {
+   // const user = await models.Person.login(email, password);  
+   // const user = await models.Person.findOne({email});  
+
+    models.Person.findOne({ email }, (err, user) =>{
+      if (err) throw err;
+      if (!user) {
+        return res.status(401).send('Invalid email or password')
+      }
+
+      bcrypt.compare(password, user.password, (err,result) =>{
+        if (err) throw err;
+        if (result){
+          res.locals.user = user;
+        }
+      });
+
+      const token = createToken(user._id);
+
+    })
+    .then((data) => {
+      return next()
+    })
+    .catch((err) =>{
+      console.log('error in the authController.loginUser middleware', err)
+      return next(err)
+    })
+
 
     // create token
-    const token = createToken(user._id);
+  //   const token = createToken(user._id);
 
-    res.status(200).json({email, token});
-  } catch (error) {
-    res.status(400).json({error: error.message});
-  }
+  //   res.status(200).json({email, token});
+  //   return next();
+  // } catch (error) {
+  //   res.status(400).json({error: error.message});
+  //   return next(error);
+  // }
 
 }; 
 
