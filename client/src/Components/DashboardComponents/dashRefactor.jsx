@@ -18,6 +18,8 @@ import { RobotoFontFace } from '@fontsource/roboto';
 import { useDispatch, useSelector} from 'react-redux';
 import { fetchUserData } from '../../slices/userSlice';
 import { createSelector } from '@reduxjs/toolkit';
+import { useSelector } from 'react-redux';
+
 
 //STATE STATE STATE STATE
 const DashboardPage = () => {
@@ -28,35 +30,41 @@ const DashboardPage = () => {
   
   //helper function to update pie chart
   // state currently passed in as arg, guessing we need to import store from redux at top?
-  const UpdatePieChart = (state) => {
-
     // labels for storing individual selector arguments for createSelector
-    const selectStateTax = state => state.userData.stateTax;
-    const selectFedTax = state => state.userData.fedTax;
-    const selectSsiTax = state => state.userData.ssiTax;
-    const selectMedicareTax = state => state.userData.medicareTax;
-    const selectBusinessExp = state => state.userData.businessExpenses;
-    const selectEstIncome = state => state.userData.estimatedIncome;
 
-    // label storing new array for pie chart update
-    const PieChartDataSelector = createSelector([selectStateTax, selectFedTax, selectSsiTax, selectMedicareTax, selectBusinessExp, selectEstIncome], (stateTax, fedTax, ssiTax, medicareTax, businessExpenses, estimatedIncome) => {
-      const result = [
-        { id: 'State Tax', label: 'State Tax', value: stateTax},
-        { id: 'Federal Tax', label: 'Federal Tax', value: (Math.abs(fedTax)).toFixed(2) },
-        { id: 'SSI Tax', label: 'SSI Tax', value: (Math.abs(ssiTax)).toFixed(2) },
-        { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.abs(medicareTax)).toFixed(2) },
-        { id: 'Deductions', label: 'Deductions', value: (Math.abs(businessExpenses)).toFixed(2)},
-        { id: 'Earnings', label: 'Earnings', value: (Math.abs(estimatedIncome)).toFixed(2)}
-      ];
-      return result;
-      
-    });
+
+
+
+
+  
+  // On Load will render piechart with userData
+  useEffect(() => {
+    //access state
+    const stateTax = useSelector((state) => state.userData.stateTax);
+    const fedTax = useSelector((state) => state.userData.fedTax);
+    const ssiTax = useSelector((state) => state.userData.ssiTax);
+    const medicareTax = useSelector((state) => state.userData.medicareTax);
+    const businessExp = useSelector((state) => state.userData.businessExpenses);
+    const estIncome = useSelector((state) => state.userData.estimatedIncome);
+
+    const pieChartData = [
+      { id: 'State Tax', label: 'State Tax', value: stateTax },
+      { id: 'Federal Tax', label: 'Federal Tax', value: (Math.abs(fedTax)) },
+      { id: 'SSI Tax', label: 'SSI Tax', value: (Math.abs(ssiTax)) },
+      { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.abs(medicareTax)) },
+      { id: 'Deductions', label: 'Deductions', value: (Math.abs(businessExp))},
+      { id: 'Earnings', label: 'Earnings', value: (Math.abs(estIncome))},
+    ];
     
-    // label storing new array for pie chart update
-    const pieChartData = PieChartDataSelector(state);
 
-    return pieChartData;
-  };
+  }, []) //Listen on redux state change)
+  
+  useEffect(() => {
+  
+    const earnings = state => state.earningsData.incomes;
+    const deductions = state => state.deductionData.expenses;
+    
+  });
 
 
   const updateBarChart = () => {
