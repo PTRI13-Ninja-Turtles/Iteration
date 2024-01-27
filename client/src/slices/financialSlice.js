@@ -4,7 +4,8 @@ import { transactionOwed } from '../../../server/Controllers/CalcController';
 // Copied initial state details from dashboard container.
 
 const initialState = {
-  earningData: {
+
+  earningData: [{
     amount: 0,
     source: '',
     timestamp: '',
@@ -13,13 +14,13 @@ const initialState = {
     stateTax: 0,
     ssiTax: 0,
     federalTax: 0,
-  },
-  deductionData: {
+  }],
+  deductionData: [{
     amount: 0,
     source: '',
     timestamp: '',
     type: 'deduction',
-  },
+  }],
   transactions: [],
   status: 'pending',
   error: null
@@ -132,6 +133,7 @@ const financialSlice = createSlice({
       })
       .addCase(postDeduction.fulfilled, (state, action) => {
         state.status = 'success';
+        // 
         // Once deduction is posted to database need to update transactions state from data returned.
 
         // Accesses the payload object which has the data necessary to update the transaction state.

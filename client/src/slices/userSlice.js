@@ -44,7 +44,7 @@ const userSlice = createSlice({
       })
       .addCase(fetchUserData.fulfilled, (state, action) => {
         state.status = 'succeded';
-        state.userData = action.payload;
+        state.userData = action.payload.userFound;
         // If the fetch is successful the payload will be assigned to the userFound const.
         // Looking at the routes res.locals if being sent in the response in dashboard router even though the data is on res.locals.userFound.
         const userFound = action.payload.userFound;
@@ -61,3 +61,5 @@ const userSlice = createSlice({
       });
   }
 });
+
+export default userSlice.reducer;
