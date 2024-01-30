@@ -4,18 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 const dispatch = useDispatch();
 
 export const handleEarningSubmit = (newEarning) => {
-  const earningAmount = parseFloat(newEarning);
-  
-  const currentTime = new Date();
-  const currentMonth = currentTime.toLocaleString('default', {month: 'short',});
+  const earningAmount = parseFloat(newEarning.amount);
 
   // Update Redux earningData in redux, access state with useSelector
-  const earningData = useSelector(state => state.earningData);
-
-  dispatch(updateEarnings({
-    ...earningData,
-    amount: earningAmount
-  }));
   
   // Update barChart earnings in correct month
   const barChart = [
@@ -27,30 +18,30 @@ export const handleEarningSubmit = (newEarning) => {
     { month: 'Jan', earnings: 0, deductions: 0 },
   ];
 
-  const updatedBarChartData = barChart.map((monthObj) => {
-    if (monthObj.month === currentMonth) {
-      return {
-        ...monthObj,
-        earnings: monthObj.earnings + earningAmount,
-      };
-    }
-    return monthObj;
-  });
+  // const updatedBarChartData = barChart.map((monthObj) => {
+  //   if (monthObj.month === currentMonth) {
+  //     return {
+  //       ...monthObj,
+  //       earnings: monthObj.earnings + earningAmount,
+  //     };
+  //   }
+  //   return monthObj;
+  // });
   
-  // Update pieChart earnings slice with new earning amount added
-  const updatedPieChartData = pieChartData.map((slice) => {
-    if (slice.id === 'Earnings') {
-      return {
-        ...slice,
-        value: slice.value + earningAmount,
-      };
-    }
-    return slice;
-  });
+  // // Update pieChart earnings slice with new earning amount added
+  // const updatedPieChartData = pieChartData.map((slice) => {
+  //   if (slice.id === 'Earnings') {
+  //     return {
+  //       ...slice,
+  //       value: slice.value + earningAmount,
+  //     };
+  //   }
+  //   return slice;
+  // });
 
 
   // Dispatch the Redux action
-  dispatch(postEarning(earningData));
+  dispatch(postEarning(newEarning));
 
   
 };

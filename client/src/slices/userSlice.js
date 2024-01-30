@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { setFinancialData } from './financialSlice';
+import { setFinancialData, setPieChart } from './financialSlice';
 
 
 // Function is repsonsible for performing aync requests to DB.
@@ -19,9 +19,12 @@ export const fetchUserData = createAsyncThunk(
       console.log('JSON response from get request within fetchUserData', data);
       // This destructures some of the financial data and assigns it to financialSlice state.
       const { userFound } = data;
-      const { expenses, incomes,  } = userFound;
+      const { expenses, incomes, stateTax, fedTax, ssiTax, medicareTax, businessExpenses, estimatedIncome } = userFound;
       // This dispatch will setFinancialData in the financialSlice wehn fetchUserData runs.
+
+      // NEED TO ADD UPDATE TO INITIAL CHARTS
       dispatch(setFinancialData({expenses, incomes}));
+      dispatch(setPieChart({stateTax, fedTax, ssiTax, medicareTax, businessExpenses, estimatedIncome}));
       return userFound;
     } catch (error) {
       console.log('error from get request within fetchUserData', error);
@@ -33,6 +36,7 @@ export const fetchUserData = createAsyncThunk(
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
+    userData: {},
     userName: '',
     grossEarnings: 0,
     status: 'idle',
@@ -50,6 +54,7 @@ export const userSlice = createSlice({
       .addCase(fetchUserData.fulfilled, (state, action) => {
         state.status = 'succeded';
         // If the fetch is successful the payload will be assigned to the userFound const.
+        state.userData = action.payload;
         // Looking at the routes res.locals if being sent in the response in dashboard router even though the data is on res.locals.userFound.
         state.userName = action.payload.email;
         state.grossEarnings = action.payload.estimatedIncome;   

@@ -18,98 +18,40 @@ import { RobotoFontFace } from '@fontsource/roboto';
 import { useDispatch, useSelector} from 'react-redux';
 import { fetchUserData } from '../../slices/userSlice';
 import { createSelector } from '@reduxjs/toolkit';
-import { useSelector } from 'react-redux';
 
 
 //STATE STATE STATE STATE
 const DashboardPage = () => {
   const dispatch = useDispatch();
 
+  // UI section state objects
+  const pieChart = useSelector(state => state.pieChart);
+  const barChart = useSelector(state => state.barChart);
+  const transactions = useSelector(state => state.transactions);
+
+  let pieChartData;
+  let barChartData;
+  let transactionsData;
+
   // use dispatch to invoke thunk and load user data
   dispatch(fetchUserData);
-  
-  // On Load will render pieChart and barChart with userData
+
+
+  //useEffect renders pieChart array to pie chart section of UI. Return statement line: 
   useEffect(() => {
-    //access state
-    const stateTax = useSelector((state) => state.userData.stateTax);
-    const fedTax = useSelector((state) => state.userData.fedTax);
-    const ssiTax = useSelector((state) => state.userData.ssiTax);
-    const medicareTax = useSelector((state) => state.userData.medicareTax);
-    const businessExp = useSelector((state) => state.userData.businessExpenses);
-    const estIncome = useSelector((state) => state.userData.estimatedIncome);
-    const earnings = useSelector((state) => state.earningData);
-    const deductions = useSelector((state) => state.deductionData);
+    pieChartData = pieChart;
+    barChartData = barChart;
+  }, [pieChart, barChart]);
 
-    // Declare and update pieChartData 
-    const pieChartData = [
-      { id: 'State Tax', label: 'State Tax', value: stateTax },
-      { id: 'Federal Tax', label: 'Federal Tax', value: (Math.abs(fedTax)) },
-      { id: 'SSI Tax', label: 'SSI Tax', value: (Math.abs(ssiTax)) },
-      { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.abs(medicareTax)) },
-      { id: 'Deductions', label: 'Deductions', value: (Math.abs(businessExp))},
-      { id: 'Earnings', label: 'Earnings', value: (Math.abs(estIncome))},
-    ];
-    
-    // Declare and update barChartData
-    const barChart = [
-      { month: 'Aug', earnings: 0, deductions: 0 },
-      { month: 'Sep', earnings: 0, deductions: 0 },
-      { month: 'Oct', earnings: 0, deductions: 0 },
-      { month: 'Nov', earnings: 0, deductions: 0 },
-      { month: 'Dec', earnings: 0, deductions: 0 },
-      { month: 'Jan', earnings: 0, deductions: 0 },
-    ];
-  
-    // need to iterate through earnings and deductions data, parse timestamp, then sort into correct element & object
 
-  }, []) 
-  
-
-  // On load render barChart with user data
+  //useEffect renders transactions array to transaction section of UI. Return statement line: 
   useEffect(() => {
+    transactionsData = transactions;
+  }, [transactions]);
+
+
+ 
   
-    const earnings = state => state.earningsData.incomes;
-    const deductions = state => state.deductionData.expenses;
-    
-  });
-
-
-  const updateBarChart = () => {
-
-    // selector labels for income and deduction state
-        // need to access earnings and deductions with timestamps on earning data
-    const selectEarnings = state => state.earningsData.incomes;
-    const selectDeductions = state => state.deductionData.expenses;
-
-    // label for storing updated barChart array
-        // bar chart data = array of objects with properties: month, earnings, deductions. months are Aug- Jan? access amount and timestamp on each object of incomes or expenses array
-    const BarChartSelector = createSelector([selectEarnings, selectDeductions], (earnings, deductions) => {
-      const barChart = [
-        { month: 'Aug', earnings: 0, deductions: 0 },
-        { month: 'Sep', earnings: 0, deductions: 0 },
-        { month: 'Oct', earnings: 0, deductions: 0 },
-        { month: 'Nov', earnings: 0, deductions: 0 },
-        { month: 'Dec', earnings: 0, deductions: 0 },
-        { month: 'Jan', earnings: 0, deductions: 0 },
-      ];
-      
-      // Iterate over earnings / deductions array of objects w/ amount and timestamp properties, if timestamp matches month in barchart, reassign earnings or deductions
-      // solution assumes timestamps are chronological
-      let i = 0;
-      let j = 0;
-      while (i < earnings.length && deductions.length) {
-        if (earnings[i]) {
-            // iterate over barchart to see if months match and then update earnings if they do. Need way to check all months without nested for loop? Binary search tree?
-        }
-        if (deductions[i]) {
-            // see above
-        }
-      }
-    });
-    
-  };
-  
-
 
 
 
@@ -142,188 +84,7 @@ const DashboardPage = () => {
     setIsDeductionFormOpen(false);
   };
 
-  // REALLY HANDLE EVERYTHING SUBMIT - EARNINGS
 
-  const handleEarningSubmit = () => {
-
-    //POST REQUEST HERE 
-    const currentTime = new Date();
-    const currentMonth = currentTime.toLocaleString('default', {
-      month: 'short',
-    });
-
-    // TURN STRING TO NUM
-    const earningAmount = parseFloat(earningData.amount);
-
-
-    setEarningData({
-      ...earningData,
-      // timestamp: currentTime.toISOString(),
-      amount: earningAmount
-    });
-
-    console.log ('Value of earning data from DashBoard Container', earningData);
-
-    
-    // UPDATE GROSS
-    setGrossEarnings((prevGrossEarnings) => prevGrossEarnings + earningAmount);
-
-    // CREATE & ADD NEW TRANSACTION
-    const newEarningTransaction = {
-      id: transactions.length + 1,
-      description: `Earning | ${earningData.source}`,
-      amount: `+$${earningAmount.toFixed(2)}`,
-      // timestamp: currentTime.toISOString(),
-    };
-
-    setTransactions([...transactions, newEarningTransaction]);
-
-
-
-    // UPDATE PIE
-    const updatedPieChartData = pieChartData.map((slice) => {
-      if (slice.id === 'Earnings') {
-        return {
-          ...slice,
-          value: slice.value + earningAmount,
-        };
-      }
-      return slice;
-    });
-
-    setPieChartData(updatedPieChartData);
-
-    // UPDATE BAR BUT MAKE SURE ITS THE CURRENT MONTH
-    const updatedBarChartData = barChartData.map((monthData) => {
-      if (monthData.month === currentMonth) {
-        return {
-          ...monthData,
-          earnings: monthData.earnings + earningAmount,
-        };
-      }
-      return monthData;
-    });
-
-    setBarChartData(updatedBarChartData);
-
-    // SAME FOR LINE
-    const updatedLineChartData = lineChartData.map((lineData) => {
-      if (lineData.id === 'Earnings') {
-        return {
-          ...lineData,
-          data: [
-            ...lineData.data,
-            {
-              x: currentMonth,
-              y: lineData.data[lineData.data.length - 1].y + earningAmount,
-            },
-          ],
-        };
-      }
-      return lineData;
-    });
-
-    setLineChartData(updatedLineChartData);
-
-    // RESET FORM
-    setEarningData({
-      amount: 0,
-      source: '',
-      timestamp: '',
-      type:'earning',
-    });
-    closeEarningForm();
-  };
-
-
-  // ANOTHER HANDLE EVERYTHING SUBMIT - DEDUCTIONS
-  const handleDeductionSubmit = () => {
-
-    //POST REQUEST HERE 
-    const currentTime = new Date();
-    const currentMonth = currentTime.toLocaleString('default', {
-      month: 'short',
-    });
-    const deductionAmount = parseFloat(deductionData.amount);
-
-    setDeductionData({
-      ...deductionData,
-      // timestamp: currentTime.toISOString(),
-      amount: deductionAmount
-    });
-
-    // TURN STRING TO NUM
-   
-
-    // UPDATE GROSS
-    setGrossEarnings(
-      (prevGrossEarnings) => prevGrossEarnings - deductionAmount
-    );
-
-    // CREATE & ADD NEW TRANSACTION
-    const newDeductionTransaction = {
-      id: transactions.length + 1,
-      description: `Deduction | ${deductionData.source}`,
-      amount: `-$${deductionAmount.toFixed(2)}`,
-      // timestamp: currentTime.toISOString(),
-    };
-
-    setTransactions([...transactions, newDeductionTransaction]);
-
-    // UPDATE PIE
-    const updatedPieChartData = pieChartData.map((slice) => {
-      if (slice.id === 'Deductions') {
-        return {
-          ...slice,
-          value: slice.value + deductionAmount,
-        };
-      }
-      return slice;
-    });
-
-    setPieChartData(updatedPieChartData);
-
-    // UPDATE BAR
-    const updatedBarChartData = barChartData.map((monthData) => {
-      if (monthData.month === currentMonth) {
-        return {
-          ...monthData,
-          deductions: monthData.deductions - deductionAmount,
-        };
-      }
-      return monthData;
-    });
-
-    setBarChartData(updatedBarChartData);
-
-    // UPDATE LINE
-    const updatedLineChartData = lineChartData.map((lineData) => {
-      if (lineData.id === 'Deductions') {
-        return {
-          ...lineData,
-          data: [
-            ...lineData.data,
-            {
-              x: currentMonth,
-              y: lineData.data[lineData.data.length - 1].y + deductionAmount,
-            },
-          ],
-        };
-      }
-      return lineData;
-    });
-
-    setLineChartData(updatedLineChartData);
-
-    // RESET FORM
-    setDeductionData({
-      amount: 0,
-      source: '',
-      timestamp: '',
-      type: 'deduction',
-    });
-    closeDeductionForm();
-  };
 
   // RUN ONCE / TRY REDUCE TO ADD ALL PIE SLICES
   useEffect(() => {
@@ -334,63 +95,6 @@ const DashboardPage = () => {
     setGrossEarnings(initialGrossEarnings);
   }, []);
 
-  //MOCK DATE FOR BUILD | REPLACE WITH USER DATA
-
-  const [transactions, setTransactions] = useState([
-    // { id: 1, description: 'Transaction 1', amount: '$100.00' },
-    // { id: 2, description: 'Transaction 2', amount: '$200.00' },
-    // { id: 3, description: 'Transaction 3', amount: '$-50.00' },
-    // { id: 4, description: 'Transaction 4', amount: '$-40.00' },
-    // { id: 5, description: 'Transaction 5', amount: '$-35.00' },
-    // { id: 6, description: 'Transaction 6', amount: '$-15.00' },
-    // { id: 7, description: 'Transaction 7', amount: '$-123.00' },
-    // { id: 8, description: 'Transaction 8', amount: '$-66.00' },
-    // { id: 9, description: 'Transaction 9', amount: '$-45.00' },
-    // { id: 10, description: 'Transaction 10', amount: '$-15.00' },
-  ]);
-
-  const [pieChartData, setPieChartData] = useState([
-    // { id: 'State Tax', label: 'State Tax', value: stateTax },
-    // { id: 'Federal Tax', label: 'Federal Tax', value: fedTax },
-    // { id: 'SSI Tax', label: 'SSI Tax', value: ssiTax },
-    // { id: 'Medicare Tax', label: 'Medicare Tax', value: medicareTax },
-    // { id: 'Deductions', label: 'Deductions', value: 0 },
-    // { id: 'Earnings', label: 'Earnings', value: 0 },
-  ]);
-
-  const [barChartData, setBarChartData] = useState([
-    { month: 'Aug', earnings: 1000, deductions: -500 },
-    { month: 'Sep', earnings: 1200, deductions: -600 },
-    { month: 'Oct', earnings: 800, deductions: -400 },
-    { month: 'Nov', earnings: 1100, deductions: -550 },
-    { month: 'Dec', earnings: 900, deductions: -450 },
-    { month: 'Jan', earnings: 1300, deductions: -650 },
-  ]);
-
-  const [lineChartData, setLineChartData] = useState([
-    {
-      id: 'Earnings',
-      data: [
-        { x: 'Aug', y: 1000 },
-        { x: 'Sep', y: 1200 },
-        { x: 'Oct', y: 800 },
-        { x: 'Nov', y: 1100 },
-        { x: 'Dec', y: 900 },
-        { x: 'Jan', y: 1300 },
-      ],
-    },
-    {
-      id: 'Deductions',
-      data: [
-        { x: 'Aug', y: 500 },
-        { x: 'Sep', y: 600 },
-        { x: 'Oct', y: 400 },
-        { x: 'Nov', y: 550 },
-        { x: 'Dec', y: 450 },
-        { x: 'Jan', y: 650 },
-      ],
-    },
-  ]);
 
   //SLIDER STUFF
 
@@ -509,6 +213,10 @@ const DashboardPage = () => {
       color: '#673AB7',
     },
   };
+
+  // state needed to be imported:
+  // username
+  // lineChartData?
 
   // :)
   return (
