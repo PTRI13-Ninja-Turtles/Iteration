@@ -6,9 +6,14 @@ const authController = require('../Controllers/authController');
 const models = require('../models/mongooseModels');  
 const router = express.Router();
 
+/*
+authcontroller.login <-- does it work?
+get user information from MongoDB <-- authcontroller.login
+Start a session <-- authcontroller.verify token
+*/
 
-router.post('/', authController.loginUser, /*more middleware maybe?*/(req, res) =>{
-//figure out what goes here
+router.post('/', authController.loginUser, /*authController.verifyToken, /*more middleware maybe?*/(req, res) =>{
+    res.status(200).send(res.locals);
 });
 
 module.exports = router

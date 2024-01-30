@@ -8,9 +8,9 @@ const cookieParser = require('cookie-parser');
 
 
 const apiRouterUser = require('./Routes/user');
-const dashboardRouter = require ('./Routes/dashboardRoute')
-const transacionRouter = require ('./Routes/transactions')
-const loginRouter = require ('./Routes/loginRoute')
+const dashboardRouter = require ('./Routes/dashboardRoute');
+const transacionRouter = require ('./Routes/transactions');
+const loginRouter = require ('./Routes/loginRoute');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
