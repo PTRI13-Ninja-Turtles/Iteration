@@ -66,18 +66,25 @@ authController.loginUser = (req, res, next) => {
         return res.status(401).send('Invalid email or password')
       }
 
-      bcrypt.compare(password, user.password, (err,result) =>{
-        if (err) throw err;
-        if (result){
-          res.locals.user = user;
-        }
-      });
+      const isMatch = bcrypt.compare(password, user.password)
+
+      if (isMatch) {
+        res.locals.user = user;
+      } else {
+        console.log('Incorrect Password');
+      }
+      // bcrypt.compare(password, user.password, (err,result) =>{
+      //   if (err) throw err;
+      //   if (result){
+      //     res.locals.user = user;
+      //   }
+      // });
 
       // res.locals.user = user;
 
-      const token = createToken(user._id);
-      console.log('this is the token:', token);
-      res.cookie('access_token', token, { httpOnly: true });
+      // const token = createToken(user._id);
+      // console.log('this is the token:', token);
+      // res.cookie('access_token', token, { httpOnly: true });
 
 
       console.log('authController loginUser sucessful: ', res.locals.user);
