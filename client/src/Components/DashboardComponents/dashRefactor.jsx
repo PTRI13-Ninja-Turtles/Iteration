@@ -16,25 +16,34 @@ import { ResponsiveBar } from '@nivo/bar';
 import { ResponsiveLine } from '@nivo/line';
 import { RobotoFontFace } from '@fontsource/roboto';
 import { useDispatch, useSelector} from 'react-redux';
-import { fetchUserData } from '../../slices/userSlice';
+import { fetchUserData, } from '../../slices/userSlice';
+import { postEarning, postDeduction } from '../../slices/financialSlice';
 import { createSelector } from '@reduxjs/toolkit';
 
+// import store from '../../store/store';
+const state = store.getState();
 
 //STATE STATE STATE STATE
-const DashboardPage = () => {
+const DashboardRefactor = () => {
   const dispatch = useDispatch();
+
+
+  // use dispatch to invoke thunk and load user data
+  useEffect(() => {
+    dispatch(fetchUserData);
+  },[]);
 
   // UI section state objects
   const pieChart = useSelector(state => state.pieChart);
   const barChart = useSelector(state => state.barChart);
   const transactions = useSelector(state => state.transactions);
-
-  let pieChartData;
-  let barChartData;
-  let transactionsData;
-
-  // use dispatch to invoke thunk and load user data
-  dispatch(fetchUserData);
+  console.log('pie chart', pieChart);
+  console.log('bar chart', barChart);
+  const username = useSelector(state => state.username);
+  
+  let pieChartData = [];
+  let barChartData = [];
+  const transactionsData = [];
 
 
   //useEffect renders pieChart array to pie chart section of UI. Return statement line: 
@@ -45,13 +54,36 @@ const DashboardPage = () => {
 
 
   //useEffect renders transactions array to transaction section of UI. Return statement line: 
-  useEffect(() => {
-    transactionsData = transactions;
-  }, [transactions]);
+  // useEffect(() => {
+  //   transactionsData = transactions;
+  // }, [transactions]);
 
 
  
-  
+  const [lineChartData, setLineChartData] = useState([
+    {
+      id: 'Earnings',
+      data: [
+        { x: 'Aug', y: 1000 },
+        { x: 'Sep', y: 1200 },
+        { x: 'Oct', y: 800 },
+        { x: 'Nov', y: 1100 },
+        { x: 'Dec', y: 900 },
+        { x: 'Jan', y: 1300 },
+      ],
+    },
+    {
+      id: 'Deductions',
+      data: [
+        { x: 'Aug', y: 500 },
+        { x: 'Sep', y: 600 },
+        { x: 'Oct', y: 400 },
+        { x: 'Nov', y: 550 },
+        { x: 'Dec', y: 450 },
+        { x: 'Jan', y: 650 },
+      ],
+    },
+  ]);
 
 
 
@@ -88,6 +120,7 @@ const DashboardPage = () => {
 
   // RUN ONCE / TRY REDUCE TO ADD ALL PIE SLICES
   useEffect(() => {
+    console.log('reduce line 118: ', pieChartData);
     const initialGrossEarnings = pieChartData.reduce(
       (total, slice) => total + slice.value,
       0
@@ -308,7 +341,7 @@ const DashboardPage = () => {
             <Typography variant="h7">Previous Transactions</Typography>
           </div>
           <div style={styles.listContent}>
-            {transactions.map((transaction) => (
+            {/* {transactions.map((transaction) => (
               <React.Fragment key={transaction.id}>
                 <ListItem style={styles.listItem}>
                   <div style={{ width: '70%', display: 'inline-block' }}>
@@ -326,7 +359,7 @@ const DashboardPage = () => {
                 </ListItem>
                 <Divider />
               </React.Fragment>
-            ))}
+            ))} */}
           </div>
         </List>
       </Paper>
@@ -340,16 +373,16 @@ const DashboardPage = () => {
             X
           </IconButton>
           <h3>Record Earning</h3>
-          <form onSubmit={(e) => { handleEarningSubmit(); postEarning(e); }}>
+          <form onSubmit={(e) => { dispatch(postEarning(e.target.value)); }}>
             <div>
               <label htmlFor="amount">Amount: $</label>
               <input
                 type="number"
                 id="amount"
-                value={earningData.amount}
-                onChange={(e) =>
-                  setEarningData({ ...earningData, amount: e.target.value })
-                }
+                // value={e.target.value}
+                // onChange={(e) =>
+                //   setEarningData({ ...earningData, amount: e.target.value })
+                // }
                 required
               />
             </div>
@@ -358,10 +391,10 @@ const DashboardPage = () => {
               <input
                 type="text"
                 id="source"
-                value={earningData.source}
-                onChange={(e) =>
-                  setEarningData({ ...earningData, source: e.target.value })
-                }
+                // value={earningData.source}
+                // onChange={(e) =>
+                //   setEarningData({ ...earningData, source: e.target.value })
+                // }
                 required
               />
             </div>
@@ -379,16 +412,16 @@ const DashboardPage = () => {
             X
           </IconButton>
           <h3>Record Deduction</h3>
-          <form onSubmit={(e) => { handleDeductionSubmit(); postDeduction(e); }}>
+          <form onSubmit={(e) => { dispatch(postDeduction(e)); }}>
             <div>
               <label htmlFor="deductionAmount">Amount: $</label>
               <input
                 type="number"
                 id="deductionAmount"
-                value={deductionData.amount}
-                onChange={(e) =>
-                  setDeductionData({ ...deductionData, amount: e.target.value })
-                }
+                // value={deductionData.amount}
+                // onChange={(e) =>
+                //   setDeductionData({ ...deductionData, amount: e.target.value })
+                // }
                 required
               />
             </div>
@@ -397,10 +430,10 @@ const DashboardPage = () => {
               <input
                 type="text"
                 id="deductionSource"
-                value={deductionData.source}
-                onChange={(e) =>
-                  setDeductionData({ ...deductionData, source: e.target.value })
-                }
+                // value={deductionData.source}
+                // onChange={(e) =>
+                //   setDeductionData({ ...deductionData, source: e.target.value })
+                // }
                 required
               />
             </div>
@@ -416,4 +449,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default DashboardRefactor;

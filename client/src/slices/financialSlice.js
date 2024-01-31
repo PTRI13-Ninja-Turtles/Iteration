@@ -31,6 +31,28 @@ const initialState = {
     { month: 'Dec', earnings: 900, deductions: -450 },
     { month: 'Jan', earnings: 1300, deductions: -650 },
   ],
+  lineChart: [    {
+    id: 'Earnings',
+    data: [
+      { x: 'Aug', y: 1000 },
+      { x: 'Sep', y: 1200 },
+      { x: 'Oct', y: 800 },
+      { x: 'Nov', y: 1100 },
+      { x: 'Dec', y: 900 },
+      { x: 'Jan', y: 1300 },
+    ],
+  },
+  {
+    id: 'Deductions',
+    data: [
+      { x: 'Aug', y: 500 },
+      { x: 'Sep', y: 600 },
+      { x: 'Oct', y: 400 },
+      { x: 'Nov', y: 550 },
+      { x: 'Dec', y: 450 },
+      { x: 'Jan', y: 650 },
+    ],
+  },],
   earningForm: false,
   deductionForm: false,
   status: 'idle',
@@ -50,6 +72,7 @@ const initialState = {
 export const postEarning = createAsyncThunk(
   'postEarning',
   async (earningData, {getState, rejectWithValue}) => {
+    console.log('postEarning Thunk, finanSlice, e object: ', earningData);
     const token = localStorage.getItem('token');
     try {
       const response = await fetch('http://localhost:3000/transaction', {
@@ -133,13 +156,13 @@ export const financialSlice = createSlice({
     },
     updateEarningForm: (state) => {
       if (state.earningForm === false) {
-        state.earnignform = true;
+        state.earnignForm = true;
       }
       if (state.earningForm === true) {
-        state.earnignform = false;
+        state.earnignForm = false;
       }
     },
-    deductionForm: (state) => {
+    updateDeductionForm: (state) => {
       if (state.deductionForm === false) {
         state.deductionForm = true;
       }
