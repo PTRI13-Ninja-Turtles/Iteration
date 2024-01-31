@@ -12,8 +12,8 @@ get user information from MongoDB <-- authcontroller.login
 Start a session <-- authcontroller.verify token
 */
 
-router.post('/', authController.loginUser, /*authController.verifyToken, /*more middleware maybe?*/(req, res) =>{
-    res.status(200).send(res.locals);
+router.post('/', authController.loginUser, (req, res) =>{
+  res.status(200).send(res.locals).redirect('/dashboard');
 });
 
 module.exports = router

@@ -46,13 +46,13 @@ userController.findUser = (req, res, next) => {
 
 userController.createUser = async (req, res, next) => {
 
-  // const {
-  //   filingStatus,
-  //   state,
-  //   estimatedIncome,
-  //   businessExpenses,
-  //   preTaxRetirementContributions
-  // } = res.locals;
+  const {
+    filingStatus,
+    state,
+    estimatedIncome,
+    businessExpenses,
+    preTaxRetirementContributions
+  } = res.locals;
 
   const {
     firstName,
@@ -62,10 +62,10 @@ userController.createUser = async (req, res, next) => {
     industry
   } = req.body;
 
-  // const medicareTax = res.locals.taxesOwed.medicare;
-  // const ssiTax = res.locals.taxesOwed.ssi;
-  // const fedTax = res.locals.taxesOwed.fed;
-  // const stateTax = res.locals.taxesOwed.stateTax;
+  const medicareTax = res.locals.taxesOwed.medicare;
+  const ssiTax = res.locals.taxesOwed.ssi;
+  const fedTax = res.locals.taxesOwed.fed;
+  const stateTax = res.locals.taxesOwed.stateTax;
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -73,17 +73,17 @@ userController.createUser = async (req, res, next) => {
     firstName,
     lastName,
     password: hashedPassword,
-    filingStatus: 'your mom',
-    state: 'in denial',
+    filingStatus,
+    state,
     industry,
     email,
-    estimatedIncome: 100000,
-    businessExpenses: 20000,
-    preTaxRetirementContributions: 25000,
-    medicareTax: 3000,
-    ssiTax: 300,
-    fedTax: 1234,
-    stateTax: 0
+    estimatedIncome,
+    businessExpenses,
+    preTaxRetirementContributions,
+    medicareTax,
+    ssiTax,
+    fedTax,
+    stateTax
   })
     .then((data) => {
       console.log('sucessfully created the document in MongoDB' + data);

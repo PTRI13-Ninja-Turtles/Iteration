@@ -32,12 +32,11 @@ authController.signupUser = async (req, res, next) => {
 
     // create a token 
     const token = createToken(user._id);
-
     res.cookie('access_token', token, { httpOnly: true });
     // Send the token as a cookie
     // res.cookie('token', token, {httpOnly: true});
 
-    res.locals.token = token;
+    // res.locals.token = token;
 
 
     //expires: new Date(Date.now() + 24 * 60 * 60 * 1000), secure: true, sameSite: 'Strict'
@@ -70,21 +69,15 @@ authController.loginUser = (req, res, next) => {
 
       if (isMatch) {
         res.locals.user = user;
+        console.log('bcrypt.compare worked!')
       } else {
         console.log('Incorrect Password');
       }
-      // bcrypt.compare(password, user.password, (err,result) =>{
-      //   if (err) throw err;
-      //   if (result){
-      //     res.locals.user = user;
-      //   }
-      // });
 
-      // res.locals.user = user;
 
-      // const token = createToken(user._id);
-      // console.log('this is the token:', token);
-      // res.cookie('access_token', token, { httpOnly: true });
+      const token = createToken(user._id);
+      console.log('this is the token:', token);
+      res.cookie('access_token', token, { httpOnly: true });
 
 
       console.log('authController loginUser sucessful: ', res.locals.user);
@@ -112,19 +105,28 @@ authController.loginUser = (req, res, next) => {
 
 authController.verifyToken = (req, res, next) => {
   // Extract token from Authorization header
+  /*
   const authorizationHeader = req.headers['authorization'];
 
   if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
     // Token not provided in the correct format
     return res.status(401).json({ error: 'Unauthorized' });
   }
+  */
+  // const token = authorizationHeader.split(' ')[1];
 
-  const token = authorizationHeader.split(' ')[1];
+  console.log('authController.verifyToken reached');
+  console.log('this is req.cookies:', req.cookies);
+  const token = req.cookies.access_token;
+
+  console.log('token created: ', token);
 
   try {
+    console.log('try block accessed');
     // Verify the token
     const decoded = jwt.verify(token, process.env.SECRET);
     
+    console.log('JWT verified: ', decoded);
     // Attach the decoded user information onto req.user
     req.user = decoded;
     
