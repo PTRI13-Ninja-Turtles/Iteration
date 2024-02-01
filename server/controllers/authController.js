@@ -77,7 +77,7 @@ authController.loginUser = (req, res, next) => {
 
       const token = createToken(user._id);
       console.log('this is the token:', token);
-      res.cookie('access_token', token, { httpOnly: true });
+      res.cookie('access_token', token);
 
 
       console.log('authController loginUser sucessful: ', res.locals.user);
@@ -114,7 +114,7 @@ authController.verifyToken = (req, res, next) => {
   }
   */
   // const token = authorizationHeader.split(' ')[1];
-
+  console.log('is there aything on res.cookie?', res.cookie)
   console.log('authController.verifyToken reached');
   console.log('this is req.cookies:', req.cookies);
   const token = req.cookies.access_token;

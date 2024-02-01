@@ -12,7 +12,7 @@ get user information from MongoDB <-- authcontroller.login
 Start a session <-- authcontroller.verify token
 */
 
-router.post('/', authController.loginUser, (req, res) =>{
+router.post('/', authController.loginUser, authController.verifyToken, (req, res) =>{
   res.status(200).send(res.locals).redirect('/dashboard');
 });
 
