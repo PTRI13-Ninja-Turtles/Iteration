@@ -140,12 +140,12 @@ export const financialSlice = createSlice({
     setPieChart: (state, action) => {
       // INITIAL PIE CHART STATER BASED ON USER DATA FROM DB
       state.pieChart = [
-        { id: 'State Tax', label: 'State Tax', value: state.stateTax },
-        { id: 'Federal Tax', label: 'Federal Tax', value: (Math.abs(state.fedTax.toFixed(2))) },
-        { id: 'SSI Tax', label: 'SSI Tax', value: (Math.abs(state.ssiTax.toFixed(2))) },
-        { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.abs(state.medicareTax.toFixed(2))) },
-        { id: 'Deductions', label: 'Deductions', value: (Math.abs(state.businessExpenses.toFixed(2)))},
-        { id: 'Earnings', label: 'Earnings', value: (Math.abs(state.estimatedIncome.toFixed(2)))},
+        { id: 'State Tax', label: 'State Tax', value: Math.round(action.payload.stateTax) },
+        { id: 'Federal Tax', label: 'Federal Tax', value: (Math.round(action.payload.fedTax)) },
+        { id: 'SSI Tax', label: 'SSI Tax', value: (Math.round(action.payload.ssiTax)) },
+        { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.round(action.payload.medicareTax)) },
+        { id: 'Deductions', label: 'Deductions', value: (Math.round(action.payload.businessExpenses))},
+        { id: 'Earnings', label: 'Earnings', value: (Math.round(action.payload.estimatedIncome))},
       ];
     },
     updateEarnings: (state, action) => {
@@ -183,16 +183,16 @@ export const financialSlice = createSlice({
         action.payload.incomes.forEach(earning => {
           state.barChart[5].amount += earning;
         });
-
+        console.log('setPieChart reducer finSlice: ', typeof medicareTax)
         // update pieChart with userData
         const userData = action.payload;
         const pieChartData = [
-          { id: 'State Tax', label: 'State Tax', value: userData.stateTax.toFixed(2) },
-          { id: 'Federal Tax', label: 'Federal Tax', value: (Math.abs(userData.fedTax.toFixed(2))) },
-          { id: 'SSI Tax', label: 'SSI Tax', value: (Math.abs(userData.ssiTax.toFixed(2))) },
-          { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.abs(userData.medicareTax.toFixed(2))) },
-          { id: 'Deductions', label: 'Deductions', value: (Math.abs(userData.businessExpenses.toFixed(2)))},
-          { id: 'Earnings', label: 'Earnings', value: (Math.abs(userData.estimatedIncome.toFixed(2)))},
+          { id: 'State Tax', label: 'State Tax', value: Math.round(userData.stateTax) },
+          { id: 'Federal Tax', label: 'Federal Tax', value: (Math.round(userData.fedTax)) },
+          { id: 'SSI Tax', label: 'SSI Tax', value: (Math.round(userData.ssiTax)) },
+          { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.round(userData.medicareTax)) },
+          { id: 'Deductions', label: 'Deductions', value: (Math.round(userData.businessExpenses))},
+          { id: 'Earnings', label: 'Earnings', value: (Math.round(userData.estimatedIncome))},
         ];
         state.pieChart = pieChartData;
 

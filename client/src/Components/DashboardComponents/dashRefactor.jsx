@@ -21,26 +21,30 @@ import { postEarning, postDeduction } from '../../slices/financialSlice';
 import { createSelector } from '@reduxjs/toolkit';
 
 // import store from '../../store/store';
-const state = store.getState();
 
 //STATE STATE STATE STATE
 const DashboardRefactor = () => {
+
   const dispatch = useDispatch();
 
 
   // use dispatch to invoke thunk and load user data
   useEffect(() => {
-    dispatch(fetchUserData);
+    dispatch(fetchUserData());
   },[]);
 
   // UI section state objects
-  const pieChart = useSelector(state => state.pieChart);
-  const barChart = useSelector(state => state.barChart);
-  const transactions = useSelector(state => state.transactions);
+  const pieChart = useSelector(state => state.financialData.pieChart);
+  const barChart = useSelector(state => state.financialData.barChart);
+  const transactions = useSelector(state => state.financialData.transactions);
   console.log('pie chart', pieChart);
   console.log('bar chart', barChart);
-  const username = useSelector(state => state.username);
+  const username = useSelector(state => state.userData.username);
   
+  // if(!pieChart || !barChart) {
+  //   return <div>Loading...</div>
+  // }
+
   let pieChartData = [];
   let barChartData = [];
   const transactionsData = [];
