@@ -178,14 +178,15 @@ export const financialSlice = createSlice({
       })
       .addCase(postEarning.fulfilled, (state, action) => {
         state.status = 'success';
-
+        console.log('after postEarning thunk, action.payload: ', action.payload);
+        const userData = action.payload.userTransactionData;
+        
         // update barChart with userData- iterate through action.payload.incomes and add incomes[0].amount to the Jan month of barChart[5]
-        action.payload.incomes.forEach(earning => {
+        action.payload.userData.incomes.forEach(earning => {
           state.barChart[5].amount += earning;
         });
         console.log('setPieChart reducer finSlice: ', typeof medicareTax)
         // update pieChart with userData
-        const userData = action.payload;
         const pieChartData = [
           { id: 'State Tax', label: 'State Tax', value: Math.round(userData.stateTax) },
           { id: 'Federal Tax', label: 'Federal Tax', value: (Math.round(userData.fedTax)) },
@@ -197,8 +198,8 @@ export const financialSlice = createSlice({
         state.pieChart = pieChartData;
 
         // Accesses the payload object which has the data necessary to update the transaction state.
-        // This is coped from the existing code that creates a newEarningTransaction with somee optimizations.
-        const newTransactions = action.payload.incomes.map((earning) => ({
+        // This is coped from the existing code that creates a newEarningTransaction with some optimizations.
+        const newTransactions = action.payload.userData.incomes.map((earning) => ({
           id: state.transactions.length + 1,
           description: `Earning | ${earning.source}`,
           amount: `+$${earning.amount.toFixed(2)}`,
@@ -206,7 +207,6 @@ export const financialSlice = createSlice({
           stateTax: `State Tax | ${earning.transState.toFixed(2)}`,
           ssiTax: `SSI Tax | ${earning.transSSI.toFixed(2)}`,
           federalTax: `Federal Tax | ${earning.transFed.toFixed(2)}`,
-          // timestamp: new Date().toISOString(), // to generate timestamp on the frontend?
         }));
         // Use spread operator create new transaction array with newEarningTransaction sequentially at the end of the array.
         state.transactions = [...state.transactions, newTransactions];
