@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { setFinancialData, setPieChart } from './financialSlice';
+import { setFinancialData, setCharts } from './financialSlice';
 
 
 // Function is repsonsible for performing aync requests to DB.
@@ -24,7 +24,7 @@ export const fetchUserData = createAsyncThunk(
 
       // NEED TO ADD UPDATE TO INITIAL CHARTS
       dispatch(setFinancialData({expenses, incomes}));
-      dispatch(setPieChart({stateTax, fedTax, ssiTax, medicareTax, businessExpenses, estimatedIncome}));
+      dispatch(setCharts({expenses, incomes, stateTax, fedTax, ssiTax, medicareTax, businessExpenses, estimatedIncome}));
       return userFound;
     } catch (error) {
       console.log('error from get request within fetchUserData', error);
