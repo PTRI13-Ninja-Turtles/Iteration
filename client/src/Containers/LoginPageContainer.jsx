@@ -135,13 +135,37 @@ const LoginPageContainer = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
  
-    const isLoginSuccessful = true;
+    const isLoginSuccessful = false;
 
-    if (isLoginSuccessful) {
-      navigate('/dashboard');
-    } else {
-      console.log('Login failed');
-    }
+    console.log('just before fetch request')
+
+    fetch('http://localhost:3000/login',{
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        password
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+      .then(response => response.json())
+      .then((response) => {
+
+        console.log("the result of running a fetch request in the handleSumbit function: ", response);
+        console.log('response.user.email  =', response.user.email);
+        console.log('response.login = ', response.login)
+
+        if (response.login){
+          navigate('/dashboard');
+        } else {
+          console.log('Login failed');
+        }
+
+      })
+      .catch((err) => {
+        console.log('error in the fetch request on the handleSubmit function on the loginpagecontainer. ... plz help', err)
+      });
   };
 
 

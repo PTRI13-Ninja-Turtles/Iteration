@@ -69,6 +69,7 @@ authController.loginUser = (req, res, next) => {
 
       if (isMatch) {
         res.locals.user = user;
+        res.locals.login = true;
         console.log('bcrypt.compare worked!')
       } else {
         console.log('Incorrect Password');
