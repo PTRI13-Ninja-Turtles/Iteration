@@ -49,12 +49,13 @@ const DashboardRefactor = () => {
   let barChartData = [];
   const transactionsData = [];
 
+  // console.log('pieChart after useEffect, dashRefactor line 52: ', pieChart);
 
   //useEffect renders pieChart array to pie chart section of UI. Return statement line: 
-  useEffect(() => {
-    pieChartData = pieChart;
-    barChartData = barChart;
-  }, [pieChart, barChart]);
+  // useEffect(() => {
+  //   pieChartData = pieChart;
+  //   barChartData = barChart;
+  // }, [pieChart, barChart]);
 
 
   //useEffect renders transactions array to transaction section of UI. Return statement line: 
@@ -256,6 +257,41 @@ const DashboardRefactor = () => {
   // lineChartData?
 
   // :)
+
+  const handleEarningSubmit = (e) => {
+    e.preventDefault();
+
+    console.log('inside handEarningSubmit, newEarning: ', e);
+
+    const newEarning = {
+      amount: e.target[0].value,
+      source: e.target[1].value,
+      timestamp: '',
+      type: 'earning',
+      medicareTax: 0,
+      stateTax: 0,
+      ssiTax: 0,
+      federalTax: 0,
+    };
+
+    dispatch(postEarning(newEarning));
+  };
+
+  const handleDeductionSubmit = (e) => {
+    e.preventDefault();
+
+    console.log('inside handleDeductionSubmit, newDeduction: ', e);
+
+    const newDeduction = {
+      amount: e.target[0].value,
+      source: e.target[1].value,
+      timestamp: '',
+      type: 'deduction'
+    };
+
+    dispatch(postDeduction(newDeduction));
+  };
+
   return (
     <div>
       <Paper style={styles.dashboard}>
@@ -268,7 +304,7 @@ const DashboardRefactor = () => {
             <div style={styles.chartContainer}>
               {isBarChart ? (
                 <ResponsiveBar
-                  data={barChartData}
+                  data={barChart}
                   keys={['earnings', 'deductions']}
                   indexBy="month"
                   margin={{ top: 50, right: 40, bottom: 100, left: 40 }}
@@ -294,7 +330,7 @@ const DashboardRefactor = () => {
           <Grid item xs={12} md={6}>
             <div style={styles.chartContainer}>
               <ResponsivePie
-                data={pieChartData}
+                data={pieChart}
                 margin={{ top: 40, right: 0, bottom: 100, left: 40 }}
                 innerRadius={0.5}
                 padAngle={2}
@@ -345,7 +381,7 @@ const DashboardRefactor = () => {
             <Typography variant="h7">Previous Transactions</Typography>
           </div>
           <div style={styles.listContent}>
-            {/* {transactions.map((transaction) => (
+            {transactions.map((transaction) => (
               <React.Fragment key={transaction.id}>
                 <ListItem style={styles.listItem}>
                   <div style={{ width: '70%', display: 'inline-block' }}>
@@ -363,7 +399,7 @@ const DashboardRefactor = () => {
                 </ListItem>
                 <Divider />
               </React.Fragment>
-            ))} */}
+            ))}
           </div>
         </List>
       </Paper>
@@ -377,7 +413,7 @@ const DashboardRefactor = () => {
             X
           </IconButton>
           <h3>Record Earning</h3>
-          <form onSubmit={(e) => { dispatch(postEarning(e.target.value)); }}>
+          <form onSubmit={(e) => {console.log('submitted'); handleEarningSubmit(e);}}>
             <div>
               <label htmlFor="amount">Amount: $</label>
               <input
