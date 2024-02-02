@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { transactionOwed } from '../../../server/Controllers/CalcController';
 
 // Copied initial state details from dashboard container.
 
@@ -20,8 +19,43 @@ const initialState = {
     timestamp: '',
     type: 'deduction',
   },
+  expenses: [],
+  incomes: [],
   transactions: [],
-  status: 'pending',
+  pieChart: [],
+  barChart: [
+    { month: 'Aug', earnings: 1000, deductions: -500 },
+    { month: 'Sep', earnings: 1200, deductions: -600 },
+    { month: 'Oct', earnings: 800, deductions: -400 },
+    { month: 'Nov', earnings: 1100, deductions: -550 },
+    { month: 'Dec', earnings: 900, deductions: -450 },
+    { month: 'Jan', earnings: 1300, deductions: -650 },
+  ],
+  lineChart: [    {
+    id: 'Earnings',
+    data: [
+      { x: 'Aug', y: 1000 },
+      { x: 'Sep', y: 1200 },
+      { x: 'Oct', y: 800 },
+      { x: 'Nov', y: 1100 },
+      { x: 'Dec', y: 900 },
+      { x: 'Jan', y: 1300 },
+    ],
+  },
+  {
+    id: 'Deductions',
+    data: [
+      { x: 'Aug', y: 500 },
+      { x: 'Sep', y: 600 },
+      { x: 'Oct', y: 400 },
+      { x: 'Nov', y: 550 },
+      { x: 'Dec', y: 450 },
+      { x: 'Jan', y: 650 },
+    ],
+  },],
+  earningForm: false,
+  deductionForm: false,
+  status: 'idle',
   error: null
 };
 
@@ -38,6 +72,7 @@ const initialState = {
 export const postEarning = createAsyncThunk(
   'postEarning',
   async (earningData, {getState, rejectWithValue}) => {
+    console.log('postEarning Thunk, finanSlice, e object: ', earningData);
     const token = localStorage.getItem('token');
     try {
       const response = await fetch('http://localhost:3000/transaction', {
@@ -88,16 +123,53 @@ export const postDeduction = createAsyncThunk(
 );
 
 //financialSlice function
-const financialSlice = createSlice({
+export const financialSlice = createSlice({
   name: 'financial',
   initialState,
   reducers: {
+    setFinancialData: (state, action) => {
+      state.expenses = action.payload.expenses;
+      state.incomes = action.payload.incomes;
+      // MAYBE SET INITIAL TRANSACTION ARRAY
+      state.transactions = [...action.payload.expenses, ...action.payload.incomes].sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return dateA - dateB;
+      });
+    },
+    setPieChart: (state, action) => {
+      // INITIAL PIE CHART STATER BASED ON USER DATA FROM DB
+      state.pieChart = [
+        { id: 'State Tax', label: 'State Tax', value: Math.round(action.payload.stateTax) },
+        { id: 'Federal Tax', label: 'Federal Tax', value: (Math.round(action.payload.fedTax)) },
+        { id: 'SSI Tax', label: 'SSI Tax', value: (Math.round(action.payload.ssiTax)) },
+        { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.round(action.payload.medicareTax)) },
+        { id: 'Deductions', label: 'Deductions', value: (Math.round(action.payload.businessExpenses))},
+        { id: 'Earnings', label: 'Earnings', value: (Math.round(action.payload.estimatedIncome))},
+      ];
+    },
     updateEarnings: (state, action) => {
-      state.earningData = action.payload;
+      state.earningData = state.earningData.push(action.payload);
     },
     updateDeductions: (state, action) => {
-      state.deductionData = action.payload;
-    }
+      state.deductionData = state.deductionData.push(action.payload);
+    },
+    updateEarningForm: (state) => {
+      if (state.earningForm === false) {
+        state.earnignForm = true;
+      }
+      if (state.earningForm === true) {
+        state.earnignForm = false;
+      }
+    },
+    updateDeductionForm: (state) => {
+      if (state.deductionForm === false) {
+        state.deductionForm = true;
+      }
+      if (state.deductionForm === true) {
+        state.deductionForm = false;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -106,11 +178,27 @@ const financialSlice = createSlice({
       })
       .addCase(postEarning.fulfilled, (state, action) => {
         state.status = 'success';
-        // Once earning is posted to database need to update transactions state from data returned.
+
+        // update barChart with userData- iterate through action.payload.incomes and add incomes[0].amount to the Jan month of barChart[5]
+        action.payload.incomes.forEach(earning => {
+          state.barChart[5].amount += earning;
+        });
+        console.log('setPieChart reducer finSlice: ', typeof medicareTax)
+        // update pieChart with userData
+        const userData = action.payload;
+        const pieChartData = [
+          { id: 'State Tax', label: 'State Tax', value: Math.round(userData.stateTax) },
+          { id: 'Federal Tax', label: 'Federal Tax', value: (Math.round(userData.fedTax)) },
+          { id: 'SSI Tax', label: 'SSI Tax', value: (Math.round(userData.ssiTax)) },
+          { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.round(userData.medicareTax)) },
+          { id: 'Deductions', label: 'Deductions', value: (Math.round(userData.businessExpenses))},
+          { id: 'Earnings', label: 'Earnings', value: (Math.round(userData.estimatedIncome))},
+        ];
+        state.pieChart = pieChartData;
 
         // Accesses the payload object which has the data necessary to update the transaction state.
         // This is coped from the existing code that creates a newEarningTransaction with somee optimizations.
-        const newTransactions = action.payload.userTransactionData.incomes.map((earning) => ({
+        const newTransactions = action.payload.incomes.map((earning) => ({
           id: state.transactions.length + 1,
           description: `Earning | ${earning.source}`,
           amount: `+$${earning.amount.toFixed(2)}`,
@@ -132,8 +220,28 @@ const financialSlice = createSlice({
       })
       .addCase(postDeduction.fulfilled, (state, action) => {
         state.status = 'success';
+        // 
         // Once deduction is posted to database need to update transactions state from data returned.
+        state.userFinData = action.payload;
+        state.deductionData = action.payload.expenses;
 
+        // Populate barChart- iterate through action.payload.expenses and add expenses[0].amount to the Jan month of barChart[5]
+        action.payload.expenses.forEach(deduction => {
+          state.barChart[5].deductions += deduction;
+        });
+
+        // update pieChart with userData
+        const userData = action.payload;
+        const pieChartData = [
+          { id: 'State Tax', label: 'State Tax', value: userData.stateTax },
+          { id: 'Federal Tax', label: 'Federal Tax', value: (Math.abs(userData.fedTax.toFixed(2))) },
+          { id: 'SSI Tax', label: 'SSI Tax', value: (Math.abs(userData.ssiTax.toFixed(2))) },
+          { id: 'Medicare Tax', label: 'Medicare Tax', value: (Math.abs(userData.medicareTax.toFixed(2))) },
+          { id: 'Deductions', label: 'Deductions', value: (Math.abs(userData.businessExpenses.toFixed(2)))},
+          { id: 'Earnings', label: 'Earnings', value: (Math.abs(userData.estimatedIncome.toFixed(2)))},
+        ];
+        state.pieChart = pieChartData;
+        
         // Accesses the payload object which has the data necessary to update the transaction state.
         // This is coped from the existing code that created newExpenseTransaction with somee optimizations.
         const newTransactions = action.payload.userTransactionData.expenses.map((deduction) => ({
@@ -152,8 +260,8 @@ const financialSlice = createSlice({
   },
 });
 
-//export actions from financialSlice:
-export const {updateEarnings, updateDeductions} = financialSlice.actions;
+// Exporting setFinancial data reducer for use in useSlice.
+export const { setFinancialData, setPieChart } = financialSlice.actions;
 
 //export reducer:
 export default financialSlice.reducer;
