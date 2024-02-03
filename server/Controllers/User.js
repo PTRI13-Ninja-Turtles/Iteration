@@ -106,9 +106,14 @@ userController.updateUser = (req, res, next) => {
   
   const { transMedicare, transSSI, transFed, transState } = res.locals.transactionOwed;
   //DESTRUCTURE THE BODY AND THEN ADD THE TRANSACTION OWED TAXES Jan 20 9:58 am
+
   if (req.body.type === 'earning'){
     body = {incomes: {
-      ...req.body,
+      // ...req.body,
+      amount: req.body.amount,
+      source: req.body.source,
+      timestamp: req.body.timestamp,
+      type: req.body.type,
       transMedicare,
       transSSI,
       transFed, 
@@ -116,7 +121,10 @@ userController.updateUser = (req, res, next) => {
     }};
   } else if (req.body.type === 'deduction'){
     body = {expenses: {
-      ...req.body,
+      amount: req.body.amount,
+      source: req.body.source,
+      timestamp: req.body.timestamp,
+      type: req.body.type,
       transMedicare,
       transSSI,
       transFed, 
@@ -125,13 +133,6 @@ userController.updateUser = (req, res, next) => {
   }
 
 
-  // req.body = {
-  //   ...req.body,
-  //   transMedicare,
-  //   transSSI,
-  //   transFed, 
-  //   transState,
-  // };
 
   console.log ('Coming from updateUser middleware:\n\n\n\n\n value of the req.body coming from client',req.body );
 
