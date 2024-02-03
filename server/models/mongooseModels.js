@@ -7,6 +7,7 @@ mongoose.connect(MONGO_URI, {
   // options for the connect method to parse the URI
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  writeConcern: { w: 'majority' },
   // sets the name of the DB that our collections are part of
   dbName: 'scratch-project'
 })

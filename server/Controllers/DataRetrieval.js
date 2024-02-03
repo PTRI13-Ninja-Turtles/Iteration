@@ -6,6 +6,7 @@ data.stateBrackets = (req, res, next) =>{
   console.log ('State Brackets Middleware accessed');
   let { state, filingStatus } = res.locals;
   if (filingStatus === 'head') filingStatus = 'single';
+  if (filingStatus === 'married_joint') filingStatus = 'jointly';
 
   console.log ('Value of state in StateBrackets', state);
   console.log ('Vale of filingStatus in StateBrackets',filingStatus);
@@ -18,7 +19,7 @@ data.stateBrackets = (req, res, next) =>{
     values: [state, filingStatus],
   };
   console.log ('res.locals.tables destructured and query created.');
-
+  console.log('this is the query:', query);
   tables.query(query)
     .then((data) =>{
       res.locals.stateTables = data.rows;
@@ -33,7 +34,9 @@ data.stateBrackets = (req, res, next) =>{
 };
 
 data.fedBrackets = ( req, res, next) => {
-  const { filingStatus } = res.locals;
+  let { filingStatus } = res.locals;
+
+  if (filingStatus === 'married_joint') filingStatus = 'married';
 
   const query = {
     text: `

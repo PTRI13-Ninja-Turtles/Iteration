@@ -1,4 +1,5 @@
 const userModels = require('../models/mongooseModels');
+const bcrypt = require('bcrypt')
 
 const userController = {};
 
@@ -22,7 +23,7 @@ userController.newUser = (req, res, next) => {
   res.locals.estimatedIncome = estimatedIncome;
   res.locals.businessExpenses = businessExpenses;
   res.locals.preTaxRetirementContributions = preTaxRetirementContributions;
-
+  console.log('we hit the newUser middleware!', res.locals);
   return next();
 };
 
@@ -43,7 +44,7 @@ userController.findUser = (req, res, next) => {
 
 };
 
-userController.createUser = (req, res, next) => {
+userController.createUser = async (req, res, next) => {
 
   const {
     filingStatus,
@@ -66,12 +67,12 @@ userController.createUser = (req, res, next) => {
   const fedTax = res.locals.taxesOwed.fed;
   const stateTax = res.locals.taxesOwed.stateTax;
 
-
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   userModels.Person.create({
     firstName,
     lastName,
-    password,
+    password: hashedPassword,
     filingStatus,
     state,
     industry,
@@ -178,60 +179,5 @@ userController.updateUser = (req, res, next) => {
   
 };
 
-
-// userController.updateUser = async (req, res, next) => {
-//   try {
-//     // update gross income, deduction & tax amounts, return per transaction tax values, create a transaction or deduction element on the array
-//     // req.body.type = earning || deduction
-//     let body = {};
-
-//     console.log('Coming from updateUser middleware:\n\n\n\n\n value of the req.body coming from client', req.body);
-
-//     console.log('Coming from updateUser middleware: result of req.body.type', req.body.type);
-
-//     // DESTRUCTURE THE BODY AND THEN ADD THE TRANSACTION OWED TAXES Jan 20 9:58 am
-
-//     const { transMedicare, transSSI, transFed, transState } = res.locals.transactionOwed;
-//     req.body = {
-//       ...req.body,
-//       transMedicare,
-//       transSSI,
-//       transFed,
-//       transState,
-//     };
-
-//     if (req.body.type === 'earning') {
-//       body = { incomes: req.body };
-//     } else if (req.body.type === 'deduction') {
-//       body = { expenses: req.body };
-//     }
-
-//     // tax values for this transaction
-//     // new YTD taxes owed
-//     const { medicare, ssi, fed, stateTax } = res.locals.taxesOwed;
-//     // new YDT earnings and deductions
-//     const { estimatedIncome, businessExpenses } = res.locals;
-
-//     const id = req.user._id;
-//     const update = {
-//       estimatedIncome,
-//       businessExpenses,
-//       medicareTax: medicare,
-//       ssiTax: ssi,
-//       fedTax: fed,
-//       stateTax,
-//     };
-
-//     console.log('THIS IS THE VALUE OF UPDATE OBJECT WITH EVERYTHING THAT WE NEED FOR THE UPDATE OF THE DOCUMENT\n\n\n\n\n\n\n:', update);
-
-//     const response = await userModels.Person.findByIdAndUpdate(id, { $push: body, $set: update}, { overwrite: true }).exec();
-//     console.log('result of the response from updating the document in db', response);
-//     res.locals.responseFromUpdatingDocument = response;
-//     return next();
-//   } catch (err) {
-//     console.error(err);
-//     next(err);
-//   }
-// };
 
 module.exports = userController;

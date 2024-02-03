@@ -1,20 +1,25 @@
-process.env.SECRET = '7hDkL$2pA!sFg@9rJm&5tYiX';
+// process.env.SECRET = '7hDkL$2pA!sFg@9rJm&5tYiX';
 require('dotenv').config();
 const models = require('../models/mongooseModels');  
 const jwt = require('jsonwebtoken'); 
+const session = require('express-session');
+const bcrypt = require('bcrypt');
+
  
 // this creates json web token
 const createToken = (_id) => { 
   if (!process.env.SECRET) {
     throw Error('Secret key is missing. Make sure process.env.SECRET is defined.');
   }
-  return jwt.sign({_id}, process.env.SECRET, {expiresIn: '1d'});
+  return jwt.sign({_id}, process.env.SECRET, {expiresIn: '30d'});
 };
 
-// signup user 
-const signupUser = async (req, res, next) => { 
+const authController = {};
 
-  const {email} = req.body;
+// signup user 
+authController.signupUser = async (req, res, next) => { 
+
+  const { email } = req.body;
 
   console.log ('Email from the request body in jwt token creation', email);
 
@@ -27,10 +32,11 @@ const signupUser = async (req, res, next) => {
 
     // create a token 
     const token = createToken(user._id);
+    res.cookie('access_token', token, { httpOnly: true });
     // Send the token as a cookie
     // res.cookie('token', token, {httpOnly: true});
 
-    res.locals.token = token;
+    // res.locals.token = token;
 
 
     //expires: new Date(Date.now() + 24 * 60 * 60 * 1000), secure: true, sameSite: 'Strict'
@@ -45,38 +51,83 @@ const signupUser = async (req, res, next) => {
 }; 
 
 // login user 
-const loginUser = async (req,res) => { 
+authController.loginUser = (req, res, next) => { 
+  console.log('are we here?? Line 54');
   const { email, password } = req.body; 
-  try {
-    const user = await models.Person.login(email, password);  
 
-    // create token
-    const token = createToken(user._id);
+  // const user = await models.Person.login(email, password);  
+  // const user = await models.Person.findOne({email});
 
-    res.status(200).json({email, token});
-  } catch (error) {
-    res.status(400).json({error: error.message});
-  }
+  models.Person.findOne({ email }) 
+    .then((user) => {
+      // if (err) throw err;
+      if (!user) {
+        return res.status(401).send('Invalid email or password')
+      }
+
+      const isMatch = bcrypt.compare(password, user.password)
+
+      if (isMatch) {
+        res.locals.user = user;
+        res.locals.login = true;
+        console.log('bcrypt.compare worked!')
+      } else {
+        console.log('Incorrect Password');
+      }
+
+
+      const token = createToken(user._id);
+      console.log('this is the token:', token);
+      res.cookie('access_token', token);
+
+
+      console.log('authController loginUser sucessful: ', res.locals.user);
+      return next();
+    })
+    .catch((err) =>{
+      console.log('error in the authController.loginUser middleware', err)
+      return next(err);
+    });
+
+
+  // create token
+  //   const token = createToken(user._id);
+
+  //   res.status(200).json({email, token});
+  //   return next();
+  // } catch (error) {
+  //   res.status(400).json({error: error.message});
+  //   return next(error);
+  // }
 
 }; 
 
 /* Controller that verifies token */
 
-const verifyToken = (req, res, next) => {
+authController.verifyToken = (req, res, next) => {
   // Extract token from Authorization header
+  /*
   const authorizationHeader = req.headers['authorization'];
 
   if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
     // Token not provided in the correct format
     return res.status(401).json({ error: 'Unauthorized' });
   }
+  */
+  // const token = authorizationHeader.split(' ')[1];
+  console.log('is there aything on res.cookie?', res.cookie)
+  console.log('authController.verifyToken reached');
+  console.log('this is req.cookies:', req.cookies);
+  const token = req.cookies.access_token;
 
-  const token = authorizationHeader.split(' ')[1];
+  console.log('token created: ', token);
 
   try {
+    console.log('try block accessed');
     // Verify the token
     const decoded = jwt.verify(token, process.env.SECRET);
     
+    console.log('JWT verified: ', decoded);
     // Attach the decoded user information onto req.user
     req.user = decoded;
     
@@ -90,4 +141,4 @@ const verifyToken = (req, res, next) => {
 };
 
 
-module.exports = {verifyToken, loginUser, signupUser};
+module.exports = authController;
