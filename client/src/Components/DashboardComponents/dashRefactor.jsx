@@ -17,18 +17,16 @@ import { ResponsiveLine } from '@nivo/line';
 import { RobotoFontFace } from '@fontsource/roboto';
 import { useDispatch, useSelector} from 'react-redux';
 import { fetchUserData, } from '../../slices/userSlice';
-import { postEarning, postDeduction } from '../../slices/financialSlice';
+import { postEarning, postDeduction, openDeductionForm, closeDeductionForm, closeEarningForm, openEarningForm, toggleChart } from '../../slices/financialSlice';
 import { createSelector } from '@reduxjs/toolkit';
-
-// import store from '../../store/store';
+import { LocalConvenienceStoreOutlined } from '@mui/icons-material';
 
 //STATE STATE STATE STATE
 const DashboardRefactor = () => {
 
   const dispatch = useDispatch();
 
-
-  // use dispatch to invoke thunk and load user data
+  // useEffect will fetch inital user data via thunk being dispatched.
   useEffect(() => {
     dispatch(fetchUserData());
   },[]);
@@ -36,17 +34,19 @@ const DashboardRefactor = () => {
   // UI section state objects
   const pieChart = useSelector(state => state.financialData.pieChart);
   const barChart = useSelector(state => state.financialData.barChart);
+  const lineChart = useSelector(state => state.financialData.lineChart);
   const transactions = useSelector(state => state.financialData.transactions);
+  const grossEarnings = useSelector(state => state.userData.grossEarnings);
+
   console.log('pie chart', pieChart);
   console.log('bar chart', barChart);
+  console.log('transactions', transactions);
+
   const username = useSelector(state => state.userData.username);
   
-  // if(!pieChart || !barChart) {
-  //   return <div>Loading...</div>
-  // }
 
-  let pieChartData = [];
-  let barChartData = [];
+  const pieChartData = [];
+  const barChartData = [];
   const transactionsData = [];
 
   // console.log('pieChart after useEffect, dashRefactor line 52: ', pieChart);
@@ -93,45 +93,26 @@ const DashboardRefactor = () => {
 
 
   const [sliderValues, setSliderValues] = useState({ 1: 0, 2: 0 });
-  const [grossEarnings, setGrossEarnings] = useState(0);
-  const [isBarChart, setIsBarChart] = useState(true);
-  const [isEarningFormOpen, setIsEarningFormOpen] = useState(false);
-  const [isDeductionFormOpen, setIsDeductionFormOpen] = useState(false);
-
 
   //HELPER FUNCTIONS FOR CHARTS / FORMS - TRUE / FALSE
+  // State for forms and chart
+  const earningForm = useSelector(state => state.financialData.earningForm);
+  const deductionForm = useSelector(state => state.financialData.deductionForm);
+  const isBarChart = useSelector(state => state.financialData.isBarChart);
 
-  const toggleChartType = () => {
-    setIsBarChart(!isBarChart);
-  };
 
-  const openEarningForm = () => {
-    setIsEarningFormOpen(true);
-  };
-
-  const openDeductionForm = () => {
-    setIsDeductionFormOpen(true);
-  };
-
-  const closeEarningForm = () => {
-    setIsEarningFormOpen(false);
-  };
-
-  const closeDeductionForm = () => {
-    setIsDeductionFormOpen(false);
-  };
 
 
 
   // RUN ONCE / TRY REDUCE TO ADD ALL PIE SLICES
-  useEffect(() => {
-    console.log('reduce line 118: ', pieChartData);
-    const initialGrossEarnings = pieChartData.reduce(
-      (total, slice) => total + slice.value,
-      0
-    );
-    setGrossEarnings(initialGrossEarnings);
-  }, []);
+  // useEffect(() => {
+  //   console.log('reduce line 118: ', pieChartData);
+  //   const initialGrossEarnings = pieChartData.reduce(
+  //     (total, slice) => total + slice.value,
+  //     0
+  //   );
+  //   setGrossEarnings(initialGrossEarnings);
+  // }, []);
 
 
   //SLIDER STUFF
@@ -252,21 +233,20 @@ const DashboardRefactor = () => {
     },
   };
 
-  // state needed to be imported:
-  // username
-  // lineChartData?
 
-  // :)
-
+  // Helper funcion to handle submission of earning.
   const handleEarningSubmit = (e) => {
     e.preventDefault();
 
     console.log('inside handEarningSubmit, newEarning: ', e);
 
+    const date = new Date();
+    const dateStr = date.toDateString();
+
     const newEarning = {
       amount: e.target[0].value,
       source: e.target[1].value,
-      timestamp: '',
+      timestamp: dateStr,
       type: 'earning',
       medicareTax: 0,
       stateTax: 0,
@@ -275,22 +255,29 @@ const DashboardRefactor = () => {
     };
 
     dispatch(postEarning(newEarning));
+    dispatch(closeEarningForm());
   };
 
+  // Helper function to handle submission of deduction. 
   const handleDeductionSubmit = (e) => {
     e.preventDefault();
 
     console.log('inside handleDeductionSubmit, newDeduction: ', e);
 
+    const date = new Date();
+    const dateStr = date.toDateString();
+
     const newDeduction = {
       amount: e.target[0].value,
       source: e.target[1].value,
-      timestamp: '',
+      timestamp: dateStr,
       type: 'deduction'
     };
 
     dispatch(postDeduction(newDeduction));
+    dispatch(closeDeductionForm());
   };
+
 
   return (
     <div>
@@ -312,14 +299,14 @@ const DashboardRefactor = () => {
                 />
               ) : (
                 <ResponsiveLine
-                  data={lineChartData}
+                  data={lineChart}
                   margin={{ top: 50, right: 40, bottom: 100, left: 40 }}
                 />
               )}
             </div>
             <div style={styles.buttonContainer}>
               <IconButton
-                onClick={toggleChartType}
+                onClick={() => dispatch(toggleChart())}
                 style={styles.buttonIcon}
                 color="white"
               >
@@ -359,7 +346,7 @@ const DashboardRefactor = () => {
               color: 'black',
               boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
             }}
-            onClick={openEarningForm}
+            onClick={() => dispatch(openEarningForm())}
           >
             Record Earning
           </Button>
@@ -371,7 +358,7 @@ const DashboardRefactor = () => {
               color: 'black',
               boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
             }}
-            onClick={openDeductionForm}
+            onClick={() => dispatch(openDeductionForm())}
           >
             Record Deduction
           </Button>
@@ -381,15 +368,15 @@ const DashboardRefactor = () => {
             <Typography variant="h7">Previous Transactions</Typography>
           </div>
           <div style={styles.listContent}>
-            {transactions.map((transaction) => (
-              <React.Fragment key={transaction.id}>
+            {transactions.map((transaction, index) => (
+              <React.Fragment key={index}>
                 <ListItem style={styles.listItem}>
-                  <div style={{ width: '70%', display: 'inline-block' }}>
+                  <div style={{ width: '70%', gap: '2rem' }}>
                     {transaction.description} {transaction.amount} {transaction.medicareTax} {transaction.stateTax} {transaction.federalTax} {transaction.ssiTax}
                   </div>
                   <div
                     style={{
-                      width: '50%',
+                      width: '85%',
                       display: 'inline-block',
                       textAlign: 'right',
                     }}
@@ -403,26 +390,22 @@ const DashboardRefactor = () => {
           </div>
         </List>
       </Paper>
-      {isEarningFormOpen && (
+      {earningForm && (
         <div style={styles.formContainer}>
           <IconButton
-            onClick={closeEarningForm}
+            onClick = {() => dispatch(closeEarningForm())}
             style={{ ...styles.closeButton, fontSize: '16px' }}
             color="black"
           >
             X
           </IconButton>
           <h3>Record Earning</h3>
-          <form onSubmit={(e) => {console.log('submitted'); handleEarningSubmit(e);}}>
+          <form onSubmit={(e) => {console.log('Earning submitted'); handleEarningSubmit(e);}}>
             <div>
               <label htmlFor="amount">Amount: $</label>
               <input
                 type="number"
                 id="amount"
-                // value={e.target.value}
-                // onChange={(e) =>
-                //   setEarningData({ ...earningData, amount: e.target.value })
-                // }
                 required
               />
             </div>
@@ -431,10 +414,6 @@ const DashboardRefactor = () => {
               <input
                 type="text"
                 id="source"
-                // value={earningData.source}
-                // onChange={(e) =>
-                //   setEarningData({ ...earningData, source: e.target.value })
-                // }
                 required
               />
             </div>
@@ -442,26 +421,22 @@ const DashboardRefactor = () => {
           </form>
         </div>
       )}
-      {isDeductionFormOpen && (
+      {deductionForm && (
         <div style={styles.formContainer}>
           <IconButton
-            onClick={closeDeductionForm}
+            onClick = {() => dispatch(closeDeductionForm())}
             style={{ ...styles.closeButton, fontSize: '16px' }}
             color="black"
           >
             X
           </IconButton>
           <h3>Record Deduction</h3>
-          <form onSubmit={(e) => { dispatch(postDeduction(e)); }}>
+          <form onSubmit={(e) => { console.log('Deduction submitted'), handleDeductionSubmit(e);}}>
             <div>
               <label htmlFor="deductionAmount">Amount: $</label>
               <input
                 type="number"
                 id="deductionAmount"
-                // value={deductionData.amount}
-                // onChange={(e) =>
-                //   setDeductionData({ ...deductionData, amount: e.target.value })
-                // }
                 required
               />
             </div>
@@ -470,10 +445,6 @@ const DashboardRefactor = () => {
               <input
                 type="text"
                 id="deductionSource"
-                // value={deductionData.source}
-                // onChange={(e) =>
-                //   setDeductionData({ ...deductionData, source: e.target.value })
-                // }
                 required
               />
             </div>
